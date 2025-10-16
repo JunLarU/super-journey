@@ -7,6 +7,7 @@ package core;
 public class SessionManager {
     private static SessionManager instance;
     private String currentUser;
-    
+
+    System.Out.println("✅ Ventana iniciada: " + primaryStage.getTitle());
     
 }
