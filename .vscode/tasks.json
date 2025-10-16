@@ -1,0 +1,114 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "clean-build",
+      "type": "shell",
+      "command": "if (Test-Path bin) { Remove-Item -Recurse -Force bin } ; if (Test-Path out) { Remove-Item -Recurse -Force out } ; if (Test-Path target) { Remove-Item -Recurse -Force target } ; Write-Host '🧹 Limpieza completada.'",
+      "problemMatcher": [],
+      "options": {
+        "shell": {
+          "executable": "powershell.exe",
+          "args": ["-NoProfile", "-Command"]
+        }
+      }
+    },
+    {
+      "label": "process-css",
+      "type": "shell",
+      "command": "$cssFiles = Get-ChildItem -Path src -Recurse -Filter '*.css'; Write-Host \"🎨 Procesando $($cssFiles.Count) archivos CSS...\"; foreach ($file in $cssFiles) { $relativePath = $file.FullName.Replace((Get-Location).Path + '\\src\\', ''); $destPath = Join-Path 'bin' $relativePath; $destDir = Split-Path $destPath -Parent; if (!(Test-Path $destDir)) { New-Item -ItemType Directory -Force -Path $destDir | Out-Null }; $content = Get-Content $file.FullName; $newContent = @(); $inBlock = $false; foreach ($line in $content) { if ($line -match '\\{') { $inBlock = $true; $newContent += $line } elseif ($line -match '\\}') { $inBlock = $false; $newContent += $line } elseif ($inBlock -and $line -match '^\\s*[a-z-]+\\s*:' -and $line -notmatch '-fx-') { $newContent += $line -replace '(^\\s*)([a-z-]+)(\\s*:)', '$1-fx-$2$3' } else { $newContent += $line } }; $newContent | Out-File -FilePath $destPath -Encoding UTF8; Write-Host \"  ✅ Procesado: $relativePath\" }; Write-Host '✅ CSS procesado.'",
+      "problemMatcher": [],
+      "options": {
+        "shell": {
+          "executable": "powershell.exe",
+          "args": ["-NoProfile", "-Command"]
+        }
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "copy-resources",
+      "type": "shell",
+      "command": "Write-Host '📦 Copiando recursos...'; Get-ChildItem -Path src -Recurse -File | Where-Object { $_.Extension -ne '.java' -and $_.Extension -ne '.class' -and $_.Extension -ne '.css' } | ForEach-Object { $relativePath = $_.FullName.Replace((Get-Location).Path + '\\src\\', ''); $destPath = Join-Path 'bin' $relativePath; $destDir = Split-Path $destPath -Parent; if (!(Test-Path $destDir)) { New-Item -ItemType Directory -Force -Path $destDir | Out-Null }; Copy-Item $_.FullName -Destination $destPath -Force }; Write-Host '✅ Recursos copiados.'",
+      "problemMatcher": [],
+      "options": {
+        "shell": {
+          "executable": "powershell.exe",
+          "args": ["-NoProfile", "-Command"]
+        }
+      }
+    },
+    {
+      "label": "compile-java",
+      "type": "shell",
+      "command": "$ErrorActionPreference = 'Stop'; if (!(Test-Path bin)) { New-Item -ItemType Directory -Force -Path bin | Out-Null }; $javaFiles = @(Get-ChildItem -Path src -Recurse -Filter '*.java' | Select-Object -ExpandProperty FullName); if ($javaFiles.Count -gt 0) { $javafxPath = 'C:/Program Files/JavaFX/javafx-sdk-25/lib'; $libs = Get-ChildItem -Path $javafxPath -Filter '*.jar' | Select-Object -ExpandProperty FullName; $classpath = @('src', 'bin') + $libs; $classpathStr = $classpath -join ';'; Write-Host \"☕ Compilando $($javaFiles.Count) archivos Java...\"; & javac -d bin -cp $classpathStr $javaFiles; if ($LASTEXITCODE -eq 0) { Write-Host '✅ Compilación exitosa.' } else { Write-Host '❌ Error en la compilación.'; exit 1 } } else { Write-Host '⚠️ No se encontraron archivos .java en src.'; exit 1 }",
+      "problemMatcher": ["$javac"],
+      "options": {
+        "shell": {
+          "executable": "powershell.exe",
+          "args": ["-NoProfile", "-Command"]
+        }
+      }
+    },
+    {
+      "label": "run-application",
+      "type": "shell",
+      "command": "$javafxPath = 'C:/Program Files/JavaFX/javafx-sdk-25/lib'; $libs = Get-ChildItem -Path $javafxPath -Filter '*.jar' | Select-Object -ExpandProperty FullName; $classpath = @('bin') + $libs; $classpathStr = $classpath -join ';'; Write-Host '🚀 Ejecutando aplicación...'; & java -cp $classpathStr '--module-path' $javafxPath '--add-modules' 'javafx.controls,javafx.fxml' Main",
+      "problemMatcher": [],
+      "options": {
+        "shell": {
+          "executable": "powershell.exe",
+          "args": ["-NoProfile", "-Command"]
+        }
+      }
+    },
+    {
+      "label": "build-project",
+      "dependsOn": ["copy-resources", "process-css", "compile-java"],
+      "dependsOrder": "sequence",
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": true
+      }
+    },
+    {
+      "label": "rebuild-project",
+      "dependsOn": ["clean-build", "build-project", "run-application"],
+      "dependsOrder": "sequence",
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": true
+      }
+    },
+    {
+      "label": "run-only",
+      "dependsOn": ["run-application"],
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": true
+      }
+    }
+  ]
+}
