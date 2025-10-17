@@ -1,0 +1,11 @@
+[{
+    "apellidoPaterno": "Larios",
+    "clave": "U001",
+    "password": "testpassword",
+    "phone": "5551234567",
+    "name": "Juan",
+    "isAdmin": true,
+    "email": "juan.larios@example.com",
+    "username": "testuser",
+    "apellidoMaterno": "Estrada"
+}]

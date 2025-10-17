@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="app.controllers.dashboard.DashboardController"
+      alignment="CENTER"
+      spacing="20"
+      style="-fx-background-color: #f9f9f9;">
+    
+    <Label text="Bienvenido al Panel Principal"
+           style="-fx-font-size: 22px; -fx-text-fill: #333;"/>
+    
+    <Label fx:id="lblUserInfo"
+           text="Usuario actual: "
+           style="-fx-font-size: 16px; -fx-text-fill: #666;"/>
+</VBox>

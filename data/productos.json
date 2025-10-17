@@ -1,0 +1,52 @@
+[{
+    "Nombre": "Hamburguesa",
+    "Calorias": 650,
+    "PrecioBase": 85,
+    "Categoria": "Desayuno Continental",
+    "Ingredientes": [
+        {
+            "NombreIngrediente": "Carne",
+            "Orden": 1,
+            "Cantidad": 0,
+            "Sustituible": true,
+            "Sustitutos": [{
+                "NombreIngrediente": "carnene",
+                "CostoExtra": 20,
+                "IDIngrediente": 4,
+                "Disponible": true
+            }],
+            "IDIngrediente": 2,
+            "Eliminable": false
+        },
+        {
+            "NombreIngrediente": "Leche",
+            "Orden": 2,
+            "Cantidad": 0,
+            "Sustituible": true,
+            "Sustitutos": [{
+                "NombreIngrediente": "Lechehwe",
+                "CostoExtra": 0,
+                "IDIngrediente": 6,
+                "Disponible": true
+            }],
+            "IDIngrediente": 5,
+            "Eliminable": false
+        }
+    ],
+    "Gramaje": 300,
+    "Descripcion": "Hamburguesa clásica",
+    "ID": 1,
+    "URLFoto": "",
+    "Disponible": true,
+    "Tamanos": [{
+        "Nombre": "Grande",
+        "Orden": 1,
+        "Gramaje": 120,
+        "Descripcion": "Hamburguesa Grande",
+        "ID": 1,
+        "Piezas": 0,
+        "Capacidad": 0,
+        "Disponible": true,
+        "Precio": 45
+    }]
+}]

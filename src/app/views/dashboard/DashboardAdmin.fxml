@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="app.controllers.dashboard.DashboardAdminController"
+            prefWidth="1000" prefHeight="650"
+            style="-fx-background-color: white;">
+
+    <!-- Sidebar de navegación -->
+    <left>
+        <VBox spacing="20" style="-fx-background-color: #2C3E50; -fx-padding: 20;">
+            <Label fx:id="lblWelcome"
+                   style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+
+            <Button fx:id="btnProductos" text="🍽️ Productos" onAction="#onProductosClicked"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;"/>
+            <Button fx:id="btnMenus" text="📋 Menús" onAction="#onMenusClicked"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;"/>
+            <Button fx:id="btnBebidas" text="☕ Especiales" onAction="#onBebidasClicked"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;"/>
+            <Button fx:id="btnIngredientes" text="🥦 Ingredientes" onAction="#onIngredientesClicked"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;"/>
+            <Button fx:id="btnAvisos" text="📢 Avisos" onAction="#onAvisosClicked"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;"/>
+
+            <!-- Nueva sección para administradores -->
+            <Button fx:id="btnAdministradores" text="🧑‍💼 Administradores" onAction="#onAdministradoresClicked"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;"/>
+
+            <Pane VBox.vgrow="ALWAYS"/>
+            <Button fx:id="btnCerrarSesion" text="🚪 Cerrar sesión"
+                    onAction="#onCerrarSesionClicked"
+                    style="-fx-background-color: #E74C3C; -fx-text-fill: white; -fx-font-size: 14px;"/>
+        </VBox>
+    </left>
+
+    <!-- Contenido central dinámico -->
+    <center>
+        <AnchorPane fx:id="contentArea"
+                    style="-fx-background-color: #ECF0F1;"
+                    prefWidth="700" prefHeight="650"/>
+    </center>
+</BorderPane>

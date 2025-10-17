@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="app.controllers.sessions.SignupController"
+      spacing="10"
+      alignment="TOP_CENTER"
+      style="-fx-background-color: white; -fx-padding: 20;">
+    
+    <children>
+
+        <Label text="Registro de Usuario"
+               style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #333;" />
+
+        <GridPane hgap="10" vgap="10">
+            <columnConstraints>
+                <ColumnConstraints halignment="RIGHT" prefWidth="150"/>
+                <ColumnConstraints prefWidth="300"/>
+            </columnConstraints>
+
+            <!-- Campos -->
+            <Label text="Expediente:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <TextField fx:id="txtExpediente" promptText="Ej: A20251234" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+            <Label text="Nombre:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <TextField fx:id="txtNombre" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+            <Label text="Apellido Paterno:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <TextField fx:id="txtApellidoPaterno" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+            <Label text="Apellido Materno:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+            <TextField fx:id="txtApellidoMaterno" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+            <Label text="Correo:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+            <TextField fx:id="txtCorreo" promptText="correo@ejemplo.com" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+            <Label text="Teléfono:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+            <TextField fx:id="txtTelefono" promptText="5551234567" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+            <Label text="NIP:" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+            <PasswordField fx:id="txtNip" promptText="••••••" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+        </GridPane>
+
+        <!-- 👑 Campo adicional solo visible para administradores -->
+        <HBox fx:id="roleBox" spacing="10" alignment="CENTER">
+            <Label text="Tipo de Usuario:"/>
+            <RadioButton fx:id="rbUsuario" text="Usuario"/>
+            <RadioButton fx:id="rbAdministrador" text="Administrador"/>
+        </HBox>
+
+        <Button fx:id="btnRegistrar"
+                text="Registrar Usuario"
+                onAction="#onRegistrarClicked"
+                prefWidth="200"
+                style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size: 14px;"/>
+
+        <Label fx:id="lblStatus"
+               text="Esperando datos..."
+               style="-fx-text-fill: #333; -fx-font-size: 14px; -fx-padding: 10 0 0 0;"/>
+
+        <!-- 🔁 Botón para cambiar a Login -->
+        <Button fx:id="btnGoLogin"
+                text="¿Ya tienes cuenta? Inicia sesión"
+                onAction="#onGoLoginClicked"
+                style="-fx-background-color: transparent; -fx-text-fill: #007bff; -fx-underline: true;"/>
+    </children>
+</VBox>

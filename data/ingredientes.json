@@ -1,0 +1,42 @@
+[
+    {
+        "Nombre": "Carne",
+        "Calorias": 1500,
+        "categoria": "Proteínas",
+        "Descripcion": "Carne de Res",
+        "Alergeno": true,
+        "ID": 2
+    },
+    {
+        "Nombre": "Queso2",
+        "Calorias": 12,
+        "categoria": "Lácteos",
+        "Descripcion": "Queso2",
+        "Alergeno": true,
+        "ID": 3
+    },
+    {
+        "Nombre": "carnene",
+        "Calorias": 152,
+        "categoria": "Proteínas",
+        "Descripcion": "carnene",
+        "Alergeno": true,
+        "ID": 4
+    },
+    {
+        "Nombre": "Leche",
+        "Calorias": 120,
+        "categoria": "Lácteos",
+        "Descripcion": "Leche",
+        "Alergeno": true,
+        "ID": 5
+    },
+    {
+        "Nombre": "Lechehwe",
+        "Calorias": 120,
+        "categoria": "Lácteos Vegetales",
+        "Descripcion": "Leceddas",
+        "Alergeno": true,
+        "ID": 6
+    }
+]

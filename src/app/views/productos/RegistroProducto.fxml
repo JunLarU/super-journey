@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="app.controllers.productos.RegistroProductoController"
+            style="-fx-background-color:#F9FAFB;"
+            prefWidth="900" prefHeight="700">
+
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background-color:transparent;">
+            <VBox spacing="15" style="-fx-padding:20;">
+                <Label text="🧾 Registro de Producto"
+                       style="-fx-font-size:20px;-fx-font-weight:bold;"/>
+
+                <!-- FORMULARIO PRINCIPAL -->
+                <TitledPane text="📝 Información Básica" expanded="true">
+                    <GridPane hgap="15" vgap="12" style="-fx-padding:15;">
+                        <columnConstraints>
+                            <ColumnConstraints halignment="RIGHT" minWidth="120"/>
+                            <ColumnConstraints hgrow="ALWAYS" prefWidth="400"/>
+                        </columnConstraints>
+
+                        <Label text="* Nombre:" GridPane.rowIndex="0" GridPane.columnIndex="0"
+                               style="-fx-font-weight:bold;"/>
+                        <TextField fx:id="txtNombre" promptText="Ej: Hamburguesa Clásica"
+                                   GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                        <Label text="* Categoría:" GridPane.rowIndex="1" GridPane.columnIndex="0"
+                               style="-fx-font-weight:bold;"/>
+                        <ComboBox fx:id="cmbCategoria" editable="true"
+                                  promptText="Selecciona o escribe categoría"
+                                  prefWidth="400"
+                                  GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                        <Label text="Descripción:" GridPane.rowIndex="2" GridPane.columnIndex="0"
+                               GridPane.valignment="TOP"/>
+                        <TextArea fx:id="txtDescripcion" prefRowCount="3"
+                                  promptText="Descripción detallada del producto"
+                                  GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                        <Label text="* Precio Base:" GridPane.rowIndex="3" GridPane.columnIndex="0"
+                               style="-fx-font-weight:bold;"/>
+                        <TextField fx:id="txtPrecio" promptText="85.00"
+                                   GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                        <Label text="Calorías:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                        <TextField fx:id="txtCalorias" promptText="650"
+                                   GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+                        <Label text="Gramaje:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                        <TextField fx:id="txtGramaje" promptText="300"
+                                   GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+                        <CheckBox fx:id="chkDisponible" text="✅ Producto disponible"
+                                  selected="true" GridPane.rowIndex="6" GridPane.columnIndex="1"
+                                  style="-fx-font-weight:bold;"/>
+                    </GridPane>
+                </TitledPane>
+
+                <!-- INGREDIENTES -->
+                <TitledPane text="🥦 Ingredientes del Producto" expanded="true">
+                    <VBox spacing="12" style="-fx-padding:15;">
+                        <Label text="Busca y agrega ingredientes (doble click para agregar):"
+                               style="-fx-font-style:italic;"/>
+                        <TextField fx:id="txtBuscarIngrediente"
+                                   promptText="🔍 Buscar ingrediente... (escribe al menos 2 letras)"
+                                   style="-fx-pref-width:450;"/>
+                        
+                        <HBox spacing="15">
+                            <!-- Lista de búsqueda -->
+                            <VBox spacing="5">
+                                <Label text="Resultados:" style="-fx-font-weight:bold;"/>
+                                <ListView fx:id="listaIngredientesBuscados"
+                                          prefHeight="150" prefWidth="250"/>
+                            </VBox>
+
+                            <!-- Tabla de ingredientes seleccionados -->
+                            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                                <Label text="Ingredientes seleccionados:" style="-fx-font-weight:bold;"/>
+                                <TableView fx:id="tablaIngredientes" prefHeight="200">
+                                    <columns>
+                                        <TableColumn fx:id="colIngNombre" text="Ingrediente" prefWidth="180"/>
+                                        <TableColumn fx:id="colIngSustitutos" text="Sustitutos" prefWidth="100"/>
+                                        <TableColumn fx:id="colIngEliminar" text="Eliminable" prefWidth="90"/>
+                                        <TableColumn fx:id="colIngSustituible" text="Sustituible" prefWidth="90"/>
+                                        <TableColumn fx:id="colIngAcciones" text="Acciones" prefWidth="120"/>
+                                    </columns>
+                                </TableView>
+                                <Label text="💡 Tip: Marca como 'Sustituible' y haz click en ♻️ para agregar sustitutos"
+                                       style="-fx-text-fill:#7f8c8d; -fx-font-size:11px; -fx-font-style:italic;"/>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+                </TitledPane>
+
+                <!-- TAMAÑOS -->
+                <TitledPane text="📏 Tamaños del Producto (Opcional)" expanded="false">
+                    <VBox spacing="10" style="-fx-padding:15;">
+                        <Label text="Define diferentes tamaños con precios específicos:"
+                               style="-fx-font-style:italic;"/>
+                        
+                        <GridPane hgap="8" vgap="8">
+                            <columnConstraints>
+                                <ColumnConstraints percentWidth="15"/>
+                                <ColumnConstraints percentWidth="25"/>
+                                <ColumnConstraints percentWidth="15"/>
+                                <ColumnConstraints percentWidth="12"/>
+                                <ColumnConstraints percentWidth="12"/>
+                                <ColumnConstraints percentWidth="12"/>
+                                <ColumnConstraints percentWidth="9"/>
+                            </columnConstraints>
+
+                            <Label text="Nombre:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                            <TextField fx:id="txtTamNombre" promptText="Chico"
+                                       GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+
+                            <Label text="Descripción:" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                            <TextField fx:id="txtTamDescripcion" promptText="Porción pequeña"
+                                       GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                            <Label text="* Precio:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                            <TextField fx:id="txtTamPrecio" promptText="45.00"
+                                       GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+
+                            <Label text="Cap. (ml):" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+                            <TextField fx:id="txtTamCapacidad" promptText="250"
+                                       GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+
+                            <Label text="Gramaje (g):" GridPane.columnIndex="4" GridPane.rowIndex="0"/>
+                            <TextField fx:id="txtTamGramaje" promptText="150"
+                                       GridPane.columnIndex="4" GridPane.rowIndex="1"/>
+
+                            <Label text="Piezas:" GridPane.columnIndex="5" GridPane.rowIndex="0"/>
+                            <TextField fx:id="txtTamPiezas" promptText="2"
+                                       GridPane.columnIndex="5" GridPane.rowIndex="1"/>
+
+                            <Button fx:id="btnAgregarTamano" text="➕"
+                                    GridPane.columnIndex="6" GridPane.rowIndex="1"
+                                    style="-fx-background-color:#3498db; -fx-text-fill:white; -fx-font-size:16px;">
+                                <tooltip>
+                                    <Tooltip text="Agregar tamaño"/>
+                                </tooltip>
+                            </Button>
+                        </GridPane>
+
+                        <TableView fx:id="tablaTamanos" prefHeight="150">
+                            <columns>
+                                <TableColumn fx:id="colTamNombre" text="Nombre" prefWidth="120"/>
+                                <TableColumn fx:id="colTamDescripcion" text="Descripción" prefWidth="200"/>
+                                <TableColumn fx:id="colTamPrecio" text="Precio" prefWidth="100"/>
+                                <TableColumn fx:id="colTamAcciones" text="Acciones" prefWidth="100"/>
+                            </columns>
+                        </TableView>
+
+                        <Label text="💡 Tip: Si no agregas tamaños, se usará solo el precio base"
+                               style="-fx-text-fill:#7f8c8d; -fx-font-size:11px; -fx-font-style:italic;"/>
+                    </VBox>
+                </TitledPane>
+
+                <!-- BOTONES -->
+                <HBox alignment="CENTER_RIGHT" spacing="15" style="-fx-padding:10 0 0 0;">
+                    <!-- ✅ Agregamos fx:id al botón de limpiar -->
+                    <Button fx:id="btnLimpiar"
+                            text="🗑️ Limpiar Formulario"
+                            onAction="#limpiarCampos"
+                            style="-fx-background-color:#95a5a6; -fx-text-fill:white; -fx-font-size:13px;"/>
+                    <Button fx:id="btnRegistrar"
+                            text="💾 Guardar Producto"
+                            onAction="#onRegistrarClicked"
+                            style="-fx-background-color:#2ecc71; -fx-text-fill:white; -fx-font-size:14px; -fx-font-weight:bold; -fx-padding:10 30;"/>
+                </HBox>
+
+                <!-- STATUS -->
+                <Separator/>
+                <Label fx:id="lblStatus" text="✏️ Completa los campos marcados con * y guarda el producto"
+                       style="-fx-text-fill:#7f8c8d; -fx-font-style:italic; -fx-font-size:12px;"/>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

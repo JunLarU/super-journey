@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="app.controllers.sessions.LoginController"
+      spacing="10"
+      alignment="CENTER"
+      style="-fx-background-color: white; -fx-padding: 30;">
+    
+    <children>
+
+        <Label text="Inicio de Sesión"
+               style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #333;" />
+
+        <GridPane hgap="10" vgap="15">
+            <columnConstraints>
+                <ColumnConstraints halignment="RIGHT" prefWidth="120"/>
+                <ColumnConstraints prefWidth="250"/>
+            </columnConstraints>
+
+            <Label text="Expediente:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <TextField fx:id="txtExpediente" promptText="Ej: A20251234" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+            <Label text="NIP:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <PasswordField fx:id="txtNip" promptText="••••••" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+        </GridPane>
+
+        <Button fx:id="btnLogin"
+                text="Iniciar Sesión"
+                prefWidth="200"
+                onAction="#onLoginClicked"
+                style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-font-size: 14px;"/>
+
+        <Label fx:id="lblStatus"
+               text="Ingrese sus credenciales."
+               style="-fx-text-fill: #333; -fx-font-size: 13px;"/>
+
+        <Button fx:id="btnGoSignup"
+                text="¿No tienes cuenta? Registrarse"
+                onAction="#onGoSignupClicked"
+                style="-fx-background-color: transparent; -fx-text-fill: #007bff; -fx-underline: true;"/>
+    </children>
+</VBox>
