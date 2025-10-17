@@ -15,6 +15,13 @@
                    style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
             
             <Separator/>
+            <VBox fx:id="vboxInfo" spacing="5" style="-fx-background-color: #e8f4fd; -fx-padding: 15; -fx-border-color: #3498db; -fx-border-radius: 5;">
+                    <Label text="💡 Información:" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                    <Label text="• Empieza por calcular las fechas de la semana seleccionada."
+                        style="-fx-text-fill: #34495e; -fx-font-size: 12px;"/>
+                    <Label text="• Los campos marcados con * son obligatorios" 
+                        style="-fx-text-fill: #e74c3c; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                </VBox>
             
             <!-- Selector de semana -->
             <HBox alignment="CENTER_LEFT" spacing="15">
@@ -69,7 +76,7 @@
                            GridPane.columnIndex="5" GridPane.rowIndex="0" GridPane.halignment="CENTER"/>
 
                     <!-- Desayuno Row -->
-                    <Label text="🌅 Desayuno" style="-fx-font-weight: bold; -fx-font-size: 13px;"
+                    <Label text="🥚Desayuno" style="-fx-font-weight: bold; -fx-font-size: 13px;"
                            GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.halignment="RIGHT">
                         <padding><Insets top="10" right="10"/></padding>
                     </Label>
@@ -116,7 +123,7 @@
                     </VBox>
 
                     <!-- Comida Row -->
-                    <Label text="🍽️ Comida" style="-fx-font-weight: bold; -fx-font-size: 13px;"
+                    <Label text="🍽️Comida" style="-fx-font-weight: bold; -fx-font-size: 13px;"
                            GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.halignment="RIGHT">
                         <padding><Insets top="10" right="10"/></padding>
                     </Label>
@@ -180,7 +187,7 @@
             </HBox>
             
             <!-- Status -->
-            <Label fx:id="lblStatus" text="✏️ Configura el menú para cada día y horario"
+            <Label fx:id="lblStatus" text="Editar Configura el menú para cada día y horario"
                    style="-fx-text-fill: #7f8c8d; -fx-font-style: italic; -fx-font-size: 12px;"
                    wrapText="true"/>
         </VBox>

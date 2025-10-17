@@ -85,7 +85,7 @@ public class RegistroMenuController {
         // Inicializar estructuras de datos
         inicializarEstructuras();
         
-        lblStatus.setText("✏️ Configura el menú para cada día y horario");
+        lblStatus.setText("Editar Configura el menú para cada día y horario");
     }
 
     private void configurarSpinners() {
@@ -356,7 +356,7 @@ public class RegistroMenuController {
         if (!validarFormulario()) return;
 
         btnGuardar.setDisable(true);
-        lblStatus.setText("⏳ Guardando menú...");
+        lblStatus.setText("Guardando menú...");
 
         new Thread(() -> {
             try {
@@ -474,7 +474,7 @@ public class RegistroMenuController {
     // =========================
     public void cargarDatosMenu(int semana, int anio) {
         modoEdicion = true;
-        lblTitulo.setText("✏️ Editar Menú Semanal");
+        lblTitulo.setText("Editar Editar Menú Semanal");
 
         this.numeroSemana = semana;
         this.anio = anio;
@@ -534,7 +534,7 @@ public class RegistroMenuController {
         cargarDatosMenu(semana, anio);
         
         modoVisualizacion = true;
-        lblTitulo.setText("👁️ Visualizar Menú Semanal");
+        lblTitulo.setText("visualizar Menú Semanal");
 
         // Deshabilitar controles de edición
         spinAnio.setDisable(true);
@@ -550,7 +550,7 @@ public class RegistroMenuController {
             lista.setStyle(lista.getStyle() + "; -fx-opacity: 0.8;");
         }
 
-        lblStatus.setText("👁️ Visualizando menú de la semana " + numeroSemana + "/" + anio);
+        lblStatus.setText("visualizando menú de la semana " + numeroSemana + "/" + anio);
     }
 
     // =========================

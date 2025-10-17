@@ -121,7 +121,7 @@ public class AllProductos {
             nextId = maxId + 1;
 
         } catch (Exception e) {
-            System.err.println("Error cargando productos desde archivo:");
+            //System.err.println("Error cargando productos desde archivo:");
             e.printStackTrace();
         }
     }
@@ -141,7 +141,7 @@ public class AllProductos {
             writer.close();
 
         } catch (Exception e) {
-            System.err.println("Error guardando productos en archivo:");
+            //System.err.println("Error guardando productos en archivo:");
             e.printStackTrace();
         }
     }

@@ -12,8 +12,16 @@
 
     <children>
 
-        <Label text="Registro de Ingrediente"
+        <Label fx:id="lblTitulo" text="Registro de Ingrediente"
                style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #333;" />
+
+        <Separator/>
+        <!-- Información adicional - Solo visible en modo edición/registro -->
+        <VBox fx:id="vboxInfo" spacing="5" style="-fx-background-color: #e8f4fd; -fx-padding: 15; -fx-border-color: #3498db; -fx-border-radius: 5;">
+            <Label text="💡 Información:" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+            <Label text="• Los campos marcados con * son obligatorios" 
+                style="-fx-text-fill: #e74c3c; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+        </VBox>
 
         <GridPane hgap="10" vgap="10">
             <columnConstraints>

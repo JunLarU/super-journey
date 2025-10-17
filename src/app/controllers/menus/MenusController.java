@@ -146,7 +146,7 @@ public class MenusController {
         productosDisponibles = allProductos.getAll().stream()
                 .filter(Producto::isDisponible)
                 .collect(Collectors.toList());
-        System.out.println("✅ " + productosDisponibles.size() + " productos disponibles cargados");
+        //System.out.println("✅ " + productosDisponibles.size() + " productos disponibles cargados");
     }
 
     // =========================
@@ -158,7 +158,7 @@ public class MenusController {
         semanaActual = spinSemana.getValue();
         anioActual = spinAnio.getValue();
 
-        lblStatus.setText("⏳ Cargando menú de la semana " + semanaActual + "/" + anioActual + "...");
+        lblStatus.setText("Cargando menú de la semana " + semanaActual + "/" + anioActual + "...");
         limpiarCalendario();
 
         new Thread(() -> {
@@ -347,7 +347,7 @@ public class MenusController {
     }
 
     private void eliminarMenu() {
-        lblStatus.setText("⏳ Eliminando menú...");
+        lblStatus.setText("Eliminando menú...");
 
         new Thread(() -> {
             try {
@@ -403,13 +403,23 @@ public class MenusController {
             int cantidad = data.getValue().getProductos().size();
             return new SimpleStringProperty(cantidad + " producto(s)");
         });
-
+        colSecAcciones.setReorderable(false);
+        colSecAcciones.setResizable(false);
+        colSecAcciones.setSortable(false);
+        colSecAcciones.setMinWidth(310);
         colSecAcciones.setCellFactory(tc -> new TableCell<SeccionMenu, Void>() {
-            private final Button btnVer = new Button("👁️");
-            private final Button btnEditar = new Button("✏️");
-            private final Button btnEliminar = new Button("🗑️");
+            private final Button btnVer = new Button("Ver");
+            private final Button btnEditar = new Button("Editar");
+            private final Button btnEliminar = new Button("Eliminar");
 
             {
+                btnVer.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+                btnVer.setMinWidth(100);
+                btnEditar.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+                btnEditar.setMinWidth(100);
+                btnEliminar.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+                btnEliminar.setMinWidth(100);
+                
                 btnVer.setStyle("-fx-background-color: #3498db; -fx-text-fill: white;");
                 btnEditar.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
                 btnEliminar.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
@@ -457,7 +467,7 @@ public class MenusController {
     }
 
     private void cargarSecciones() {
-        lblStatus.setText("⏳ Cargando secciones...");
+        lblStatus.setText("Cargando secciones...");
         seccionesData.clear();
 
         new Thread(() -> {
@@ -487,7 +497,7 @@ public class MenusController {
      */
     private void abrirDialogoSeccion(boolean esNueva, SeccionMenu seccionExistente) {
         Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.setTitle(esNueva ? "📦 Nueva Sección" : "✏️ Editar Sección");
+        dialog.setTitle(esNueva ? "Nueva Sección" : "Editar Editar Sección");
 
         // Crear formulario
         VBox content = new VBox(15);
@@ -509,7 +519,7 @@ public class MenusController {
         ColorPicker colorPicker = new ColorPicker(Color.web("#3498db"));
 
         // === SELECTOR DE PRODUCTOS ===
-        Label lblProductos = new Label("🍔 Productos de esta sección:");
+        Label lblProductos = new Label("Productos de esta sección:");
         lblProductos.setStyle("-fx-font-weight: bold; -fx-font-size: 13px;");
 
         // ListView con CheckBoxes para productos
@@ -648,7 +658,7 @@ public class MenusController {
      */
     private void verProductosSeccion(SeccionMenu seccion) {
         Dialog<Void> dialog = new Dialog<>();
-        dialog.setTitle("👁️ Productos de: " + seccion.getNombre());
+        dialog.setTitle("Ver Productos de: " + seccion.getNombre());
 
         VBox content = new VBox(10);
         content.setPadding(new Insets(20));
@@ -668,7 +678,7 @@ public class MenusController {
                         categoria = "Sin categoría";
                     }
 
-                    items.add(String.format("🍔 %s (%s) - $%.2f",
+                    items.add(String.format("%s (%s) - $%.2f",
                             producto.getNombre(), categoria, producto.getPrecioBase()));
                 }
             }
@@ -696,7 +706,7 @@ public class MenusController {
      */
     private void crearSeccionConProductos(String nombre, String descripcion, String color,
             List<Integer> productosSeleccionados) {
-        lblStatus.setText("⏳ Creando sección...");
+        lblStatus.setText("Creando sección...");
 
         new Thread(() -> {
             try {
@@ -738,7 +748,7 @@ public class MenusController {
     private void actualizarSeccionConProductos(int id, String nombre, String descripcion,
             String color, Set<Integer> productosAnteriores,
             List<Integer> productosNuevos) {
-        lblStatus.setText("⏳ Actualizando sección...");
+        lblStatus.setText("Actualizando sección...");
 
         new Thread(() -> {
             try {
@@ -801,7 +811,7 @@ public class MenusController {
     }
 
     private void eliminarSeccion(int id) {
-        lblStatus.setText("⏳ Eliminando sección...");
+        lblStatus.setText("Eliminando sección...");
 
         new Thread(() -> {
             try {

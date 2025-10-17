@@ -12,10 +12,21 @@
       prefWidth="700" prefHeight="750">
 
     <!-- TÍTULO -->
-    <Label fx:id="lblTitulo" text="📢 Nuevo Aviso"
+    <Label fx:id="lblTitulo" text="Nuevo Aviso"
            style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
 
     <Separator/>
+    <!-- INFORMACIÓN ADICIONAL -->
+    <VBox fx:id="vboxInfo" spacing="5" style="-fx-background-color: #e8f4fd; -fx-padding: 15; -fx-border-color: #3498db; -fx-border-radius: 5;">
+        <Label text="💡 Información:" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+        <Label text="• El aviso se mostrará durante el rango de fecha y hora especificado" 
+               style="-fx-text-fill: #34495e; -fx-font-size: 12px;"/>
+        <Label text="• Los avisos importantes se mostrarán destacados" 
+               style="-fx-text-fill: #34495e; -fx-font-size: 12px;"/>
+        <Label text="• Los campos marcados con * son obligatorios" 
+               style="-fx-text-fill: #e74c3c; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+    </VBox>
+
 
     <!-- FORMULARIO PRINCIPAL -->
     <VBox spacing="12" style="-fx-background-color: white; -fx-padding: 20; -fx-border-color: #ddd; -fx-border-radius: 5;">
@@ -100,17 +111,6 @@
 
     </VBox>
 
-    <!-- INFORMACIÓN ADICIONAL -->
-    <VBox spacing="5" style="-fx-background-color: #e8f4fd; -fx-padding: 15; -fx-border-color: #3498db; -fx-border-radius: 5;">
-        <Label text="💡 Información:" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
-        <Label text="• El aviso se mostrará durante el rango de fecha y hora especificado" 
-               style="-fx-text-fill: #34495e; -fx-font-size: 12px;"/>
-        <Label text="• Los avisos importantes se mostrarán destacados" 
-               style="-fx-text-fill: #34495e; -fx-font-size: 12px;"/>
-        <Label text="• Los campos marcados con * son obligatorios" 
-               style="-fx-text-fill: #e74c3c; -fx-font-size: 12px; -fx-font-weight: bold;"/>
-    </VBox>
-
     <!-- BOTONES -->
     <HBox spacing="15" alignment="CENTER_RIGHT" style="-fx-padding: 10 0 0 0;">
         <Button fx:id="btnCancelar" text="❌ Cancelar" onAction="#onCancelarClicked"
@@ -121,7 +121,7 @@
 
     <!-- STATUS -->
     <Separator/>
-    <Label fx:id="lblStatus" text="✏️ Completa los campos para crear un aviso"
+    <Label fx:id="lblStatus" text="Editar Completa los campos para crear un aviso"
            style="-fx-text-fill: #7f8c8d; -fx-font-style: italic; -fx-font-size: 12px;"
            wrapText="true"/>
 

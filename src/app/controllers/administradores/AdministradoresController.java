@@ -72,12 +72,20 @@ public class AdministradoresController {
             ));
 
         // Configurar columna de acciones con botones
+        colAcciones.setReorderable(false);
+        colAcciones.setResizable(false);
+        colAcciones.setSortable(false);
+        colAcciones.setMinWidth(210);
         colAcciones.setCellFactory(
             (Callback<TableColumn<User, Void>, TableCell<User, Void>>) param -> new TableCell<>() {
-                private final Button btnEditar = new Button("✏️");
-                private final Button btnEliminar = new Button("🗑️");
+                private final Button btnEditar = new Button("Editar");
+                private final Button btnEliminar = new Button("Eliminar");
 
                 {
+                    btnEditar.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+                    btnEditar.setMinWidth(100);
+                    btnEliminar.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+                    btnEliminar.setMinWidth(100);
                     // Estilos de botones
                     btnEditar.setStyle("-fx-background-color: #f1c40f; -fx-text-fill: black; -fx-font-weight: bold; -fx-background-radius: 5; -fx-cursor: hand;");
                     btnEliminar.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-cursor: hand;");
@@ -220,7 +228,7 @@ public class AdministradoresController {
                         allUsers.saveUsers();
                         
                         Platform.runLater(() -> {
-                            lblEstado.setText("🗑️ Administrador eliminado correctamente.");
+                            lblEstado.setText("Eliminar Administrador eliminado correctamente.");
                             cargarAdministradores();
                         });
                     } catch (Exception e) {
@@ -244,7 +252,7 @@ public class AdministradoresController {
             }
 
             Stage stage = new Stage();
-            stage.setTitle(administrador == null ? "👑 Nuevo Administrador" : "✏️ Editar Administrador");
+            stage.setTitle(administrador == null ? "👑 Nuevo Administrador" : "Editar Editar Administrador");
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setResizable(false);

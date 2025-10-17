@@ -132,7 +132,7 @@ public class AllProductosEspeciales {
             nextId = maxId + 1;
 
         } catch (Exception e) {
-            System.err.println("Error cargando productos especiales desde archivo:");
+            //System.err.println("Error cargando productos especiales desde archivo:");
             e.printStackTrace();
         }
     }
@@ -152,7 +152,7 @@ public class AllProductosEspeciales {
             writer.close();
 
         } catch (Exception e) {
-            System.err.println("Error guardando productos especiales en archivo:");
+            //System.err.println("Error guardando productos especiales en archivo:");
             e.printStackTrace();
         }
     }
@@ -178,7 +178,7 @@ public class AllProductosEspeciales {
         
         if (removidos > 0) {
             saveToFile();
-            System.out.println("Se removieron " + removidos + " productos especiales expirados");
+            //System.out.println("Se removieron " + removidos + " productos especiales expirados");
         }
     }
 }

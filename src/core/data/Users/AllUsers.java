@@ -21,7 +21,7 @@ public class AllUsers {
         loadUsers(); // intenta cargar desde archivo
 
         if (users.isEmpty()) {
-            System.out.println("⚠️ No hay usuarios cargados. Creando usuario de prueba...");
+            //System.out.println("⚠️ No hay usuarios cargados. Creando usuario de prueba...");
             User testUser = new User("testuser", "testpassword", "Juan", "Larios", "Estrada",
                                      "juan.larios@example.com", "5551234567");
             testUser.setClave("U001");
@@ -32,7 +32,7 @@ public class AllUsers {
 
         // 🔹 Registrar hook para guardar antes de cerrar la JVM
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            System.out.println("🧩 Guardando usuarios antes de salir...");
+            //System.out.println("🧩 Guardando usuarios antes de salir...");
             saveUsers();
         }));
     }
@@ -87,7 +87,7 @@ public class AllUsers {
         File file = new File(FILE_NAME);
 
         if (!file.exists()) {
-            System.out.println("⚠️ Archivo " + FILE_NAME + " no existe. Se creará automáticamente.");
+            //System.out.println("⚠️ Archivo " + FILE_NAME + " no existe. Se creará automáticamente.");
             saveUsers(); // crea un archivo vacío o con usuarios iniciales
             return;
         }
@@ -105,9 +105,9 @@ public class AllUsers {
                 users.add(User.fromJSON(array.getJSONObject(i)));
             }
 
-            System.out.println("✅ Usuarios cargados desde " + FILE_NAME + ": " + users.size());
+            //System.out.println("✅ Usuarios cargados desde " + FILE_NAME + ": " + users.size());
         } catch (Exception e) {
-            System.err.println("⚠️ Error al cargar usuarios: " + e.getMessage());
+            //System.err.println("⚠️ Error al cargar usuarios: " + e.getMessage());
         }
     }
 
@@ -120,9 +120,9 @@ public class AllUsers {
 
         try (FileWriter writer = new FileWriter(FILE_NAME)) {
             writer.write(array.toString(4)); // formato bonito
-            System.out.println("💾 Usuarios guardados en " + FILE_NAME);
+            //System.out.println("💾 Usuarios guardados en " + FILE_NAME);
         } catch (Exception e) {
-            System.err.println("⚠️ Error al guardar usuarios: " + e.getMessage());
+            //System.err.println("⚠️ Error al guardar usuarios: " + e.getMessage());
         }
     }
 }

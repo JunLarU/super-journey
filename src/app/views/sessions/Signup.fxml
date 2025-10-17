@@ -45,7 +45,7 @@
             <PasswordField fx:id="txtNip" promptText="••••••" GridPane.rowIndex="6" GridPane.columnIndex="1"/>
         </GridPane>
 
-        <!-- 👑 Campo adicional solo visible para administradores -->
+        <!-- Campo adicional solo visible para administradores -->
         <HBox fx:id="roleBox" spacing="10" alignment="CENTER">
             <Label text="Tipo de Usuario:"/>
             <RadioButton fx:id="rbUsuario" text="Usuario"/>
@@ -62,7 +62,7 @@
                text="Esperando datos..."
                style="-fx-text-fill: #333; -fx-font-size: 14px; -fx-padding: 10 0 0 0;"/>
 
-        <!-- 🔁 Botón para cambiar a Login -->
+        <!-- Botón para cambiar a Login -->
         <Button fx:id="btnGoLogin"
                 text="¿Ya tienes cuenta? Inicia sesión"
                 onAction="#onGoLoginClicked"

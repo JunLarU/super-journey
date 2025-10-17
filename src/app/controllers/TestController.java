@@ -16,7 +16,7 @@ public class TestController {
             Parent root = loader.load();
             Stage stage = (Stage) btnGoSignup.getScene().getWindow();
             stage.setScene(new Scene(root, 600, 500));
-            stage.setTitle("CAFI – Registro de Usuario");
+            stage.setTitle("CAFI - Registro de Usuario");
         } catch (Exception e) {
             e.printStackTrace();
         }

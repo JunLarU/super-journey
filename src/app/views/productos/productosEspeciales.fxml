@@ -13,7 +13,7 @@
     <!-- 🔍 Barra superior -->
     <top>
         <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 15;">
-            <Label text="⭐ Productos Especiales"
+            <Label text="Productos Especiales"
                    style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
             <Region HBox.hgrow="ALWAYS"/>
             <TextField fx:id="txtBuscar" promptText="Buscar por producto, descripción, fecha u hora..."

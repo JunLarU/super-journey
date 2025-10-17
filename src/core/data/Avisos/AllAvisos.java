@@ -136,7 +136,7 @@ public class AllAvisos {
             nextId = maxId + 1;
 
         } catch (Exception e) {
-            System.err.println("Error cargando avisos desde archivo:");
+            //System.err.println("Error cargando avisos desde archivo:");
             e.printStackTrace();
         }
     }
@@ -156,7 +156,7 @@ public class AllAvisos {
             writer.close();
 
         } catch (Exception e) {
-            System.err.println("Error guardando avisos en archivo:");
+            //System.err.println("Error guardando avisos en archivo:");
             e.printStackTrace();
         }
     }
@@ -183,7 +183,7 @@ public class AllAvisos {
         
         if (removidos > 0) {
             saveToFile();
-            System.out.println("Se removieron " + removidos + " avisos expirados");
+            //System.out.println("Se removieron " + removidos + " avisos expirados");
         }
     }
 

@@ -10,11 +10,11 @@
 
     <top>
         <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 15;">
-            <Label text="🍔 Productos" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+            <Label text="Productos" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
             <Region HBox.hgrow="ALWAYS"/>
             <TextField fx:id="txtBuscar" promptText="Buscar producto..." style="-fx-pref-width: 250px;"/>
-            <Button fx:id="btnRecargar" text="🔄" onAction="#cargarProductos"/>
-            <Button fx:id="btnNuevo" text="➕ Nuevo" onAction="#onNuevoClicked"/>
+            <Button fx:id="btnRecargar" text="🔄" onAction="#cargarProductos" style="-fx-background-color: #27AE60; -fx-text-fill: white; -fx-background-radius: 6;"/>
+            <Button fx:id="btnNuevo" text="➕ Nuevo" onAction="#onNuevoClicked" style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-background-radius: 6; -fx-font-weight: bold;"/>
         </HBox>
     </top>
 

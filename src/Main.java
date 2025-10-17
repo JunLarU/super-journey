@@ -14,24 +14,25 @@ import javafx.stage.Stage;
 public class Main extends Application {
     private static final String APP_NAME = "CAFI";
 
-    // Instancias Singleton
+    // Instancias de los Singleton utilizados para el almacenamiento de todos los datos.
+    // Se empieza cargando todo a memoria, para poderlo usar en la aplicación
     private final AllUsers allUsers = AllUsers.getInstance();
-    private final AllIngredientes allIngredientes = AllIngredientes.getInstance(); // 🧩 NUEVO
-    private final AllProductos allProductos = AllProductos.getInstance(); // ��� NUEVO
-    private final AllMenus allMenus = AllMenus.getInstance(); // 🧩 NUEVO
-    private final AllProductosEspeciales allProductosEspeciales = AllProductosEspeciales.getInstance(); // 🧩 NUEVO
-    private final AllAvisos allAvisos = AllAvisos.getInstance(); // 🧩 NUEVO
+    private final AllIngredientes allIngredientes = AllIngredientes.getInstance();
+    private final AllProductos allProductos = AllProductos.getInstance();
+    private final AllMenus allMenus = AllMenus.getInstance();
+    private final AllProductosEspeciales allProductosEspeciales = AllProductosEspeciales.getInstance();
+    private final AllAvisos allAvisos = AllAvisos.getInstance();
     private final SessionManager sessionManager = SessionManager.getInstance();
 
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        System.out.println("🚀 Iniciando la aplicación...");
+        //System.out.println("🚀 Iniciando la aplicación...");
 
-        // 🔹 Carga la vista inicial
+        // 🔹 Carga la vista inicial (Login)
         String viewName = "sessions/Login";
         String fxmlPath = "/app/views/" + viewName + ".fxml";
-        System.out.println("Cargando vista: " + fxmlPath);
+        //System.out.println("Cargando vista: " + fxmlPath);
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
         Parent root = loader.load();
@@ -49,30 +50,30 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        System.out.println("✅ Ventana iniciada correctamente: " + primaryStage.getTitle());
+        //System.out.println("✅ Ventana iniciada correctamente: " + primaryStage.getTitle());
 
         // 🔹 Hook para guardar datos al cerrar la aplicación
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            System.out.println("💾 Guardando usuarios e ingredientes en JSON antes de salir...");
+            //System.out.println("Guardando usuarios e ingredientes en JSON antes de salir...");
             allUsers.saveUsers();
             allIngredientes.saveToFile();
             allProductos.saveToFile();
             allMenus.saveToFile();
             allProductosEspeciales.saveToFile();
             allAvisos.saveToFile();
-            System.out.println("✅ Datos guardados correctamente.");
+            //System.out.println("Datos guardados correctamente.");
         }));
 
         // 🔹 También guarda si se cierra la ventana manualmente
         primaryStage.setOnCloseRequest(event -> {
-            System.out.println("🧩 Evento de cierre detectado. Guardando usuarios e ingredientes...");
+            //System.out.println("Evento de cierre detectado. Guardando usuarios e ingredientes...");
             allUsers.saveUsers();
             allProductos.saveToFile();
             allIngredientes.saveToFile();
             allMenus.saveToFile();
             allProductosEspeciales.saveToFile();
             allAvisos.saveToFile();
-            System.out.println("✅ Datos guardados correctamente.");
+            //System.out.println("Datos guardados correctamente.");
         });
     }
 

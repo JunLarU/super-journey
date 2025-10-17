@@ -15,19 +15,19 @@
             <Label fx:id="lblWelcome"
                    style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
 
-            <Button fx:id="btnProductos" text="🍽️ Productos" onAction="#onProductosClicked"
+            <Button fx:id="btnProductos" text="Productos" onAction="#onProductosClicked"
                     style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;"/>
-            <Button fx:id="btnMenus" text="📋 Menús" onAction="#onMenusClicked"
+            <Button fx:id="btnMenus" text="Menús" onAction="#onMenusClicked"
                     style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;"/>
-            <Button fx:id="btnBebidas" text="☕ Especiales" onAction="#onBebidasClicked"
+            <Button fx:id="btnBebidas" text="Especiales" onAction="#onBebidasClicked"
                     style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;"/>
-            <Button fx:id="btnIngredientes" text="🥦 Ingredientes" onAction="#onIngredientesClicked"
+            <Button fx:id="btnIngredientes" text="Ingredientes" onAction="#onIngredientesClicked"
                     style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;"/>
-            <Button fx:id="btnAvisos" text="📢 Avisos" onAction="#onAvisosClicked"
+            <Button fx:id="btnAvisos" text="Avisos" onAction="#onAvisosClicked"
                     style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;"/>
 
             <!-- Nueva sección para administradores -->
-            <Button fx:id="btnAdministradores" text="🧑‍💼 Administradores" onAction="#onAdministradoresClicked"
+            <Button fx:id="btnAdministradores" text="Administradores" onAction="#onAdministradoresClicked"
                     style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;"/>
 
             <Pane VBox.vgrow="ALWAYS"/>

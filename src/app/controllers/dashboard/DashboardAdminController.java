@@ -14,15 +14,24 @@ import java.net.URL;
 
 public class DashboardAdminController {
 
-    @FXML private Label lblWelcome;
-    @FXML private AnchorPane contentArea;
-    @FXML private Button btnProductos;
-    @FXML private Button btnMenus;
-    @FXML private Button btnBebidas;
-    @FXML private Button btnIngredientes;
-    @FXML private Button btnAvisos;
-    @FXML private Button btnAdministradores;
-    @FXML private Button btnCerrarSesion;
+    @FXML
+    private Label lblWelcome;
+    @FXML
+    private AnchorPane contentArea;
+    @FXML
+    private Button btnProductos;
+    @FXML
+    private Button btnMenus;
+    @FXML
+    private Button btnBebidas;
+    @FXML
+    private Button btnIngredientes;
+    @FXML
+    private Button btnAvisos;
+    @FXML
+    private Button btnAdministradores;
+    @FXML
+    private Button btnCerrarSesion;
 
     private final SessionManager session = SessionManager.getInstance();
 
@@ -37,8 +46,9 @@ public class DashboardAdminController {
                 lblWelcome.setText("👋 Bienvenido, Administrador");
             }
 
-            // Vista por defecto al abrir el panel - comenzar con ingredientes si productos no existe
-            cargarVista("Ingredientes", "/app/views/ingredientes/Ingredientes.fxml");
+            // Vista por defecto al abrir el panel - comenzar con ingredientes si productos
+            // no existe
+            cargarVista("Menus", "/app/views/menus/Menus.fxml");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -47,34 +57,34 @@ public class DashboardAdminController {
     }
 
     // --- Navegación entre secciones ---
-    @FXML 
-    private void onProductosClicked() { 
-        cargarVista("Productos", "/app/views/productos/Productos.fxml"); 
+    @FXML
+    private void onProductosClicked() {
+        cargarVista("Productos", "/app/views/productos/Productos.fxml");
     }
-    
-    @FXML 
-    private void onMenusClicked() { 
-        cargarVista("Menus", "/app/views/menus/Menus.fxml"); 
+
+    @FXML
+    private void onMenusClicked() {
+        cargarVista("Menus", "/app/views/menus/Menus.fxml");
     }
-    
-    @FXML 
-    private void onBebidasClicked() { 
-        cargarVista("Bebidas", "/app/views/productos/productosEspeciales.fxml"); 
+
+    @FXML
+    private void onBebidasClicked() {
+        cargarVista("Productos Especiales", "/app/views/productos/productosEspeciales.fxml");
     }
-    
-    @FXML 
-    private void onIngredientesClicked() { 
-        cargarVista("Ingredientes", "/app/views/ingredientes/Ingredientes.fxml"); 
+
+    @FXML
+    private void onIngredientesClicked() {
+        cargarVista("Ingredientes", "/app/views/ingredientes/Ingredientes.fxml");
     }
-    
-    @FXML 
-    private void onAvisosClicked() { 
-        cargarVista("Avisos", "/app/views/avisos/Avisos.fxml"); 
+
+    @FXML
+    private void onAvisosClicked() {
+        cargarVista("Avisos", "/app/views/avisos/Avisos.fxml");
     }
-    
-    @FXML 
-    private void onAdministradoresClicked() { 
-        cargarVista("Administradores", "/app/views/administradores/Administradores.fxml"); 
+
+    @FXML
+    private void onAdministradoresClicked() {
+        cargarVista("Administradores", "/app/views/administradores/Administradores.fxml");
     }
 
     @FXML
@@ -86,7 +96,7 @@ public class DashboardAdminController {
 
             Stage stage = (Stage) btnCerrarSesion.getScene().getWindow();
             stage.setScene(new Scene(root, 600, 500));
-            stage.setTitle("CAFI – Inicio de Sesión");
+            stage.setTitle("CAFI - Inicio de Sesión");
             stage.show();
 
         } catch (Exception e) {
@@ -99,10 +109,10 @@ public class DashboardAdminController {
         try {
             // Verificar que el recurso existe
             URL resource = getClass().getResource(rutaFxml);
-            
+
             if (resource == null) {
-                System.err.println("❌ No se encontró el archivo: " + rutaFxml);
-                mostrarVistaNoDisponible(nombreVista, rutaFxml);
+                // System.err.println("No se encontró la pantalla de " + nombreVista);
+                // mostrarVistaNoDisponible(nombreVista, rutaFxml);
                 return;
             }
 
@@ -117,11 +127,21 @@ public class DashboardAdminController {
             AnchorPane.setLeftAnchor(vista, 0.0);
             AnchorPane.setRightAnchor(vista, 0.0);
 
-            System.out.println("✅ Vista cargada: " + nombreVista);
+            // System.out.println("✅ Vista cargada: " + nombreVista);
+
+            try {
+                // Obtener el stage de manera segura
+                Stage stage = (Stage) contentArea.getScene().getWindow();
+                if (stage != null) {
+                    stage.setTitle("CAFI - " + nombreVista);
+                }
+            } catch (Exception e) {
+                System.err.println("Error al actualizar título: " + e.getMessage());
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("❌ Error cargando vista: " + nombreVista);
+            // System.err.println("❌ Error cargando vista: " + nombreVista);
             mostrarVistaError(nombreVista, e.getMessage());
         }
     }
@@ -135,9 +155,9 @@ public class DashboardAdminController {
                 "-fx-alignment: center; -fx-text-alignment: center;");
         mensaje.setMaxWidth(Double.MAX_VALUE);
         mensaje.setMaxHeight(Double.MAX_VALUE);
-        
+
         contentArea.getChildren().setAll(mensaje);
-        
+
         AnchorPane.setTopAnchor(mensaje, 0.0);
         AnchorPane.setBottomAnchor(mensaje, 0.0);
         AnchorPane.setLeftAnchor(mensaje, 0.0);
@@ -153,9 +173,9 @@ public class DashboardAdminController {
                 "-fx-alignment: center; -fx-text-alignment: center;");
         mensaje.setMaxWidth(Double.MAX_VALUE);
         mensaje.setMaxHeight(Double.MAX_VALUE);
-        
+
         contentArea.getChildren().setAll(mensaje);
-        
+
         AnchorPane.setTopAnchor(mensaje, 0.0);
         AnchorPane.setBottomAnchor(mensaje, 0.0);
         AnchorPane.setLeftAnchor(mensaje, 0.0);

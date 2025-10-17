@@ -13,7 +13,7 @@
     <!-- 🔍 Barra superior -->
     <top>
         <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 15;">
-            <Label text="🥦 Ingredientes"
+            <Label text="Ingredientes"
                    style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
             <Region HBox.hgrow="ALWAYS"/>
             <TextField fx:id="txtBuscar" promptText="Buscar ingrediente..."
@@ -37,8 +37,6 @@
                     <TableColumn fx:id="colDescripcion" text="Descripción" prefWidth="230"/>
                     <TableColumn fx:id="colCalorias" text="Calorías" prefWidth="80"/>
                     <TableColumn fx:id="colAlergeno" text="Alergeno" prefWidth="80"/>
-
-                    <!-- 🔧 Nueva columna de acciones -->
                     <TableColumn fx:id="colAcciones" text="Acciones" prefWidth="130"/>
                 </columns>
             </TableView>

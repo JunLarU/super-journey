@@ -211,7 +211,7 @@ public class DashboardUserController {
                 "-fx-background-color: #f8f9fa; -fx-border-color: #e9ecef; -fx-border-radius: 6; -fx-padding: 12;");
 
         // Header del horario
-        Label lblHorario = new Label(menu.getHorario().equalsIgnoreCase("Desayuno") ? "🍳 DESAYUNO" : "🍽️ COMIDA");
+        Label lblHorario = new Label(menu.getHorario().equalsIgnoreCase("Desayuno") ? "🥚DESAYUNO" :"🍕COMIDA");
         lblHorario.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #495057;");
 
         HBox header = new HBox(lblHorario);
@@ -248,7 +248,7 @@ public class DashboardUserController {
         String colorTexto = esColorOscuro(colorFondo) ? "white" : "#2c3e50";
 
         // Header de la sección con color - TEXTO AJUSTADO AUTOMÁTICAMENTE
-        Label lblSeccion = new Label("📦 " + seccion.getNombre());
+        Label lblSeccion = new Label("✔️" + seccion.getNombre());
         lblSeccion.setStyle(
                 "-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: " + colorTexto +
                         "; -fx-padding: 5 10; -fx-background-radius: 15;");
@@ -637,7 +637,7 @@ public class DashboardUserController {
         header.getChildren().addAll(lblIcono, lblTitulo, spacer, lblDescuento);
 
         // Información del producto - CORREGIDO: texto oscuro
-        Label lblProducto = new Label("🍽️ " + producto.getNombre());
+        Label lblProducto = new Label("⭐" + producto.getNombre());
         lblProducto.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
 
         // Precios
@@ -690,7 +690,7 @@ public class DashboardUserController {
 
             Stage stage = (Stage) btnCerrarSesion.getScene().getWindow();
             stage.setScene(new Scene(root, 600, 500));
-            stage.setTitle("CAFI – Inicio de Sesión");
+            stage.setTitle("CAFI - Inicio de Sesión");
             stage.show();
 
         } catch (Exception e) {

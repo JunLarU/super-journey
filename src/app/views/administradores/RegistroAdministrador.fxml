@@ -17,6 +17,15 @@
                style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
 
         <Separator/>
+        <VBox fx:id="vboxInfo" spacing="5" style="-fx-background-color: #e8f4fd; -fx-padding: 15; -fx-border-color: #3498db; -fx-border-radius: 5;">
+                    <Label text="💡 Información:" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                    <Label text="• El expediente debe de ser único para cada administrador"
+                        style="-fx-text-fill: #34495e; -fx-font-size: 12px;"/>
+                    <Label text="• El NIP debe tener al menos 4 caracteres"
+                        style="-fx-text-fill: #34495e; -fx-font-size: 12px;"/>
+                    <Label text="• Los campos marcados con * son obligatorios" 
+                        style="-fx-text-fill: #e74c3c; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                </VBox>
 
         <!-- FORMULARIO -->
         <VBox spacing="12" style="-fx-background-color: #f8f9fa; -fx-padding: 20; -fx-border-color: #dee2e6; -fx-border-radius: 5;">
@@ -95,16 +104,7 @@
 
         </VBox>
 
-        <!-- INFORMACIÓN -->
-        <VBox spacing="5" style="-fx-background-color: #e8f4fd; -fx-padding: 15; -fx-border-color: #3498db; -fx-border-radius: 5;">
-            <Label text="💡 Información:" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
-            <Label text="• Todos los campos marcados con * son obligatorios" 
-                   style="-fx-text-fill: #34495e; -fx-font-size: 12px;"/>
-            <Label text="• El expediente debe ser único para cada administrador" 
-                   style="-fx-text-fill: #34495e; -fx-font-size: 12px;"/>
-            <Label text="• El NIP debe tener al menos 4 caracteres" 
-                   style="-fx-text-fill: #34495e; -fx-font-size: 12px;"/>
-        </VBox>
+        
 
         <!-- BOTONES -->
         <HBox spacing="15" alignment="CENTER_RIGHT" style="-fx-padding: 10 0 0 0;">
@@ -116,7 +116,7 @@
 
         <!-- STATUS -->
         <Separator/>
-        <Label fx:id="lblStatus" text="✏️ Completa los campos marcados con * para registrar un administrador"
+        <Label fx:id="lblStatus" text="Editar Completa los campos marcados con * para registrar un administrador"
                style="-fx-text-fill: #7f8c8d; -fx-font-style: italic; -fx-font-size: 12px;"
                wrapText="true"/>
     </children>

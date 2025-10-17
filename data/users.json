@@ -20,5 +20,16 @@
         "email": "jlari@gmail.com",
         "username": "12",
         "apellidoMaterno": "matr"
+    },
+    {
+        "apellidoPaterno": "Larios",
+        "clave": "317673",
+        "password": "12345",
+        "phone": "4422815545",
+        "name": "Juan",
+        "isAdmin": true,
+        "email": "juanlarios.118@gmail.com",
+        "username": "317673",
+        "apellidoMaterno": "Estrada"
     }
 ]

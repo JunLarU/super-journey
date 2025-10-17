@@ -8,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
@@ -40,6 +41,7 @@ public class RegistroAvisoController {
     @FXML private Button btnGuardar;
     @FXML private Button btnCancelar;
     @FXML private Label lblStatus;
+    @FXML private VBox vboxInfo;
 
     // =========================
     // 🔹 MODELOS Y DATOS
@@ -156,7 +158,7 @@ public class RegistroAvisoController {
         cmbPrioridad.setValue(Aviso.Prioridad.Normal);
         chkActivo.setSelected(true);
         
-        lblStatus.setText("✏️ Completa los campos para crear un aviso");
+        lblStatus.setText("Editar Completa los campos para crear un aviso");
     }
 
     // =========================
@@ -167,7 +169,7 @@ public class RegistroAvisoController {
         if (!validarFormulario()) return;
 
         btnGuardar.setDisable(true);
-        lblStatus.setText("⏳ Guardando aviso...");
+        lblStatus.setText("Guardando aviso...");
 
         new Thread(() -> {
             try {
@@ -319,7 +321,7 @@ public class RegistroAvisoController {
         avisoEditando = aviso;
 
         // Configurar título
-        lblTitulo.setText("✏️ Editar Aviso");
+        lblTitulo.setText("Editar Aviso");
 
         // Cargar datos existentes
         txtTitulo.setText(aviso.getTitulo());
@@ -349,6 +351,8 @@ public class RegistroAvisoController {
     public void visualizarAviso(Aviso aviso) {
         cargarDatosExistentes(aviso);
         
+        vboxInfo.setVisible(false);
+        vboxInfo.setManaged(false);
         // Deshabilitar todos los controles
         txtTitulo.setDisable(true);
         txtContenido.setDisable(true);
@@ -366,8 +370,8 @@ public class RegistroAvisoController {
         btnGuardar.setVisible(false);
         btnGuardar.setManaged(false);
 
-        lblTitulo.setText("👁️ Visualizar Aviso");
-        lblStatus.setText("👁️ Visualizando aviso #" + aviso.getId());
+        lblTitulo.setText("Visualizar Aviso");
+        lblStatus.setText("Visualizando aviso #" + aviso.getId());
     }
 
     // =========================

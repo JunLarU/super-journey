@@ -11,7 +11,7 @@
 
     <top>
         <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 15; -fx-background-color: white;">
-            <Label text="📅 Gestión de Menús y Secciones" 
+            <Label text="Gestión de Menús y Secciones" 
                    style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
             <Region HBox.hgrow="ALWAYS"/>
             <Label fx:id="lblStatus" text="" style="-fx-text-fill: #7f8c8d; -fx-font-style: italic;"/>
@@ -76,7 +76,7 @@
                                    GridPane.columnIndex="5" GridPane.rowIndex="0" GridPane.halignment="CENTER"/>
 
                             <!-- Fila de Desayuno -->
-                            <Label text="🌅 Desayuno" style="-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #2c3e50;"
+                            <Label text="🥚Desayuno" style="-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #2c3e50;"
                                    GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.halignment="RIGHT">
                                 <padding><Insets top="5" right="10"/></padding>
                             </Label>
@@ -97,7 +97,7 @@
                                   GridPane.columnIndex="5" GridPane.rowIndex="1"/>
 
                             <!-- Fila de Comida -->
-                            <Label text="🍽️ Comida" style="-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #2c3e50;"
+                            <Label text="🍕 Comida" style="-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #2c3e50;"
                                    GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.halignment="RIGHT">
                                 <padding><Insets top="5" right="10"/></padding>
                             </Label>
@@ -122,9 +122,9 @@
                         <HBox alignment="CENTER" spacing="15" style="-fx-padding: 15; -fx-background-color: #ecf0f1; -fx-background-radius: 5;">
                             <Button fx:id="btnNuevoMenu" text="➕ Nuevo Menú" onAction="#onNuevoMenuClicked"
                                     style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-padding: 10 25; -fx-font-size: 13px; -fx-font-weight: bold;"/>
-                            <Button fx:id="btnEditarMenu" text="✏️ Editar Menú" onAction="#onEditarMenuClicked"
+                            <Button fx:id="btnEditarMenu" text="Editar Editar Menú" onAction="#onEditarMenuClicked"
                                     style="-fx-background-color: #f39c12; -fx-text-fill: white; -fx-padding: 10 25; -fx-font-size: 13px; -fx-font-weight: bold;"/>
-                            <Button fx:id="btnEliminarMenu" text="🗑️ Eliminar Menú" onAction="#onEliminarMenuClicked"
+                            <Button fx:id="btnEliminarMenu" text="Eliminar Eliminar Menú" onAction="#onEliminarMenuClicked"
                                     style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-padding: 10 25; -fx-font-size: 13px; -fx-font-weight: bold;"/>
                         </HBox>
                     </VBox>
@@ -134,11 +134,11 @@
             <!-- ============================================ -->
             <!-- TAB 2: SECCIONES -->
             <!-- ============================================ -->
-            <Tab text="📦 Secciones">
+            <Tab text="📝 Secciones">
                 <BorderPane>
                     <top>
                         <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 15; -fx-background-color: #ecf0f1;">
-                            <Label text="📦 Gestionar Secciones del Menú" 
+                            <Label text="Gestionar Secciones del Menú" 
                                    style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
                             <Region HBox.hgrow="ALWAYS"/>
                             <Button fx:id="btnNuevaSeccion" text="➕ Nueva Sección" onAction="#onNuevaSeccionClicked"

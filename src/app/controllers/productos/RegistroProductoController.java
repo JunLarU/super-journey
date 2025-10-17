@@ -44,6 +44,12 @@ public class RegistroProductoController {
     @FXML private Button btnLimpiar;
 
     // =========================
+    // 🔹 Campos para control de visualización
+    // =========================
+    @FXML private Label lblTitulo;
+    @FXML private VBox vboxInfo;
+
+    // =========================
     // 🔹 Ingredientes
     // =========================
     @FXML private TextField txtBuscarIngrediente;
@@ -137,7 +143,7 @@ public class RegistroProductoController {
             new SimpleStringProperty(String.format("$%.2f", data.getValue().getPrecio())));
 
         colTamAcciones.setCellFactory(tc -> new TableCell<>() {
-            private final Button btnEliminar = new Button("🗑️");
+            private final Button btnEliminar = new Button("Eliminar");
             {
                 btnEliminar.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-cursor: hand; -fx-background-radius: 5;");
                 btnEliminar.setTooltip(new Tooltip("Eliminar tamaño"));
@@ -146,7 +152,7 @@ public class RegistroProductoController {
                     if (idx >= 0 && idx < tamanosDefinidos.size()) {
                         String nombreTam = tamanosDefinidos.get(idx).getNombre();
                         tamanosDefinidos.remove(idx);
-                        lblStatus.setText("🗑️ Tamaño eliminado: " + nombreTam);
+                        lblStatus.setText("Eliminar Tamaño eliminado: " + nombreTam);
                     }
                 });
             }
@@ -271,7 +277,7 @@ public class RegistroProductoController {
             
             prop.addListener((obs, oldVal, newVal) -> {
                 ing.setEliminable(newVal);
-                System.out.println("✅ Eliminable actualizado: " + ing.getNombreIngrediente() + " = " + newVal);
+                //System.out.println("✅ Eliminable actualizado: " + ing.getNombreIngrediente() + " = " + newVal);
             });
             
             return prop;
@@ -285,7 +291,7 @@ public class RegistroProductoController {
             
             prop.addListener((obs, oldVal, newVal) -> {
                 ing.setSustituible(newVal);
-                System.out.println("✅ Sustituible actualizado: " + ing.getNombreIngrediente() + " = " + newVal);
+                //System.out.println("✅ Sustituible actualizado: " + ing.getNombreIngrediente() + " = " + newVal);
                 tablaIngredientes.refresh();
             });
             
@@ -295,7 +301,7 @@ public class RegistroProductoController {
 
         // Columna: Acciones
         colIngAcciones.setCellFactory(tc -> new TableCell<>() {
-            private final Button btnEliminar = new Button("🗑️");
+            private final Button btnEliminar = new Button("Eliminar");
             private final Button btnSustituir = new Button("♻️");
 
             {
@@ -310,7 +316,7 @@ public class RegistroProductoController {
                     if (idx >= 0 && idx < ingredientesSeleccionados.size()) {
                         String nombreIng = ingredientesSeleccionados.get(idx).getNombreIngrediente();
                         ingredientesSeleccionados.remove(idx);
-                        lblStatus.setText("🗑️ Ingrediente eliminado: " + nombreIng);
+                        lblStatus.setText("Eliminar Ingrediente eliminado: " + nombreIng);
                     }
                 });
 
@@ -627,7 +633,7 @@ public class RegistroProductoController {
         if (!validarCampos()) return;
 
         btnRegistrar.setDisable(true);
-        lblStatus.setText("⏳ Guardando producto...");
+        lblStatus.setText("Guardando producto...");
 
         new Thread(() -> {
             try {
@@ -751,12 +757,12 @@ public class RegistroProductoController {
     // ---------------------------------------------------
     public void cargarDatosExistentes(Producto producto) {
         if (producto == null) {
-            System.err.println("⚠️ Producto nulo recibido");
+            //System.err.println("⚠️ Producto nulo recibido");
             return;
         }
 
-        System.out.println("🔍 Cargando producto: " + producto.getNombre());
-
+        //System.out.println("🔍 Cargando producto: " + producto.getNombre());
+        lblTitulo.setText("Editar Producto");
         modoEdicion = true;
         idProductoEditando = producto.getId();
 
@@ -796,12 +802,15 @@ public class RegistroProductoController {
     }
 
     // ---------------------------------------------------
-    // 👁️ Visualizar producto (solo lectura)
+    // visualizar producto (solo lectura)
     // ---------------------------------------------------
     public void visualizarProducto(Producto producto) {
         cargarDatosExistentes(producto);
-        
+        lblTitulo.setText("Visualizar Producto");
         modoVisualizacion = true;
+
+        vboxInfo.setVisible(false);
+        vboxInfo.setManaged(false);
 
         // Deshabilitar todos los campos
         txtNombre.setDisable(true);
@@ -844,7 +853,7 @@ public class RegistroProductoController {
         btnLimpiar.setVisible(false);
         btnLimpiar.setManaged(false);
 
-        lblStatus.setText("👁️ Visualizando producto: " + producto.getNombre());
+        lblStatus.setText("visualizando producto: " + producto.getNombre());
         lblStatus.setStyle("-fx-text-fill: #3498db; -fx-font-weight: bold; -fx-font-size: 13px;");
     }
 
@@ -876,7 +885,7 @@ public class RegistroProductoController {
         modoVisualizacion = false;
         idProductoEditando = 0;
         btnRegistrar.setText("💾 Guardar Producto");
-        lblStatus.setText("✏️ Completa los campos marcados con * y guarda el producto");
+        lblStatus.setText("Editar Completa los campos marcados con * y guarda el producto");
     }
 
     private void mostrarAlerta(String titulo, String mensaje) {

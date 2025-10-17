@@ -69,13 +69,23 @@ public class ProductosController {
                 data.getValue().isDisponible() ? "Sí" : "No"));
 
         // Configurar columna de acciones con botones
+        colAcciones.setReorderable(false);
+        colAcciones.setResizable(false);
+        colAcciones.setSortable(false);
+        colAcciones.setMinWidth(310);
         colAcciones.setCellFactory(
             (Callback<TableColumn<Producto, Void>, TableCell<Producto, Void>>) param -> new TableCell<>() {
-                private final Button btnVer = new Button("👁️");
-                private final Button btnEditar = new Button("✏️");
-                private final Button btnEliminar = new Button("🗑️");
+                private final Button btnVer = new Button("Ver");
+                private final Button btnEditar = new Button("Editar");
+                private final Button btnEliminar = new Button("Eliminar");
 
                 {
+                    btnVer.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+                    btnVer.setMinWidth(100);
+                    btnEditar.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+                    btnEditar.setMinWidth(100);
+                    btnEliminar.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+                    btnEliminar.setMinWidth(100);
                     // Estilos de botones
                     btnVer.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-cursor: hand; -fx-background-radius: 5;");
                     btnEditar.setStyle("-fx-background-color: #f1c40f; -fx-cursor: hand; -fx-background-radius: 5;");
@@ -207,7 +217,7 @@ public class ProductosController {
                         allProductos.removeProducto(id);
                         
                         Platform.runLater(() -> {
-                            lblEstado.setText("🗑️ Producto eliminado correctamente.");
+                            lblEstado.setText("Eliminar Producto eliminado correctamente.");
                             cargarProductos();
                         });
                     } catch (Exception e) {

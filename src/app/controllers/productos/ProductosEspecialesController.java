@@ -113,7 +113,7 @@ public class ProductosEspecialesController {
             } else if (especial.estaVigente()) {
                 estado = "✅ Vigente";
             } else if (LocalDateTime.now().isBefore(especial.getFechaInicio())) {
-                estado = "⏳ Próximo";
+                estado = "Próximo";
             } else {
                 estado = "📅 Expirado";
             }
@@ -121,12 +121,21 @@ public class ProductosEspecialesController {
         });
 
         // Columna de acciones
+        colAcciones.setReorderable(false);
+        colAcciones.setResizable(false);
+        colAcciones.setSortable(false);
+        colAcciones.setMinWidth(210);
         colAcciones.setCellFactory(
             (Callback<TableColumn<ProductoEspecial, Void>, TableCell<ProductoEspecial, Void>>) param -> new TableCell<>() {
-                private final Button btnEditar = new Button("✏️");
-                private final Button btnEliminar = new Button("🗑️");
+                private final Button btnEditar = new Button("Editar");
+                private final Button btnEliminar = new Button("Eliminar");
 
                 {
+
+                btnEditar.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+                btnEditar.setMinWidth(100);
+                btnEliminar.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+                btnEliminar.setMinWidth(100);
                     // Estilos de botones
                     btnEditar.setStyle("-fx-background-color: #f1c40f; -fx-text-fill: black; -fx-font-weight: bold; -fx-background-radius: 5; -fx-cursor: hand;");
                     btnEliminar.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-cursor: hand;");
@@ -257,7 +266,7 @@ public class ProductosEspecialesController {
                     try {
                         allEspeciales.removeProductoEspecial(especial.getId());
                         Platform.runLater(() -> {
-                            lblEstado.setText("🗑️ Producto especial eliminado correctamente.");
+                            lblEstado.setText("Eliminar Producto especial eliminado correctamente.");
                             cargarEspeciales();
                         });
                     } catch (Exception e) {

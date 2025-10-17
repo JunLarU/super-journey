@@ -248,7 +248,7 @@ public class AllMenus {
             nextMenuId = maxId + 1;
 
         } catch (Exception e) {
-            System.err.println("Error cargando menús desde archivo:");
+            //System.err.println("Error cargando menús desde archivo:");
             e.printStackTrace();
         }
     }
@@ -280,7 +280,7 @@ public class AllMenus {
             nextSeccionId = maxId + 1;
 
         } catch (Exception e) {
-            System.err.println("Error cargando secciones desde archivo:");
+            //System.err.println("Error cargando secciones desde archivo:");
             e.printStackTrace();
         }
     }
@@ -300,7 +300,7 @@ public class AllMenus {
             writer.close();
 
         } catch (Exception e) {
-            System.err.println("Error guardando menús en archivo:");
+            //System.err.println("Error guardando menús en archivo:");
             e.printStackTrace();
         }
     }
@@ -320,7 +320,7 @@ public class AllMenus {
             writer.close();
 
         } catch (Exception e) {
-            System.err.println("Error guardando secciones en archivo:");
+            //System.err.println("Error guardando secciones en archivo:");
             e.printStackTrace();
         }
     }

@@ -4,6 +4,7 @@ import core.SessionManager;
 import core.data.Ingredientes.AllIngredientes;
 import core.data.Ingredientes.Ingrediente;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,6 +16,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -66,6 +68,7 @@ public class IngredientesController {
         txtBuscar.textProperty().addListener((obs, o, n) -> {
             if (n.isBlank())
                 cargarIngredientes();
+
             else
                 buscarIngredientes(n);
         });
@@ -74,21 +77,32 @@ public class IngredientesController {
     private void configurarTabla() {
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-        colCategoria.setCellValueFactory(new PropertyValueFactory<>("categoria"));
+        colCategoria.setCellValueFactory(cellData -> {
+            Ingrediente ingrediente = cellData.getValue();
+            String categoria = ingrediente.getcategoria();
+            return new javafx.beans.property.SimpleStringProperty(categoria != null ? categoria : "");
+        });
         colDescripcion.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
         colCalorias.setCellValueFactory(new PropertyValueFactory<>("calorias"));
         colAlergeno.setCellValueFactory(data -> {
             Ingrediente ing = data.getValue();
             return new javafx.beans.property.SimpleStringProperty(ing.isAlergenico() ? "Sí" : "No");
         });
-
+        colAcciones.setResizable(false);
+        colAcciones.setSortable(false);
+        colAcciones.setMinWidth(210);
+        colAcciones.setReorderable(false);
         // 🔧 Columna de botones de acción
         colAcciones.setCellFactory(
                 (Callback<TableColumn<Ingrediente, Void>, TableCell<Ingrediente, Void>>) param -> new TableCell<>() {
-                    private final Button btnEditar = new Button("✏️");
-                    private final Button btnEliminar = new Button("🗑️");
+                    private final Button btnEditar = new Button("Editar");
+                    private final Button btnEliminar = new Button("Eliminar");
 
                     {
+                        btnEditar.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+                        btnEditar.setMinWidth(100);
+                        btnEliminar.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+                        btnEliminar.setMinWidth(100);
                         btnEditar.setStyle(
                                 "-fx-background-color: #f1c40f; -fx-text-fill: black; -fx-font-weight: bold; -fx-background-radius: 5;");
                         btnEliminar.setStyle(
@@ -174,12 +188,12 @@ public class IngredientesController {
         abrirFormulario(null); // null → modo nuevo
     }
 
-    // ✏️ Editar
+    // Editar Editar
     private void editarIngrediente(Ingrediente ingrediente) {
         abrirFormulario(ingrediente); // modo edición
     }
 
-    // 🗑️ Eliminar
+    // Eliminar Eliminar
     private void eliminarIngrediente(Ingrediente ingrediente) {
         String nombre = ingrediente.getNombre();
         int id = ingrediente.getId();
@@ -194,7 +208,7 @@ public class IngredientesController {
                     try {
                         allIngredientes.removeIngrediente(id);
                         Platform.runLater(() -> {
-                            lblEstado.setText("🗑️ " + nombre + " eliminado correctamente.");
+                            lblEstado.setText("Eliminar " + nombre + " eliminado correctamente.");
                             cargarIngredientes();
                         });
                     } catch (Exception e) {
@@ -243,4 +257,5 @@ public class IngredientesController {
         alert.setContentText(mensaje);
         alert.showAndWait();
     }
+
 }

@@ -158,5 +158,13 @@
         "Descripcion": "Huevo frito",
         "Alergeno": true,
         "ID": 20
+    },
+    {
+        "Nombre": "Test",
+        "Calorias": 123,
+        "categoria": "Vegetales",
+        "Descripcion": "Tes",
+        "Alergeno": true,
+        "ID": 21
     }
 ]

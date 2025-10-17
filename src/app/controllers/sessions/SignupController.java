@@ -115,7 +115,7 @@ public class SignupController {
             Parent root = loader.load();
             Stage stage = (Stage) txtExpediente.getScene().getWindow();
             stage.setScene(new Scene(root, 600, 500));
-            stage.setTitle("CAFI – Inicio de Sesión");
+            stage.setTitle("CAFI - Inicio de Sesión");
         } catch (Exception e) {
             e.printStackTrace();
             lblStatus.setText("⚠️ Error al cargar la vista de inicio de sesión.");

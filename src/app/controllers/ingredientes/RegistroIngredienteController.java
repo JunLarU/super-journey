@@ -19,6 +19,7 @@ public class RegistroIngredienteController {
     @FXML private CheckBox chkAlergeno;
     @FXML private Button btnRegistrar;
     @FXML private Label lblStatus;
+    @FXML private Label lblTitulo;
 
     private final AllIngredientes allIngredientes = AllIngredientes.getInstance();
     private Integer ingredienteIdEnEdicion = null; // Para modo edición
@@ -35,7 +36,7 @@ public class RegistroIngredienteController {
                 "Endulzantes",
                 "Lácteos Vegetales"
         );
-        lblStatus.setText("🧾 Completa los campos para registrar un ingrediente.");
+        lblStatus.setText("");
     }
 
     @FXML
@@ -70,7 +71,7 @@ public class RegistroIngredienteController {
         }
 
         btnRegistrar.setDisable(true);
-        lblStatus.setText("⏳ Guardando...");
+        lblStatus.setText("Guardando...");
 
         // Procesar en segundo plano para mantener UI responsive
         new Thread(() -> {
@@ -145,7 +146,7 @@ public class RegistroIngredienteController {
         chkAlergeno.setSelected(false);
         ingredienteIdEnEdicion = null;
         btnRegistrar.setText("Registrar Ingrediente");
-        lblStatus.setText("🧾 Completa los campos para registrar un ingrediente.");
+        lblStatus.setText("");
     }
 
     /**
@@ -158,9 +159,9 @@ public class RegistroIngredienteController {
         cbCategoria.setValue(ingrediente.getcategoria());
         txtCalorias.setText(String.valueOf(ingrediente.getCalorias()));
         chkAlergeno.setSelected(ingrediente.isAlergenico());
-
+        lblTitulo.setText("Edición de Ingrediente");
         btnRegistrar.setText("Guardar Cambios");
-        lblStatus.setText("✏️ Editando ingrediente existente");
+        lblStatus.setText("");
 
         // Guardar ID para saber que estamos en modo edición
         ingredienteIdEnEdicion = ingrediente.getId();

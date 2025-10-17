@@ -112,11 +112,11 @@ public class RegistroProductoEspecialController {
 
     private void configurarValoresPorDefecto() {
         chkActivo.setSelected(true);
-        lblStatus.setText("✏️ Completa los campos para crear un producto especial");
+        lblStatus.setText("Editar Completa los campos para crear un producto especial");
     }
 
     private void cargarProductos() {
-        lblStatus.setText("⏳ Cargando productos...");
+        lblStatus.setText("Cargando productos...");
         
         new Thread(() -> {
             try {
@@ -147,7 +147,7 @@ public class RegistroProductoEspecialController {
         if (!validarFormulario()) return;
 
         btnGuardar.setDisable(true);
-        lblStatus.setText("⏳ Guardando producto especial...");
+        lblStatus.setText("Guardando producto especial...");
 
         new Thread(() -> {
             try {
@@ -295,7 +295,7 @@ public class RegistroProductoEspecialController {
         productoEspecialEditando = productoEspecial;
 
         // Configurar título
-        lblTitulo.setText("✏️ Editar Producto Especial");
+        lblTitulo.setText("Editar Producto Especial");
 
         // Buscar y seleccionar el producto
         Producto producto = allProductos.getById(productoEspecial.getIdProducto());
@@ -343,8 +343,8 @@ public class RegistroProductoEspecialController {
         btnGuardar.setVisible(false);
         btnGuardar.setManaged(false);
 
-        lblTitulo.setText("👁️ Visualizar Producto Especial");
-        lblStatus.setText("👁️ Visualizando producto especial #" + productoEspecial.getId());
+        lblTitulo.setText("visualizar Producto Especial");
+        lblStatus.setText("visualizando producto especial #" + productoEspecial.getId());
     }
 
     // =========================

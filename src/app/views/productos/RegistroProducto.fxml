@@ -11,9 +11,20 @@
     <center>
         <ScrollPane fitToWidth="true" style="-fx-background-color:transparent;">
             <VBox spacing="15" style="-fx-padding:20;">
-                <Label text="🧾 Registro de Producto"
-                       style="-fx-font-size:20px;-fx-font-weight:bold;"/>
+                <!-- Título dinámico -->
+                <Label fx:id="lblTitulo" text="Registro de Producto"
+                    style="-fx-font-size:20px;-fx-font-weight:bold;"/>
 
+                <!-- Información adicional - Solo visible en modo edición/registro -->
+                <VBox fx:id="vboxInfo" spacing="5" style="-fx-background-color: #e8f4fd; -fx-padding: 15; -fx-border-color: #3498db; -fx-border-radius: 5;">
+                    <Label text="💡 Información:" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                    <Label text="• Puedes agregar múltiples ingredientes y definir si son sustituibles o eliminables" 
+                        style="-fx-text-fill: #34495e; -fx-font-size: 12px;"/>
+                    <Label text="• Los tamaños son opcionales; si no se agregan, solo se usará el precio base"
+                        style="-fx-text-fill: #34495e; -fx-font-size: 12px;"/>
+                    <Label text="• Los campos marcados con * son obligatorios" 
+                        style="-fx-text-fill: #e74c3c; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                </VBox>
                 <!-- FORMULARIO PRINCIPAL -->
                 <TitledPane text="📝 Información Básica" expanded="true">
                     <GridPane hgap="15" vgap="12" style="-fx-padding:15;">
@@ -60,7 +71,7 @@
                 </TitledPane>
 
                 <!-- INGREDIENTES -->
-                <TitledPane text="🥦 Ingredientes del Producto" expanded="true">
+                <TitledPane text="🥗 Ingredientes del Producto" expanded="true">
                     <VBox spacing="12" style="-fx-padding:15;">
                         <Label text="Busca y agrega ingredientes (doble click para agregar):"
                                style="-fx-font-style:italic;"/>
@@ -159,11 +170,13 @@
                     </VBox>
                 </TitledPane>
 
+                
+
                 <!-- BOTONES -->
                 <HBox alignment="CENTER_RIGHT" spacing="15" style="-fx-padding:10 0 0 0;">
                     <!-- ✅ Agregamos fx:id al botón de limpiar -->
                     <Button fx:id="btnLimpiar"
-                            text="🗑️ Limpiar Formulario"
+                            text="Eliminar Limpiar Formulario"
                             onAction="#limpiarCampos"
                             style="-fx-background-color:#95a5a6; -fx-text-fill:white; -fx-font-size:13px;"/>
                     <Button fx:id="btnRegistrar"
@@ -174,7 +187,7 @@
 
                 <!-- STATUS -->
                 <Separator/>
-                <Label fx:id="lblStatus" text="✏️ Completa los campos marcados con * y guarda el producto"
+                <Label fx:id="lblStatus" text="Editar Completa los campos marcados con * y guarda el producto"
                        style="-fx-text-fill:#7f8c8d; -fx-font-style:italic; -fx-font-size:12px;"/>
             </VBox>
         </ScrollPane>
