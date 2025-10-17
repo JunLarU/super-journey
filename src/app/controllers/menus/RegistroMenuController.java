@@ -28,9 +28,9 @@ import java.util.stream.Collectors;
  */
 public class RegistroMenuController {
 
-    // =========================
-    // 🔹 COMPONENTES FXML
-    // =========================
+    
+    // COMPONENTES FXML
+    
     @FXML private Label lblTitulo;
     @FXML private Spinner<Integer> spinAnio;
     @FXML private Spinner<Integer> spinSemana;
@@ -50,9 +50,9 @@ public class RegistroMenuController {
     @FXML private Button btnGuardar, btnCancelar;
     @FXML private Label lblStatus;
 
-    // =========================
-    // 🔹 MODELOS Y DATOS
-    // =========================
+    
+    // MODELOS Y DATOS
+    
     private final AllMenus allMenus = AllMenus.getInstance();
     private final SessionManager session = SessionManager.getInstance();
 
@@ -73,9 +73,9 @@ public class RegistroMenuController {
     // Catálogo de secciones disponibles
     private List<SeccionMenu> seccionesDisponibles = new ArrayList<>();
 
-    // =========================
-    // 🔹 INICIALIZACIÓN
-    // =========================
+    
+    // INICIALIZACIÓN
+    
     @FXML
     public void initialize() {
         configurarSpinners();
@@ -159,9 +159,9 @@ public class RegistroMenuController {
         }).start();
     }
 
-    // =========================
-    // 🔹 CALCULAR FECHAS
-    // =========================
+    
+    // CALCULAR FECHAS
+    
     @FXML
     private void onCalcularFechasClicked() {
         calcularFechasSemana();
@@ -217,9 +217,9 @@ public class RegistroMenuController {
         }
     }
 
-    // =========================
-    // 🔹 MÉTODOS PARA AGREGAR SECCIONES
-    // =========================
+    
+    // MÉTODOS PARA AGREGAR SECCIONES
+    
     
     @FXML private void onAgregarLunesDesayuno() { abrirDialogoSeleccion("Lunes", "Desayuno"); }
     @FXML private void onAgregarMartesDesayuno() { abrirDialogoSeleccion("Martes", "Desayuno"); }
@@ -348,9 +348,9 @@ public class RegistroMenuController {
         }
     }
 
-    // =========================
-    // 🔹 GUARDAR MENÚ
-    // =========================
+    
+    // GUARDAR MENÚ
+    
     @FXML
     private void onGuardarClicked() {
         if (!validarFormulario()) return;
@@ -469,9 +469,9 @@ public class RegistroMenuController {
         }
     }
 
-    // =========================
-    // 🔹 CARGAR DATOS EXISTENTES
-    // =========================
+    
+    // CARGAR DATOS EXISTENTES
+    
     public void cargarDatosMenu(int semana, int anio) {
         modoEdicion = true;
         lblTitulo.setText("Editar Editar Menú Semanal");
@@ -527,9 +527,9 @@ public class RegistroMenuController {
         }).start();
     }
 
-    // =========================
-    // 🔹 MODO VISUALIZACIÓN
-    // =========================
+    
+    // MODO VISUALIZACIÓN
+    
     public void visualizarMenu(int semana, int anio) {
         cargarDatosMenu(semana, anio);
         
@@ -553,9 +553,9 @@ public class RegistroMenuController {
         lblStatus.setText("visualizando menú de la semana " + numeroSemana + "/" + anio);
     }
 
-    // =========================
-    // 🔹 UTILIDADES
-    // =========================
+    
+    // UTILIDADES
+    
     @FXML
     private void onCancelarClicked() {
         cerrarVentana();

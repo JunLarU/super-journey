@@ -26,9 +26,9 @@ import java.util.stream.Collectors;
  */
 public class RegistroProductoEspecialController {
 
-    // =========================
-    // 🔹 COMPONENTES FXML
-    // =========================
+    
+    // COMPONENTES FXML
+    
     @FXML private Label lblTitulo;
     @FXML private ComboBox<Producto> cmbProducto;
     @FXML private TextField txtDescripcion;
@@ -44,9 +44,9 @@ public class RegistroProductoEspecialController {
     @FXML private Button btnCancelar;
     @FXML private Label lblStatus;
 
-    // =========================
-    // 🔹 MODELOS Y DATOS
-    // =========================
+    
+    // MODELOS Y DATOS
+    
     private final AllProductosEspeciales allEspeciales = AllProductosEspeciales.getInstance();
     private final AllProductos allProductos = AllProductos.getInstance();
     private final SessionManager session = SessionManager.getInstance();
@@ -56,9 +56,9 @@ public class RegistroProductoEspecialController {
 
     private final ObservableList<Producto> productosDisponibles = FXCollections.observableArrayList();
 
-    // =========================
-    // 🔹 INICIALIZACIÓN
-    // =========================
+    
+    // INICIALIZACIÓN
+    
     @FXML
     public void initialize() {
         // Verificar permisos de administrador
@@ -139,9 +139,9 @@ public class RegistroProductoEspecialController {
         }).start();
     }
 
-    // =========================
-    // 🔹 MÉTODOS DE ACCIÓN
-    // =========================
+    
+    // MÉTODOS DE ACCIÓN
+    
     @FXML
     private void onGuardarClicked() {
         if (!validarFormulario()) return;
@@ -238,9 +238,9 @@ public class RegistroProductoEspecialController {
         cerrarVentana();
     }
 
-    // =========================
-    // 🔹 VALIDACIÓN
-    // =========================
+    
+    // VALIDACIÓN
+    
     private boolean validarFormulario() {
         // Validar producto seleccionado
         if (cmbProducto.getValue() == null) {
@@ -285,9 +285,9 @@ public class RegistroProductoEspecialController {
         return true;
     }
 
-    // =========================
-    // 🔹 CARGAR DATOS EXISTENTES
-    // =========================
+    
+    // CARGAR DATOS EXISTENTES
+    
     public void cargarDatosExistentes(ProductoEspecial productoEspecial) {
         if (productoEspecial == null) return;
 
@@ -322,9 +322,9 @@ public class RegistroProductoEspecialController {
         lblStatus.setText("📝 Editando producto especial #" + productoEspecial.getId());
     }
 
-    // =========================
-    // 🔹 MODO VISUALIZACIÓN
-    // =========================
+    
+    // MODO VISUALIZACIÓN
+    
     public void visualizarProductoEspecial(ProductoEspecial productoEspecial) {
         cargarDatosExistentes(productoEspecial);
         
@@ -347,9 +347,9 @@ public class RegistroProductoEspecialController {
         lblStatus.setText("visualizando producto especial #" + productoEspecial.getId());
     }
 
-    // =========================
-    // 🔹 UTILIDADES
-    // =========================
+    
+    // UTILIDADES
+    
     private void limpiarCampos() {
         cmbProducto.setValue(null);
         txtDescripcion.clear();

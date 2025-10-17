@@ -26,7 +26,7 @@ public class RegistroIngredienteController {
 
     @FXML
     public void initialize() {
-        // 🔹 Cargar categorías
+        // Cargar categorías
         cbCategoria.getItems().addAll(
                 "Lácteos",
                 "Proteínas",

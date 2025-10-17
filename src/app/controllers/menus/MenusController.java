@@ -36,9 +36,9 @@ import java.util.stream.Collectors;
  */
 public class MenusController {
 
-    // =========================
+    
     // 📌 COMPONENTES MENÚS
-    // =========================
+    
     @FXML
     private TabPane tabPane;
     @FXML
@@ -67,9 +67,9 @@ public class MenusController {
     @FXML
     private Button btnNuevoMenu, btnEditarMenu, btnEliminarMenu;
 
-    // =========================
+    
     // 📌 COMPONENTES SECCIONES
-    // =========================
+    
     @FXML
     private TableView<SeccionMenu> tablaSecciones;
     @FXML
@@ -81,9 +81,9 @@ public class MenusController {
     @FXML
     private Button btnNuevaSeccion;
 
-    // =========================
+    
     // 📌 MODELOS Y DATOS
-    // =========================
+    
     private final AllMenus allMenus = AllMenus.getInstance();
     private final AllProductos allProductos = AllProductos.getInstance();
     private final SessionManager session = SessionManager.getInstance();
@@ -95,9 +95,9 @@ public class MenusController {
     private int semanaActual = 0;
     private int anioActual = 0;
 
-    // =========================
+    
     // 📌 INICIALIZACIÓN
-    // =========================
+    
     @FXML
     public void initialize() {
         configurarSpinners();
@@ -149,9 +149,9 @@ public class MenusController {
         //System.out.println("✅ " + productosDisponibles.size() + " productos disponibles cargados");
     }
 
-    // =========================
+    
     // 📅 GESTIÓN DE MENÚS
-    // =========================
+    
 
     @FXML
     private void onCargarSemanaClicked() {
@@ -371,9 +371,9 @@ public class MenusController {
         }).start();
     }
 
-    // =========================
+    
     // 📦 GESTIÓN DE SECCIONES CON PRODUCTOS
-    // =========================
+    
 
     private void configurarTablaSecciones() {
         colSecID.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getId())));
@@ -830,9 +830,9 @@ public class MenusController {
         }).start();
     }
 
-    // =========================
+    
     // 🔧 UTILIDADES
-    // =========================
+    
 
     private void mostrarAlerta(String titulo, String mensaje) {
         Alert alert = new Alert(Alert.AlertType.WARNING);

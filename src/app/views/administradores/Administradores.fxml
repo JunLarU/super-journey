@@ -11,24 +11,24 @@
             prefWidth="1000" prefHeight="700">
 
     <top>
-        <VBox spacing="15" style="-fx-padding: 20;">
+        <VBox spacing="0" style="-fx-padding: 20;">
             <!-- TÍTULO -->
-            <Label text="👑 Gestión de Administradores"
-                   style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+            
 
             <!-- BARRA DE HERRAMIENTAS -->
-            <HBox spacing="15" alignment="CENTER_LEFT">
-                <Button fx:id="btnNuevo" text="➕ Nuevo Administrador" onAction="#onNuevoClicked"
-                        style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20; -fx-background-radius: 6;"/>
-                
-                <Button fx:id="btnRecargar" text="🔄 Refrescar" onAction="#onRecargarClicked"
-                        style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-padding: 10 15; -fx-background-radius: 6;"/>
+            <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 15;">
+                <Label text="Gestión de Administradores"
+                    style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
                 
                 <Region HBox.hgrow="ALWAYS"/>
                 
-                <Label text="🔍 Buscar:" style="-fx-font-weight: bold;"/>
                 <TextField fx:id="txtBuscar" promptText="Buscar por nombre, apellidos, expediente o correo..."
                           style="-fx-pref-width: 300px; -fx-background-radius: 6;"/>
+                <Button fx:id="btnRecargar" text="🔄" onAction="#onRecargarClicked"
+                        style="-fx-background-color: #27AE60; -fx-text-fill: white; -fx-background-radius: 6;"/>
+                <Button fx:id="btnNuevo" text="➕ Nuevo" onAction="#onNuevoClicked"
+                        style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-background-radius: 6; -fx-font-weight: bold;"/>
+
             </HBox>
 
             <Separator/>
@@ -36,7 +36,7 @@
     </top>
 
     <center>
-        <VBox spacing="10" style="-fx-padding: 0 20 20 20;">
+        <VBox spacing="10" style="-fx-padding: 15;">
             <!-- TABLA -->
             <TableView fx:id="tablaAdministradores" VBox.vgrow="ALWAYS"
                       style="-fx-background-radius: 6;">

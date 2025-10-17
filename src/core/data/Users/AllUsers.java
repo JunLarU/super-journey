@@ -15,7 +15,7 @@ public class AllUsers {
     private List<User> users;
     private static final String FILE_NAME = "data/users.json";
 
-    // 🔹 Constructor privado
+    // Constructor privado
     private AllUsers() {
         users = new ArrayList<>();
         loadUsers(); // intenta cargar desde archivo
@@ -30,14 +30,14 @@ public class AllUsers {
             saveUsers(); // crea el archivo si no existía
         }
 
-        // 🔹 Registrar hook para guardar antes de cerrar la JVM
+        // Registrar hook para guardar antes de cerrar la JVM
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             //System.out.println("🧩 Guardando usuarios antes de salir...");
             saveUsers();
         }));
     }
 
-    // 🔹 Obtener instancia única
+    // Obtener instancia única
     public static AllUsers getInstance() {
         if (instance == null) {
             instance = new AllUsers();
@@ -45,18 +45,18 @@ public class AllUsers {
         return instance;
     }
 
-    // 🔹 Agregar usuario
+    // Agregar usuario
     public void addUser(User user) {
         users.add(user);
         saveUsers();
     }
 
-    // 🔹 Obtener todos los usuarios
+    // Obtener todos los usuarios
     public List<User> getUsers() {
         return users;
     }
 
-    // 🔹 Buscar usuario por nombre de usuario
+    // Buscar usuario por nombre de usuario
     public User getUserByUsername(String username) {
         for (User user : users) {
             if (user.getUsername().equalsIgnoreCase(username)) {
@@ -66,7 +66,7 @@ public class AllUsers {
         return null;
     }
 
-    // 🔹 Buscar usuario por clave
+    // Buscar usuario por clave
     public User getUserByClave(String clave) {
         for (User user : users) {
             if (user.getClave() != null && user.getClave().equalsIgnoreCase(clave)) {
@@ -76,13 +76,13 @@ public class AllUsers {
         return null;
     }
 
-    // 🔹 Validar credenciales
+    // Validar credenciales
     public boolean validateCredentials(String clave, String password) {
         User user = getUserByClave(clave);
         return user != null && user.getPassword().equals(password);
     }
 
-    // 🔹 Cargar usuarios desde JSON
+    // Cargar usuarios desde JSON
     private void loadUsers() {
         File file = new File(FILE_NAME);
 
@@ -111,7 +111,7 @@ public class AllUsers {
         }
     }
 
-    // 🔹 Guardar usuarios en JSON
+    // Guardar usuarios en JSON
     public synchronized void saveUsers() {
         JSONArray array = new JSONArray();
         for (User u : users) {

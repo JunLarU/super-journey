@@ -115,9 +115,9 @@ public class DashboardUserController {
         cargarProductosEspeciales();
     }
 
-    // =========================
+    
     // 📅 SECCIÓN DE MENÚ SEMANAL
-    // =========================
+    
 
     @FXML
     private void onSemanaAnterior() {
@@ -468,9 +468,9 @@ public class DashboardUserController {
         dialog.showAndWait();
     }
 
-    // =========================
+    
     // 📢 SECCIÓN DE AVISOS
-    // =========================
+    
 
     private void cargarAvisos() {
         vboxAvisosContenido.getChildren().clear();
@@ -579,9 +579,9 @@ public class DashboardUserController {
         return card;
     }
 
-    // =========================
+    
     // ⭐ SECCIÓN DE PRODUCTOS ESPECIALES
-    // =========================
+    
 
     private void cargarProductosEspeciales() {
         vboxEspecialesContenido.getChildren().clear();
@@ -677,9 +677,9 @@ public class DashboardUserController {
         return card;
     }
 
-    // =========================
+    
     // 🔧 MÉTODOS UTILITARIOS
-    // =========================
+    
 
     @FXML
     private void onCerrarSesionClicked() {
@@ -691,6 +691,7 @@ public class DashboardUserController {
             Stage stage = (Stage) btnCerrarSesion.getScene().getWindow();
             stage.setScene(new Scene(root, 600, 500));
             stage.setTitle("CAFI - Inicio de Sesión");
+            stage.centerOnScreen();
             stage.show();
 
         } catch (Exception e) {

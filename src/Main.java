@@ -29,7 +29,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         //System.out.println("🚀 Iniciando la aplicación...");
 
-        // 🔹 Carga la vista inicial (Login)
+        // Carga la vista inicial (Login)
         String viewName = "sessions/Login";
         String fxmlPath = "/app/views/" + viewName + ".fxml";
         //System.out.println("Cargando vista: " + fxmlPath);
@@ -37,11 +37,11 @@ public class Main extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
         Parent root = loader.load();
 
-        // 🔹 Configura la escena
+        // Configura la escena
         Scene scene = new Scene(root, 600, 500);
         scene.getStylesheets().add(getClass().getResource("/assets/css/app.css").toExternalForm());
 
-        // 🔹 Icono, título y propiedades de la ventana
+        // Icono, título y propiedades de la ventana
         primaryStage.getIcons().add(
             new javafx.scene.image.Image(getClass().getResourceAsStream("/assets/img/CAFI_LOGO.png"))
         );
@@ -52,7 +52,7 @@ public class Main extends Application {
 
         //System.out.println("✅ Ventana iniciada correctamente: " + primaryStage.getTitle());
 
-        // 🔹 Hook para guardar datos al cerrar la aplicación
+        // Hook para guardar datos al cerrar la aplicación
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             //System.out.println("Guardando usuarios e ingredientes en JSON antes de salir...");
             allUsers.saveUsers();
@@ -64,7 +64,7 @@ public class Main extends Application {
             //System.out.println("Datos guardados correctamente.");
         }));
 
-        // 🔹 También guarda si se cierra la ventana manualmente
+        // También guarda si se cierra la ventana manualmente
         primaryStage.setOnCloseRequest(event -> {
             //System.out.println("Evento de cierre detectado. Guardando usuarios e ingredientes...");
             allUsers.saveUsers();

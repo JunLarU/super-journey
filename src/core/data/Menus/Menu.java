@@ -20,9 +20,9 @@ public class Menu {
     private int anio;
     private String fechaCreacion;
     private boolean activo;
-    private int idUsuarioCreador; // 🔹 NUEVO - Para auditoría
-    private int idUsuarioModificador; // 🔹 NUEVO - Para auditoría
-    private String fechaModificacion; // 🔹 NUEVO - Para auditoría
+    private int idUsuarioCreador; // NUEVO - Para auditoría
+    private int idUsuarioModificador; // NUEVO - Para auditoría
+    private String fechaModificacion; // NUEVO - Para auditoría
     private List<MenuSeccion> secciones;
 
     public Menu(int id, LocalDate fecha, String diaSemana, String horario, 

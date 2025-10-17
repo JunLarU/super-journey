@@ -36,7 +36,7 @@ public class SignupController {
         rbAdministrador.setToggleGroup(roleGroup);
         rbUsuario.setSelected(true); // por defecto
 
-        // 🔹 Verificar si hay sesión y si es administrador
+        // Verificar si hay sesión y si es administrador
         User currentUser = sessionManager.getCurrentUser();
         if (currentUser == null || !currentUser.isAdmin()) {
             // Ocultar el campo de tipo de usuario si no hay sesión o si no es admin
@@ -116,6 +116,7 @@ public class SignupController {
             Stage stage = (Stage) txtExpediente.getScene().getWindow();
             stage.setScene(new Scene(root, 600, 500));
             stage.setTitle("CAFI - Inicio de Sesión");
+            stage.centerOnScreen();
         } catch (Exception e) {
             e.printStackTrace();
             lblStatus.setText("⚠️ Error al cargar la vista de inicio de sesión.");

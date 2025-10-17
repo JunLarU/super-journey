@@ -97,6 +97,7 @@ public class DashboardAdminController {
             Stage stage = (Stage) btnCerrarSesion.getScene().getWindow();
             stage.setScene(new Scene(root, 600, 500));
             stage.setTitle("CAFI - Inicio de Sesión");
+            stage.centerOnScreen();
             stage.show();
 
         } catch (Exception e) {

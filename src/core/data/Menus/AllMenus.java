@@ -37,9 +37,9 @@ public class AllMenus {
         return instance;
     }
 
-    // =========================
-    // 🔹 MÉTODOS PARA MENÚS
-    // =========================
+    
+    // MÉTODOS PARA MENÚS
+    
 
     public void addMenu(Menu menu) {
         if (menu.getId() == 0) {
@@ -100,9 +100,9 @@ public class AllMenus {
                 .orElse(null);
     }
 
-    // =========================
-    // 🔹 MÉTODOS PARA SECCIONES
-    // =========================
+    
+    // MÉTODOS PARA SECCIONES
+    
 
     public void addSeccion(SeccionMenu seccion) {
         if (seccion.getId() == 0) {
@@ -151,9 +151,9 @@ public class AllMenus {
         return new ArrayList<>(secciones);
     }
 
-    // =========================
-    // 🔹 MÉTODOS UTILITARIOS
-    // =========================
+    
+    // MÉTODOS UTILITARIOS
+    
 
     /**
      * Genera menús para una semana específica
@@ -212,9 +212,9 @@ public class AllMenus {
         }
     }
 
-    // =========================
-    // 🔹 PERSISTENCIA
-    // =========================
+    
+    // PERSISTENCIA
+    
 
     private void loadFromFiles() {
         loadMenusFromFile();
@@ -334,9 +334,9 @@ public class AllMenus {
         saveSeccionesToFile();
     }
 
-    // =========================
-    // 🔹 ESTADÍSTICAS
-    // =========================
+    
+    // ESTADÍSTICAS
+    
 
     public String getEstadisticas() {
         int totalMenus = menus.size();

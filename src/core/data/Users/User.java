@@ -13,7 +13,7 @@ public class User {
     private String apellidoPaterno;
     private String apellidoMaterno;
 
-    // 🔹 Constructor principal
+    // Constructor principal
     public User(String username, String password, String name, String apellidoPaterno, String apellidoMaterno, String email, String phone) {
         this.username = username;
         this.password = password;
@@ -25,10 +25,10 @@ public class User {
         this.isAdmin = false;
     }
 
-    // 🔹 Constructor vacío (requerido para carga desde JSON)
+    // Constructor vacío (requerido para carga desde JSON)
     public User() {}
 
-    // 🔹 Getters y setters
+    // Getters y setters
     public boolean isAdmin() {
         return isAdmin;
     }
@@ -88,7 +88,7 @@ public class User {
         this.apellidoMaterno = apellidoMaterno;
     }
 
-    // 🔹 Conversión a JSONObject (para guardar en JSON)
+    // Conversión a JSONObject (para guardar en JSON)
     public JSONObject toJSON() {
         JSONObject obj = new JSONObject();
         obj.put("clave", clave != null ? clave : "");
@@ -103,7 +103,7 @@ public class User {
         return obj;
     }
 
-    // 🔹 Crea un objeto User desde un JSONObject (para leer desde JSON)
+    // Crea un objeto User desde un JSONObject (para leer desde JSON)
     public static User fromJSON(JSONObject obj) {
         User u = new User();
         u.setClave(obj.optString("clave", ""));

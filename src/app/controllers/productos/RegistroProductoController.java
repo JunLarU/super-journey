@@ -31,9 +31,9 @@ import java.util.stream.Collectors;
  */
 public class RegistroProductoController {
 
-    // =========================
-    // 🔹 Campos principales
-    // =========================
+    
+    // Campos principales
+    
     @FXML private TextField txtNombre;
     @FXML private TextArea txtDescripcion;
     @FXML private ComboBox<String> cmbCategoria;
@@ -43,15 +43,15 @@ public class RegistroProductoController {
     @FXML private CheckBox chkDisponible;
     @FXML private Button btnLimpiar;
 
-    // =========================
-    // 🔹 Campos para control de visualización
-    // =========================
+    
+    // Campos para control de visualización
+    
     @FXML private Label lblTitulo;
     @FXML private VBox vboxInfo;
 
-    // =========================
-    // 🔹 Ingredientes
-    // =========================
+    
+    // Ingredientes
+    
     @FXML private TextField txtBuscarIngrediente;
     @FXML private ListView<String> listaIngredientesBuscados;
     @FXML private TableView<ProductoIngrediente> tablaIngredientes;
@@ -61,9 +61,9 @@ public class RegistroProductoController {
     @FXML private TableColumn<ProductoIngrediente, Boolean> colIngSustituible;
     @FXML private TableColumn<ProductoIngrediente, Void> colIngAcciones;
 
-    // =========================
-    // 🔹 Tamaños (NUEVO - ahora funcional)
-    // =========================
+    
+    // Tamaños (NUEVO - ahora funcional)
+    
     @FXML private TableView<TamanoProducto> tablaTamanos;
     @FXML private TableColumn<TamanoProducto, String> colTamNombre;
     @FXML private TableColumn<TamanoProducto, String> colTamDescripcion;
@@ -81,9 +81,9 @@ public class RegistroProductoController {
     @FXML private Button btnRegistrar;
     @FXML private Label lblStatus;
 
-    // =========================
-    // 🔹 Objetos de datos
-    // =========================
+    
+    // Objetos de datos
+    
     private final AllProductos allProductos = AllProductos.getInstance();
     private final AllIngredientes allIngredientes = AllIngredientes.getInstance();
     private final SessionManager session = SessionManager.getInstance();
@@ -97,9 +97,9 @@ public class RegistroProductoController {
     private int idProductoEditando = 0;
     private int nextTamanoId = 1; // NUEVO: Para generar IDs de tamaños
 
-    // =========================
-    // 🔹 Categorías hardcoded
-    // =========================
+    
+    // Categorías hardcoded
+    
     private final ObservableList<String> categoriasDisponibles = FXCollections.observableArrayList(
             "Desayuno Mexicano", "Desayuno Continental", "Desayuno Express",
             "Plato Fuerte", "Antojitos Mexicanos", "Hamburguesas", "Tortas y Sandwiches",
@@ -110,9 +110,9 @@ public class RegistroProductoController {
             "Bebidas Energéticas", "Bebidas de Temporada Frías",
             "Snacks Dulces", "Snacks Salados", "Panadería", "Baguettes y Croissants", "Yogurt y Parfait");
 
-    // =========================
-    // 🔹 Inicialización
-    // =========================
+    
+    // Inicialización
+    
     @FXML
     public void initialize() {
         // Verificar permisos

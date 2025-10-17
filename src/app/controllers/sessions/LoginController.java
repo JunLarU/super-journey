@@ -58,7 +58,7 @@ public class LoginController {
         lblStatus.setText("✅ Bienvenido, " + user.getName());
         lblStatus.setStyle("-fx-text-fill: green;");
 
-        // 🔹 Cargar Dashboard correspondiente
+        // Cargar Dashboard correspondiente
         Stage currentStage = (Stage) txtExpediente.getScene().getWindow();
         DashboardRouter.loadDashboard(currentStage);
     }
@@ -74,6 +74,8 @@ public class LoginController {
             Stage stage = (Stage) btnGoSignup.getScene().getWindow();
             stage.setScene(new Scene(root, 600, 500));
             stage.setTitle("CAFI - Registro de Usuario");
+            stage.centerOnScreen();
+            
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -17,7 +17,7 @@ public class SeccionMenu {
     private String urlFoto;
     private String color; // Color hex para identificación visual
     private boolean activo;
-    private String fechaCreacion; // 🔹 NUEVO - Para auditoría
+    private String fechaCreacion; // NUEVO - Para auditoría
     private List<SeccionProducto> productos;
 
     public SeccionMenu(int id, String nombre, String descripcion, String urlFoto, 

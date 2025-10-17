@@ -22,9 +22,9 @@ import java.time.format.DateTimeFormatter;
  */
 public class RegistroAvisoController {
 
-    // =========================
-    // 🔹 COMPONENTES FXML
-    // =========================
+    
+    // COMPONENTES FXML
+    
     @FXML private Label lblTitulo;
     @FXML private TextField txtTitulo;
     @FXML private TextArea txtContenido;
@@ -43,18 +43,18 @@ public class RegistroAvisoController {
     @FXML private Label lblStatus;
     @FXML private VBox vboxInfo;
 
-    // =========================
-    // 🔹 MODELOS Y DATOS
-    // =========================
+    
+    // MODELOS Y DATOS
+    
     private final AllAvisos allAvisos = AllAvisos.getInstance();
     private final SessionManager session = SessionManager.getInstance();
 
     private boolean modoEdicion = false;
     private Aviso avisoEditando = null;
 
-    // =========================
-    // 🔹 INICIALIZACIÓN
-    // =========================
+    
+    // INICIALIZACIÓN
+    
     @FXML
     public void initialize() {
         // Verificar permisos de administrador
@@ -161,9 +161,9 @@ public class RegistroAvisoController {
         lblStatus.setText("Editar Completa los campos para crear un aviso");
     }
 
-    // =========================
-    // 🔹 MÉTODOS DE ACCIÓN
-    // =========================
+    
+    // MÉTODOS DE ACCIÓN
+    
     @FXML
     private void onGuardarClicked() {
         if (!validarFormulario()) return;
@@ -256,9 +256,9 @@ public class RegistroAvisoController {
         cerrarVentana();
     }
 
-    // =========================
-    // 🔹 VALIDACIÓN
-    // =========================
+    
+    // VALIDACIÓN
+    
     private boolean validarFormulario() {
         // Validar título
         if (txtTitulo.getText().trim().isEmpty()) {
@@ -311,9 +311,9 @@ public class RegistroAvisoController {
         return true;
     }
 
-    // =========================
-    // 🔹 CARGAR DATOS EXISTENTES
-    // =========================
+    
+    // CARGAR DATOS EXISTENTES
+    
     public void cargarDatosExistentes(Aviso aviso) {
         if (aviso == null) return;
 
@@ -345,9 +345,9 @@ public class RegistroAvisoController {
         lblStatus.setText("📝 Editando aviso #" + aviso.getId());
     }
 
-    // =========================
-    // 🔹 MODO VISUALIZACIÓN
-    // =========================
+    
+    // MODO VISUALIZACIÓN
+    
     public void visualizarAviso(Aviso aviso) {
         cargarDatosExistentes(aviso);
         
@@ -374,9 +374,9 @@ public class RegistroAvisoController {
         lblStatus.setText("Visualizando aviso #" + aviso.getId());
     }
 
-    // =========================
-    // 🔹 UTILIDADES
-    // =========================
+    
+    // UTILIDADES
+    
     private void limpiarCampos() {
         txtTitulo.clear();
         txtContenido.clear();
