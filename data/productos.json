@@ -1,80 +1,302 @@
 [
     {
-        "Nombre": "Hamburguesa",
+        "Nombre": "Hamburguesa Clásica",
         "Calorias": 650,
         "PrecioBase": 85,
-        "Categoria": "Desayuno Continental",
+        "Categoria": "Platillo",
         "Ingredientes": [
             {
-                "NombreIngrediente": "Carne",
+                "NombreIngrediente": "Carne de Res",
                 "Orden": 1,
-                "Cantidad": 0,
+                "Cantidad": 150,
                 "Sustituible": true,
                 "Sustitutos": [{
-                    "NombreIngrediente": "carnene",
-                    "CostoExtra": 20,
-                    "IDIngrediente": 4,
+                    "NombreIngrediente": "Carne Vegetal",
+                    "CostoExtra": 15,
+                    "IDIngrediente": 18,
                     "Disponible": true
                 }],
                 "IDIngrediente": 2,
                 "Eliminable": false
             },
             {
-                "NombreIngrediente": "Leche",
+                "NombreIngrediente": "Queso Americano",
                 "Orden": 2,
-                "Cantidad": 0,
+                "Cantidad": 50,
                 "Sustituible": true,
                 "Sustitutos": [{
-                    "NombreIngrediente": "Lechehwe",
-                    "CostoExtra": 0,
-                    "IDIngrediente": 6,
+                    "NombreIngrediente": "Queso Vegano",
+                    "CostoExtra": 10,
+                    "IDIngrediente": 19,
                     "Disponible": true
                 }],
-                "IDIngrediente": 5,
+                "IDIngrediente": 3,
+                "Eliminable": true
+            },
+            {
+                "NombreIngrediente": "Pan de Hamburguesa",
+                "Orden": 3,
+                "Cantidad": 80,
+                "Sustituible": false,
+                "Sustitutos": [],
+                "IDIngrediente": 1,
                 "Eliminable": false
+            },
+            {
+                "NombreIngrediente": "Lechuga",
+                "Orden": 4,
+                "Cantidad": 30,
+                "Sustituible": false,
+                "Sustitutos": [],
+                "IDIngrediente": 4,
+                "Eliminable": true
+            },
+            {
+                "NombreIngrediente": "Tomate",
+                "Orden": 5,
+                "Cantidad": 40,
+                "Sustituible": false,
+                "Sustitutos": [],
+                "IDIngrediente": 5,
+                "Eliminable": true
+            },
+            {
+                "NombreIngrediente": "Mayonesa",
+                "Orden": 6,
+                "Cantidad": 20,
+                "Sustituible": true,
+                "Sustitutos": [{
+                    "NombreIngrediente": "Mostaza",
+                    "CostoExtra": 0,
+                    "IDIngrediente": 15,
+                    "Disponible": true
+                }],
+                "IDIngrediente": 9,
+                "Eliminable": true
             }
         ],
-        "Gramaje": 300,
-        "Descripcion": "Hamburguesa clásica",
+        "Gramaje": 350,
+        "Descripcion": "Hamburguesa con carne, queso, lechuga, tomate y salsas especiales",
         "ID": 1,
         "URLFoto": "",
         "Disponible": true,
-        "Tamanos": [{
-            "Nombre": "Grande",
-            "Orden": 1,
-            "Gramaje": 120,
-            "Descripcion": "Hamburguesa Grande",
-            "ID": 1,
-            "Piezas": 0,
-            "Capacidad": 0,
-            "Disponible": true,
-            "Precio": 45
-        }]
+        "Tamanos": [
+            {
+                "Nombre": "Individual",
+                "Orden": 1,
+                "Gramaje": 350,
+                "Descripcion": "Hamburguesa individual",
+                "ID": 1,
+                "Piezas": 1,
+                "Capacidad": 0,
+                "Disponible": true,
+                "Precio": 85
+            },
+            {
+                "Nombre": "Doble",
+                "Orden": 2,
+                "Gramaje": 500,
+                "Descripcion": "Hamburguesa con doble carne y queso",
+                "ID": 2,
+                "Piezas": 1,
+                "Capacidad": 0,
+                "Disponible": true,
+                "Precio": 120
+            },
+            {
+                "Nombre": "Especial",
+                "Orden": 3,
+                "Gramaje": 450,
+                "Descripcion": "Hamburguesa con tocino y huevo",
+                "ID": 3,
+                "Piezas": 1,
+                "Capacidad": 0,
+                "Disponible": true,
+                "Precio": 135
+            }
+        ]
     },
     {
-        "Nombre": "Malteada",
-        "Calorias": 65,
-        "PrecioBase": 85,
-        "Categoria": "Bebidas de Temporada Calientes",
-        "Ingredientes": [{
-            "NombreIngrediente": "Lechehwe",
-            "Orden": 1,
-            "Cantidad": 0,
-            "Sustituible": true,
-            "Sustitutos": [{
-                "NombreIngrediente": "Leche",
-                "CostoExtra": 0,
-                "IDIngrediente": 5,
-                "Disponible": true
-            }],
-            "IDIngrediente": 6,
-            "Eliminable": false
-        }],
-        "Gramaje": 300,
-        "Descripcion": "a",
+        "Nombre": "Sándwich Club",
+        "Calorias": 420,
+        "PrecioBase": 65,
+        "Categoria": "Platillo",
+        "Ingredientes": [
+            {
+                "NombreIngrediente": "Pan de Sandwich",
+                "Orden": 1,
+                "Cantidad": 100,
+                "Sustituible": false,
+                "Sustitutos": [],
+                "IDIngrediente": 10,
+                "Eliminable": false
+            },
+            {
+                "NombreIngrediente": "Pechuga de Pollo",
+                "Orden": 2,
+                "Cantidad": 80,
+                "Sustituible": true,
+                "Sustitutos": [{
+                    "NombreIngrediente": "Jamón de Pavo",
+                    "CostoExtra": 5,
+                    "IDIngrediente": 12,
+                    "Disponible": true
+                }],
+                "IDIngrediente": 11,
+                "Eliminable": false
+            },
+            {
+                "NombreIngrediente": "Queso Manchego",
+                "Orden": 3,
+                "Cantidad": 40,
+                "Sustituible": true,
+                "Sustitutos": [
+                    {
+                        "NombreIngrediente": "Queso Americano",
+                        "CostoExtra": 0,
+                        "IDIngrediente": 3,
+                        "Disponible": true
+                    },
+                    {
+                        "NombreIngrediente": "Queso Vegano",
+                        "CostoExtra": 8,
+                        "IDIngrediente": 19,
+                        "Disponible": true
+                    }
+                ],
+                "IDIngrediente": 13,
+                "Eliminable": true
+            },
+            {
+                "NombreIngrediente": "Aguacate",
+                "Orden": 4,
+                "Cantidad": 30,
+                "Sustituible": false,
+                "Sustitutos": [],
+                "IDIngrediente": 14,
+                "Eliminable": true
+            },
+            {
+                "NombreIngrediente": "Lechuga",
+                "Orden": 5,
+                "Cantidad": 20,
+                "Sustituible": false,
+                "Sustitutos": [],
+                "IDIngrediente": 4,
+                "Eliminable": true
+            },
+            {
+                "NombreIngrediente": "Mostaza",
+                "Orden": 6,
+                "Cantidad": 10,
+                "Sustituible": true,
+                "Sustitutos": [{
+                    "NombreIngrediente": "Mayonesa",
+                    "CostoExtra": 0,
+                    "IDIngrediente": 9,
+                    "Disponible": true
+                }],
+                "IDIngrediente": 15,
+                "Eliminable": true
+            }
+        ],
+        "Gramaje": 280,
+        "Descripcion": "Sándwich triple con pollo, jamón, queso y vegetales frescos",
         "ID": 2,
         "URLFoto": "",
         "Disponible": true,
-        "Tamanos": []
+        "Tamanos": [
+            {
+                "Nombre": "Mediano",
+                "Orden": 1,
+                "Gramaje": 280,
+                "Descripcion": "Sándwich tamaño regular",
+                "ID": 1,
+                "Piezas": 1,
+                "Capacidad": 0,
+                "Disponible": true,
+                "Precio": 65
+            },
+            {
+                "Nombre": "Grande",
+                "Orden": 2,
+                "Gramaje": 380,
+                "Descripcion": "Sándwich tamaño grande con extras",
+                "ID": 2,
+                "Piezas": 1,
+                "Capacidad": 0,
+                "Disponible": true,
+                "Precio": 85
+            }
+        ]
+    },
+    {
+        "Nombre": "Hamburguesa Vegana",
+        "Calorias": 480,
+        "PrecioBase": 95,
+        "Categoria": "Platillo",
+        "Ingredientes": [
+            {
+                "NombreIngrediente": "Carne Vegetal",
+                "Orden": 1,
+                "Cantidad": 120,
+                "Sustituible": false,
+                "Sustitutos": [],
+                "IDIngrediente": 18,
+                "Eliminable": false
+            },
+            {
+                "NombreIngrediente": "Queso Vegano",
+                "Orden": 2,
+                "Cantidad": 45,
+                "Sustituible": false,
+                "Sustitutos": [],
+                "IDIngrediente": 19,
+                "Eliminable": true
+            },
+            {
+                "NombreIngrediente": "Pan de Hamburguesa",
+                "Orden": 3,
+                "Cantidad": 80,
+                "Sustituible": false,
+                "Sustitutos": [],
+                "IDIngrediente": 1,
+                "Eliminable": false
+            },
+            {
+                "NombreIngrediente": "Aguacate",
+                "Orden": 4,
+                "Cantidad": 50,
+                "Sustituible": false,
+                "Sustitutos": [],
+                "IDIngrediente": 14,
+                "Eliminable": true
+            },
+            {
+                "NombreIngrediente": "Tomate",
+                "Orden": 5,
+                "Cantidad": 35,
+                "Sustituible": false,
+                "Sustitutos": [],
+                "IDIngrediente": 5,
+                "Eliminable": true
+            }
+        ],
+        "Gramaje": 320,
+        "Descripcion": "Hamburguesa 100% vegetal con ingredientes naturales",
+        "ID": 3,
+        "URLFoto": "",
+        "Disponible": true,
+        "Tamanos": [{
+            "Nombre": "Individual",
+            "Orden": 1,
+            "Gramaje": 320,
+            "Descripcion": "Hamburguesa vegana individual",
+            "ID": 1,
+            "Piezas": 1,
+            "Capacidad": 0,
+            "Disponible": true,
+            "Precio": 95
+        }]
     }
 ]

@@ -1,42 +1,162 @@
 [
     {
-        "Nombre": "Carne",
-        "Calorias": 1500,
-        "categoria": "Proteínas",
-        "Descripcion": "Carne de Res",
+        "Nombre": "Pan de Hamburguesa",
+        "Calorias": 150,
+        "categoria": "Carbohidratos",
+        "Descripcion": "Pan brioche tostado",
         "Alergeno": true,
+        "ID": 1
+    },
+    {
+        "Nombre": "Carne de Res",
+        "Calorias": 250,
+        "categoria": "Proteínas",
+        "Descripcion": "Medallón de carne 100% res",
+        "Alergeno": false,
         "ID": 2
     },
     {
-        "Nombre": "Queso2",
-        "Calorias": 12,
+        "Nombre": "Queso Americano",
+        "Calorias": 80,
         "categoria": "Lácteos",
-        "Descripcion": "Queso2",
+        "Descripcion": "Queso procesado tipo americano",
         "Alergeno": true,
         "ID": 3
     },
     {
-        "Nombre": "carnene",
-        "Calorias": 152,
-        "categoria": "Proteínas",
-        "Descripcion": "carnene",
-        "Alergeno": true,
+        "Nombre": "Lechuga",
+        "Calorias": 5,
+        "categoria": "Verduras",
+        "Descripcion": "Lechuga fresca",
+        "Alergeno": false,
         "ID": 4
     },
     {
-        "Nombre": "Leche",
-        "Calorias": 120,
-        "categoria": "Lácteos",
-        "Descripcion": "Leche",
-        "Alergeno": true,
+        "Nombre": "Tomate",
+        "Calorias": 10,
+        "categoria": "Verduras",
+        "Descripcion": "Rodajas de tomate",
+        "Alergeno": false,
         "ID": 5
     },
     {
-        "Nombre": "Lechehwe",
-        "Calorias": 120,
-        "categoria": "Lácteos Vegetales",
-        "Descripcion": "Leceddas",
-        "Alergeno": true,
+        "Nombre": "Cebolla",
+        "Calorias": 8,
+        "categoria": "Verduras",
+        "Descripcion": "Aros de cebolla",
+        "Alergeno": false,
         "ID": 6
+    },
+    {
+        "Nombre": "Tocino",
+        "Calorias": 120,
+        "categoria": "Proteínas",
+        "Descripcion": "Tocino crujiente",
+        "Alergeno": false,
+        "ID": 7
+    },
+    {
+        "Nombre": "Salsa BBQ",
+        "Calorias": 25,
+        "categoria": "Salsas",
+        "Descripcion": "Salsa barbacoa",
+        "Alergeno": false,
+        "ID": 8
+    },
+    {
+        "Nombre": "Mayonesa",
+        "Calorias": 40,
+        "categoria": "Salsas",
+        "Descripcion": "Mayonesa cremosa",
+        "Alergeno": true,
+        "ID": 9
+    },
+    {
+        "Nombre": "Pan de Sandwich",
+        "Calorias": 120,
+        "categoria": "Carbohidratos",
+        "Descripcion": "Pan blanco para sandwich",
+        "Alergeno": true,
+        "ID": 10
+    },
+    {
+        "Nombre": "Pechuga de Pollo",
+        "Calorias": 180,
+        "categoria": "Proteínas",
+        "Descripcion": "Pechuga de pollo a la plancha",
+        "Alergeno": false,
+        "ID": 11
+    },
+    {
+        "Nombre": "Jamón de Pavo",
+        "Calorias": 60,
+        "categoria": "Proteínas",
+        "Descripcion": "Jamón de pavo bajo en grasa",
+        "Alergeno": false,
+        "ID": 12
+    },
+    {
+        "Nombre": "Queso Manchego",
+        "Calorias": 90,
+        "categoria": "Lácteos",
+        "Descripcion": "Queso manchego en rebanadas",
+        "Alergeno": true,
+        "ID": 13
+    },
+    {
+        "Nombre": "Aguacate",
+        "Calorias": 50,
+        "categoria": "Verduras",
+        "Descripcion": "Rebanadas de aguacate",
+        "Alergeno": false,
+        "ID": 14
+    },
+    {
+        "Nombre": "Mostaza",
+        "Calorias": 5,
+        "categoria": "Salsas",
+        "Descripcion": "Mostaza amarilla",
+        "Alergeno": false,
+        "ID": 15
+    },
+    {
+        "Nombre": "Pepinillos",
+        "Calorias": 3,
+        "categoria": "Verduras",
+        "Descripcion": "Rodajas de pepinillo",
+        "Alergeno": false,
+        "ID": 16
+    },
+    {
+        "Nombre": "Leche de Almendra",
+        "Calorias": 15,
+        "categoria": "Lácteos Vegetales",
+        "Descripcion": "Alternativa láctea de almendra",
+        "Alergeno": true,
+        "ID": 17
+    },
+    {
+        "Nombre": "Carne Vegetal",
+        "Calorias": 120,
+        "categoria": "Proteínas Vegetales",
+        "Descripcion": "Medallón de proteína vegetal",
+        "Alergeno": false,
+        "ID": 18
+    },
+    {
+        "Nombre": "Queso Vegano",
+        "Calorias": 70,
+        "categoria": "Lácteos Vegetales",
+        "Descripcion": "Queso a base de plantas",
+        "Alergeno": false,
+        "ID": 19
+    },
+    {
+        "Nombre": "Huevo",
+        "Calorias": 70,
+        "categoria": "Proteínas",
+        "Descripcion": "Huevo frito",
+        "Alergeno": true,
+        "ID": 20
     }
 ]

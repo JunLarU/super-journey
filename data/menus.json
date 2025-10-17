@@ -2208,5 +2208,197 @@
         "FechaCreacion": "2025-10-17",
         "IDUsuarioCreador": 1,
         "Secciones": []
+    },
+    {
+        "IDUsuarioModificador": 0,
+        "Fecha": "2025-10-20",
+        "Activo": true,
+        "ID": 239,
+        "DiaSemana": "Lunes",
+        "Horario": "Desayuno",
+        "NumeroSemana": 42,
+        "Anio": 2025,
+        "FechaCreacion": "2025-10-17",
+        "IDUsuarioCreador": 1,
+        "Secciones": [{
+            "Orden": 1,
+            "IDSeccion": 2,
+            "IDUsuarioAsigno": 1,
+            "ID": 0,
+            "FechaAsignacion": "2025-10-17",
+            "NombreSeccion": "Sandwiches",
+            "IDMenu": 0
+        }]
+    },
+    {
+        "IDUsuarioModificador": 0,
+        "Fecha": "2025-10-20",
+        "Activo": true,
+        "ID": 240,
+        "DiaSemana": "Lunes",
+        "Horario": "Comida",
+        "NumeroSemana": 42,
+        "Anio": 2025,
+        "FechaCreacion": "2025-10-17",
+        "IDUsuarioCreador": 1,
+        "Secciones": []
+    },
+    {
+        "IDUsuarioModificador": 0,
+        "Fecha": "2025-10-21",
+        "Activo": true,
+        "ID": 241,
+        "DiaSemana": "Martes",
+        "Horario": "Desayuno",
+        "NumeroSemana": 42,
+        "Anio": 2025,
+        "FechaCreacion": "2025-10-17",
+        "IDUsuarioCreador": 1,
+        "Secciones": [
+            {
+                "Orden": 1,
+                "IDSeccion": 1,
+                "IDUsuarioAsigno": 1,
+                "ID": 0,
+                "FechaAsignacion": "2025-10-17",
+                "NombreSeccion": "Hamburguesas",
+                "IDMenu": 0
+            },
+            {
+                "Orden": 2,
+                "IDSeccion": 2,
+                "IDUsuarioAsigno": 1,
+                "ID": 0,
+                "FechaAsignacion": "2025-10-17",
+                "NombreSeccion": "Sandwiches",
+                "IDMenu": 0
+            }
+        ]
+    },
+    {
+        "IDUsuarioModificador": 0,
+        "Fecha": "2025-10-21",
+        "Activo": true,
+        "ID": 242,
+        "DiaSemana": "Martes",
+        "Horario": "Comida",
+        "NumeroSemana": 42,
+        "Anio": 2025,
+        "FechaCreacion": "2025-10-17",
+        "IDUsuarioCreador": 1,
+        "Secciones": []
+    },
+    {
+        "IDUsuarioModificador": 0,
+        "Fecha": "2025-10-22",
+        "Activo": true,
+        "ID": 243,
+        "DiaSemana": "Miércoles",
+        "Horario": "Desayuno",
+        "NumeroSemana": 42,
+        "Anio": 2025,
+        "FechaCreacion": "2025-10-17",
+        "IDUsuarioCreador": 1,
+        "Secciones": []
+    },
+    {
+        "IDUsuarioModificador": 0,
+        "Fecha": "2025-10-22",
+        "Activo": true,
+        "ID": 244,
+        "DiaSemana": "Miércoles",
+        "Horario": "Comida",
+        "NumeroSemana": 42,
+        "Anio": 2025,
+        "FechaCreacion": "2025-10-17",
+        "IDUsuarioCreador": 1,
+        "Secciones": [{
+            "Orden": 1,
+            "IDSeccion": 1,
+            "IDUsuarioAsigno": 1,
+            "ID": 0,
+            "FechaAsignacion": "2025-10-17",
+            "NombreSeccion": "Hamburguesas",
+            "IDMenu": 0
+        }]
+    },
+    {
+        "IDUsuarioModificador": 0,
+        "Fecha": "2025-10-23",
+        "Activo": true,
+        "ID": 245,
+        "DiaSemana": "Jueves",
+        "Horario": "Desayuno",
+        "NumeroSemana": 42,
+        "Anio": 2025,
+        "FechaCreacion": "2025-10-17",
+        "IDUsuarioCreador": 1,
+        "Secciones": [
+            {
+                "Orden": 1,
+                "IDSeccion": 1,
+                "IDUsuarioAsigno": 1,
+                "ID": 0,
+                "FechaAsignacion": "2025-10-17",
+                "NombreSeccion": "Hamburguesas",
+                "IDMenu": 0
+            },
+            {
+                "Orden": 2,
+                "IDSeccion": 2,
+                "IDUsuarioAsigno": 1,
+                "ID": 0,
+                "FechaAsignacion": "2025-10-17",
+                "NombreSeccion": "Sandwiches",
+                "IDMenu": 0
+            }
+        ]
+    },
+    {
+        "IDUsuarioModificador": 0,
+        "Fecha": "2025-10-23",
+        "Activo": true,
+        "ID": 246,
+        "DiaSemana": "Jueves",
+        "Horario": "Comida",
+        "NumeroSemana": 42,
+        "Anio": 2025,
+        "FechaCreacion": "2025-10-17",
+        "IDUsuarioCreador": 1,
+        "Secciones": []
+    },
+    {
+        "IDUsuarioModificador": 0,
+        "Fecha": "2025-10-24",
+        "Activo": true,
+        "ID": 247,
+        "DiaSemana": "Viernes",
+        "Horario": "Desayuno",
+        "NumeroSemana": 42,
+        "Anio": 2025,
+        "FechaCreacion": "2025-10-17",
+        "IDUsuarioCreador": 1,
+        "Secciones": []
+    },
+    {
+        "IDUsuarioModificador": 0,
+        "Fecha": "2025-10-24",
+        "Activo": true,
+        "ID": 248,
+        "DiaSemana": "Viernes",
+        "Horario": "Comida",
+        "NumeroSemana": 42,
+        "Anio": 2025,
+        "FechaCreacion": "2025-10-17",
+        "IDUsuarioCreador": 1,
+        "Secciones": [{
+            "Orden": 1,
+            "IDSeccion": 2,
+            "IDUsuarioAsigno": 1,
+            "ID": 0,
+            "FechaAsignacion": "2025-10-17",
+            "NombreSeccion": "Sandwiches",
+            "IDMenu": 0
+        }]
     }
 ]

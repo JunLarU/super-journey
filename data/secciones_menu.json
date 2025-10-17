@@ -1,1 +1,46 @@
-[]
+[
+    {
+        "Nombre": "Hamburguesas",
+        "Productos": [
+            {
+                "Destacado": false,
+                "NombreProducto": "Hamburguesa Clásica",
+                "Orden": 1,
+                "IDSeccion": 0,
+                "ID": 0,
+                "IDProducto": 1
+            },
+            {
+                "Destacado": false,
+                "NombreProducto": "Hamburguesa Vegana",
+                "Orden": 2,
+                "IDSeccion": 0,
+                "ID": 0,
+                "IDProducto": 3
+            }
+        ],
+        "Activo": true,
+        "Color": "#3498DB",
+        "Descripcion": "Hamburguesas para el antojo",
+        "ID": 1,
+        "URLFoto": "",
+        "FechaCreacion": "2025-10-17"
+    },
+    {
+        "Nombre": "Sandwiches",
+        "Productos": [{
+            "Destacado": false,
+            "NombreProducto": "Sándwich Club",
+            "Orden": 1,
+            "IDSeccion": 0,
+            "ID": 0,
+            "IDProducto": 2
+        }],
+        "Activo": true,
+        "Color": "#800000",
+        "Descripcion": "Ricos y nutritivos sandwiches",
+        "ID": 2,
+        "URLFoto": "",
+        "FechaCreacion": "2025-10-17"
+    }
+]

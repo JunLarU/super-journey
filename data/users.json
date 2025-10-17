@@ -1,11 +1,24 @@
-[{
-    "apellidoPaterno": "Larios",
-    "clave": "U001",
-    "password": "testpassword",
-    "phone": "5551234567",
-    "name": "Juan",
-    "isAdmin": true,
-    "email": "juan.larios@example.com",
-    "username": "testuser",
-    "apellidoMaterno": "Estrada"
-}]
+[
+    {
+        "apellidoPaterno": "Larios",
+        "clave": "U001",
+        "password": "testpassword",
+        "phone": "5551234567",
+        "name": "Juan",
+        "isAdmin": true,
+        "email": "juan.larios@example.com",
+        "username": "testuser",
+        "apellidoMaterno": "Estrada"
+    },
+    {
+        "apellidoPaterno": "LAR",
+        "clave": "12",
+        "password": "1234",
+        "phone": "456123",
+        "name": "Juan",
+        "isAdmin": false,
+        "email": "jlari@gmail.com",
+        "username": "12",
+        "apellidoMaterno": "matr"
+    }
+]

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- DashboardUser.fxml -->
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="app.controllers.dashboard.DashboardUserController"
+            prefWidth="1000" prefHeight="700"
+            style="-fx-background-color: #f8f9fa;">
+
+    <!-- Header -->
+    <top>
+        <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-background-color: white; -fx-padding: 15; -fx-border-color: #dee2e6; -fx-border-width: 0 0 1 0;">
+            <Label text="🎓 CAFI - Panel del Estudiante" 
+                   style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="lblWelcome" text="Bienvenido"
+                   style="-fx-font-size: 14px; -fx-text-fill: #6c757d;"/>
+            <Button fx:id="btnCerrarSesion" text="🚪 Cerrar sesión"
+                    onAction="#onCerrarSesionClicked"
+                    style="-fx-background-color: #6c757d; -fx-text-fill: white; -fx-background-radius: 5;"/>
+        </HBox>
+    </top>
+
+    <!-- Contenido principal con pestañas -->
+    <center>
+        <TabPane fx:id="mainTabPane" tabClosingPolicy="UNAVAILABLE" style="-fx-background-color: white;">
+            
+            <!-- 📅 Pestaña Menú Semanal -->
+            <Tab fx:id="tabMenu" text="📅 Menú Semanal">
+                <VBox spacing="15" style="-fx-padding: 20;">
+                    <!-- Controles superiores -->
+                    <HBox spacing="15" alignment="CENTER_LEFT">
+                        <Label fx:id="lblSemanaActual" text="Semana actual" 
+                               style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label text="Horario:"/>
+                        <ComboBox fx:id="comboHorario" prefWidth="120"/>
+                        <Button fx:id="btnSemanaAnterior" text="◀ Semana anterior" 
+                                onAction="#onSemanaAnterior"
+                                style="-fx-background-color: #6c757d; -fx-text-fill: white;"/>
+                        <Button fx:id="btnSemanaSiguiente" text="Semana siguiente ▶" 
+                                onAction="#onSemanaSiguiente"
+                                style="-fx-background-color: #007bff; -fx-text-fill: white;"/>
+                    </HBox>
+
+                    <!-- Contenido del menú -->
+                    <ScrollPane fitToWidth="true" style="-fx-background: transparent; -fx-border-color: transparent;">
+                        <VBox fx:id="vboxMenuContenido" spacing="15" 
+                              style="-fx-padding: 10; -fx-background-color: #f8f9fa;"/>
+                    </ScrollPane>
+                </VBox>
+            </Tab>
+
+            <!-- 📢 Pestaña Avisos -->
+            <Tab fx:id="tabAvisos" text="📢 Avisos">
+                <VBox spacing="15" style="-fx-padding: 20;">
+                    <!-- Controles de filtro -->
+                    <HBox spacing="15" alignment="CENTER_LEFT">
+                        <Label text="Filtrar por:"/>
+                        <ComboBox fx:id="comboFiltroAvisos" prefWidth="150"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label text="💡 Los avisos se actualizan semanalmente" 
+                               style="-fx-text-fill: #6c757d; -fx-font-style: italic;"/>
+                    </HBox>
+
+                    <!-- Lista de avisos -->
+                    <ScrollPane fitToWidth="true" style="-fx-background: transparent; -fx-border-color: transparent;">
+                        <VBox fx:id="vboxAvisosContenido" spacing="15" 
+                              style="-fx-padding: 10; -fx-background-color: #f8f9fa;"/>
+                    </ScrollPane>
+                </VBox>
+            </Tab>
+
+            <!-- ⭐ Pestaña Productos Especiales -->
+            <Tab fx:id="tabEspeciales" text="⭐ Especiales">
+                <VBox spacing="15" style="-fx-padding: 20;">
+                    <Label text="🎯 Ofertas y productos especiales disponibles" 
+                           style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                    
+                    <!-- Lista de productos especiales -->
+                    <ScrollPane fitToWidth="true" style="-fx-background: transparent; -fx-border-color: transparent;">
+                        <VBox fx:id="vboxEspecialesContenido" spacing="15" 
+                              style="-fx-padding: 10; -fx-background-color: #f8f9fa;"/>
+                    </ScrollPane>
+                </VBox>
+            </Tab>
+
+        </TabPane>
+    </center>
+
+</BorderPane>

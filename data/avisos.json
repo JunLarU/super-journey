@@ -1,1 +1,28 @@
-[]
+[
+    {
+        "Prioridad": "Importante",
+        "FechaPublicacion": "2025-10-17T02:41:03.1298746",
+        "FechaFin": "2025-10-24T20:00:00",
+        "TipoAviso": "NoLaboral",
+        "Establecimiento": "Ambos",
+        "FechaInicio": "2025-10-17T02:00:00",
+        "Contenido": "Cerraremos del---",
+        "Activo": true,
+        "ID": 1,
+        "Titulo": "Cierre",
+        "IDUsuarioCreador": "U001"
+    },
+    {
+        "Prioridad": "Normal",
+        "FechaPublicacion": "2025-10-17T02:41:15.3232459",
+        "FechaFin": "2025-10-24T20:00:00",
+        "TipoAviso": "General",
+        "Establecimiento": "Ambos",
+        "FechaInicio": "2025-10-17T02:00:00",
+        "Contenido": "Hola",
+        "Activo": true,
+        "ID": 2,
+        "Titulo": "Hola",
+        "IDUsuarioCreador": "U001"
+    }
+]
