@@ -1,5 +1,6 @@
 import core.SessionManager;
 import core.data.Users.AllUsers;
+import core.data.Avisos.AllAvisos;
 import core.data.Ingredientes.AllIngredientes;
 import core.data.Menus.AllMenus;
 import core.data.Productos.AllProductos;
@@ -19,6 +20,7 @@ public class Main extends Application {
     private final AllProductos allProductos = AllProductos.getInstance(); // ��� NUEVO
     private final AllMenus allMenus = AllMenus.getInstance(); // 🧩 NUEVO
     private final AllProductosEspeciales allProductosEspeciales = AllProductosEspeciales.getInstance(); // 🧩 NUEVO
+    private final AllAvisos allAvisos = AllAvisos.getInstance(); // 🧩 NUEVO
     private final SessionManager sessionManager = SessionManager.getInstance();
 
 
@@ -57,6 +59,7 @@ public class Main extends Application {
             allProductos.saveToFile();
             allMenus.saveToFile();
             allProductosEspeciales.saveToFile();
+            allAvisos.saveToFile();
             System.out.println("✅ Datos guardados correctamente.");
         }));
 
@@ -68,6 +71,7 @@ public class Main extends Application {
             allIngredientes.saveToFile();
             allMenus.saveToFile();
             allProductosEspeciales.saveToFile();
+            allAvisos.saveToFile();
             System.out.println("✅ Datos guardados correctamente.");
         });
     }

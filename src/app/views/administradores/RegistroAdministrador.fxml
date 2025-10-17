@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="app.controllers.administradores.RegisterAdministradorController"
+      spacing="15"
+      style="-fx-background-color: white; -fx-padding: 20;"
+      prefWidth="500" prefHeight="600">
+
+    <children>
+        <!-- TÍTULO -->
+        <Label fx:id="lblTitulo" text="👑 Registro de Administrador"
+               style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+
+        <Separator/>
+
+        <!-- FORMULARIO -->
+        <VBox spacing="12" style="-fx-background-color: #f8f9fa; -fx-padding: 20; -fx-border-color: #dee2e6; -fx-border-radius: 5;">
+            
+            <!-- EXPEDIENTE -->
+            <GridPane hgap="10" vgap="10">
+                <columnConstraints>
+                    <ColumnConstraints prefWidth="120"/>
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                </columnConstraints>
+                
+                <Label text="* Expediente:" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="txtExpediente" promptText="Ej: A20251234"
+                          GridPane.columnIndex="1"/>
+            </GridPane>
+
+            <!-- NOMBRE -->
+            <GridPane hgap="10" vgap="10">
+                <columnConstraints>
+                    <ColumnConstraints prefWidth="120"/>
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                </columnConstraints>
+                
+                <Label text="* Nombre:" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="txtNombre" promptText="Nombre(s)"
+                          GridPane.columnIndex="1"/>
+            </GridPane>
+
+            <!-- APELLIDOS -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                    <Label text="* Apellido Paterno:" style="-fx-font-weight: bold;"/>
+                    <TextField fx:id="txtApellidoPaterno" promptText="Apellido paterno"/>
+                </VBox>
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+                    <Label text="Apellido Materno:"/>
+                    <TextField fx:id="txtApellidoMaterno" promptText="Apellido materno"/>
+                </VBox>
+            </HBox>
+
+            <!-- CORREO -->
+            <GridPane hgap="10" vgap="10">
+                <columnConstraints>
+                    <ColumnConstraints prefWidth="120"/>
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                </columnConstraints>
+                
+                <Label text="* Correo:" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="txtCorreo" promptText="correo@ejemplo.com"
+                          GridPane.columnIndex="1"/>
+            </GridPane>
+
+            <!-- TELÉFONO -->
+            <GridPane hgap="10" vgap="10">
+                <columnConstraints>
+                    <ColumnConstraints prefWidth="120"/>
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                </columnConstraints>
+                
+                <Label text="Teléfono:"/>
+                <TextField fx:id="txtTelefono" promptText="5551234567"
+                          GridPane.columnIndex="1"/>
+            </GridPane>
+
+            <!-- NIP -->
+            <GridPane hgap="10" vgap="10">
+                <columnConstraints>
+                    <ColumnConstraints prefWidth="120"/>
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                </columnConstraints>
+                
+                <Label text="* NIP:" style="-fx-font-weight: bold;"/>
+                <PasswordField fx:id="txtNip" promptText="••••••"
+                              GridPane.columnIndex="1"/>
+            </GridPane>
+
+        </VBox>
+
+        <!-- INFORMACIÓN -->
+        <VBox spacing="5" style="-fx-background-color: #e8f4fd; -fx-padding: 15; -fx-border-color: #3498db; -fx-border-radius: 5;">
+            <Label text="💡 Información:" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+            <Label text="• Todos los campos marcados con * son obligatorios" 
+                   style="-fx-text-fill: #34495e; -fx-font-size: 12px;"/>
+            <Label text="• El expediente debe ser único para cada administrador" 
+                   style="-fx-text-fill: #34495e; -fx-font-size: 12px;"/>
+            <Label text="• El NIP debe tener al menos 4 caracteres" 
+                   style="-fx-text-fill: #34495e; -fx-font-size: 12px;"/>
+        </VBox>
+
+        <!-- BOTONES -->
+        <HBox spacing="15" alignment="CENTER_RIGHT" style="-fx-padding: 10 0 0 0;">
+            <Button fx:id="btnCancelar" text="❌ Cancelar" onAction="#onCancelarClicked"
+                    style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 8 20;"/>
+            <Button fx:id="btnRegistrar" text="💾 Registrar Administrador" onAction="#onRegistrarClicked"
+                    style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 8 30;"/>
+        </HBox>
+
+        <!-- STATUS -->
+        <Separator/>
+        <Label fx:id="lblStatus" text="✏️ Completa los campos marcados con * para registrar un administrador"
+               style="-fx-text-fill: #7f8c8d; -fx-font-style: italic; -fx-font-size: 12px;"
+               wrapText="true"/>
+    </children>
+</VBox>

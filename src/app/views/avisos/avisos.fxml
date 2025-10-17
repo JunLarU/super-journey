@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="app.controllers.avisos.AvisosController"
+            prefWidth="1200" prefHeight="600"
+            style="-fx-background-color: #F9FAFB;">
+
+    <!-- 🔍 Barra superior -->
+    <top>
+        <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 15;">
+            <Label text="📢 Avisos del Sistema"
+                   style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <TextField fx:id="txtBuscar" promptText="Buscar por título, contenido, establecimiento o tipo..."
+                       style="-fx-pref-width: 300px; -fx-background-radius: 6;"/>
+            <Button fx:id="btnRecargar" text="🔄" onAction="#onRecargarClicked"
+                    style="-fx-background-color: #27AE60; -fx-text-fill: white; -fx-background-radius: 6;"/>
+            <Button fx:id="btnNuevo" text="➕ Nuevo Aviso" onAction="#onNuevoClicked"
+                    style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-background-radius: 6; -fx-font-weight: bold;"/>
+        </HBox>
+    </top>
+
+    <!-- 📋 Tabla de avisos -->
+    <center>
+        <VBox spacing="10" style="-fx-padding: 15;">
+            <TableView fx:id="tablaAvisos" prefHeight="500"
+                       style="-fx-background-radius: 6;">
+                <columns>
+                    <TableColumn fx:id="colID" text="ID" prefWidth="60"/>
+                    <TableColumn fx:id="colTitulo" text="Título" prefWidth="200"/>
+                    <TableColumn fx:id="colEstablecimiento" text="Establecimiento" prefWidth="120"/>
+                    <TableColumn fx:id="colTipo" text="Tipo" prefWidth="100"/>
+                    <TableColumn fx:id="colPrioridad" text="Prioridad" prefWidth="100"/>
+                    <TableColumn fx:id="colFechas" text="Fechas y Horario" prefWidth="200"/>
+                    <TableColumn fx:id="colEstado" text="Estado" prefWidth="100"/>
+                    <TableColumn fx:id="colAcciones" text="Acciones" prefWidth="120"/>
+                </columns>
+            </TableView>
+
+            <Label fx:id="lblEstado" text="Cargando avisos..."
+                   style="-fx-font-size: 14px; -fx-text-fill: #555;"/>
+        </VBox>
+    </center>
+</BorderPane>

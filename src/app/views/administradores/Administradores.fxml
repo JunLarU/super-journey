@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="app.controllers.administradores.AdministradoresController"
+            style="-fx-background-color: #F9FAFB;"
+            prefWidth="1000" prefHeight="700">
+
+    <top>
+        <VBox spacing="15" style="-fx-padding: 20;">
+            <!-- TÍTULO -->
+            <Label text="👑 Gestión de Administradores"
+                   style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+
+            <!-- BARRA DE HERRAMIENTAS -->
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <Button fx:id="btnNuevo" text="➕ Nuevo Administrador" onAction="#onNuevoClicked"
+                        style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10 20; -fx-background-radius: 6;"/>
+                
+                <Button fx:id="btnRecargar" text="🔄 Refrescar" onAction="#onRecargarClicked"
+                        style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-padding: 10 15; -fx-background-radius: 6;"/>
+                
+                <Region HBox.hgrow="ALWAYS"/>
+                
+                <Label text="🔍 Buscar:" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="txtBuscar" promptText="Buscar por nombre, apellidos, expediente o correo..."
+                          style="-fx-pref-width: 300px; -fx-background-radius: 6;"/>
+            </HBox>
+
+            <Separator/>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox spacing="10" style="-fx-padding: 0 20 20 20;">
+            <!-- TABLA -->
+            <TableView fx:id="tablaAdministradores" VBox.vgrow="ALWAYS"
+                      style="-fx-background-radius: 6;">
+                <columns>
+                    <TableColumn fx:id="colExpediente" text="Expediente" prefWidth="120"/>
+                    <TableColumn fx:id="colNombre" text="Nombre" prefWidth="150"/>
+                    <TableColumn fx:id="colApellidos" text="Apellidos" prefWidth="200"/>
+                    <TableColumn fx:id="colCorreo" text="Correo" prefWidth="250"/>
+                    <TableColumn fx:id="colTelefono" text="Teléfono" prefWidth="120"/>
+                    <TableColumn fx:id="colEstado" text="Tipo" prefWidth="120"/>
+                    <TableColumn fx:id="colAcciones" text="Acciones" prefWidth="120"/>
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                </columnResizePolicy>
+            </TableView>
+
+            <!-- ESTADO -->
+            <Label fx:id="lblEstado" text="Cargando administradores..."
+                   style="-fx-font-size: 14px; -fx-text-fill: #555;"/>
+        </VBox>
+    </center>
+
+    <!-- INFORMACIÓN ADICIONAL -->
+    <bottom>
+        <VBox spacing="5" style="-fx-background-color: #e8f4fd; -fx-padding: 15; -fx-border-color: #3498db; -fx-border-radius: 5; -fx-margin: 20;">
+            <Label text="💡 Información:" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+            <Label text="• Solo los administradores pueden acceder a esta sección" 
+                   style="-fx-text-fill: #34495e; -fx-font-size: 12px;"/>
+            <Label text="• No puedes editar o eliminar tu propia cuenta (se ocultan los botones)" 
+                   style="-fx-text-fill: #34495e; -fx-font-size: 12px;"/>
+            <Label text="• Utiliza la barra de búsqueda para filtrar administradores por cualquier campo" 
+                   style="-fx-text-fill: #34495e; -fx-font-size: 12px;"/>
+            <Label text="• Los cambios se guardan automáticamente" 
+                   style="-fx-text-fill: #34495e; -fx-font-size: 12px;"/>
+        </VBox>
+    </bottom>
+</BorderPane>

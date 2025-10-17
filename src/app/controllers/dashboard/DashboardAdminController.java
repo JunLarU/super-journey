@@ -69,12 +69,12 @@ public class DashboardAdminController {
     
     @FXML 
     private void onAvisosClicked() { 
-        cargarVista("Avisos", "/app/views/admin/Avisos.fxml"); 
+        cargarVista("Avisos", "/app/views/avisos/Avisos.fxml"); 
     }
     
     @FXML 
     private void onAdministradoresClicked() { 
-        cargarVista("Administradores", "/app/views/admin/Administradores.fxml"); 
+        cargarVista("Administradores", "/app/views/administradores/Administradores.fxml"); 
     }
 
     @FXML
