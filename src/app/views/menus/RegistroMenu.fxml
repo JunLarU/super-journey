@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="app.controllers.menus.RegistroMenuController"
+            prefWidth="1000" prefHeight="700"
+            style="-fx-background-color: #F9FAFB;">
+
+    <top>
+        <VBox spacing="10" style="-fx-padding: 20; -fx-background-color: white;">
+            <Label fx:id="lblTitulo" text="📅 Nuevo Menú Semanal"
+                   style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+            
+            <Separator/>
+            
+            <!-- Selector de semana -->
+            <HBox alignment="CENTER_LEFT" spacing="15">
+                <Label text="* Año:" style="-fx-font-weight: bold;"/>
+                <Spinner fx:id="spinAnio" prefWidth="100" editable="true"/>
+                
+                <Label text="* Semana:" style="-fx-font-weight: bold;"/>
+                <Spinner fx:id="spinSemana" prefWidth="100" editable="true"/>
+                
+                <Button fx:id="btnCalcularFechas" text="📆 Calcular Fechas" onAction="#onCalcularFechasClicked"
+                        style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
+                
+                <Region HBox.hgrow="ALWAYS"/>
+                
+                <Label fx:id="lblRangoFechas" text="" 
+                       style="-fx-font-style: italic; -fx-text-fill: #7f8c8d; -fx-font-size: 12px;"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" fitToHeight="true" style="-fx-background-color: transparent;">
+            <VBox spacing="20" style="-fx-padding: 20;">
+                
+                <Label text="💡 Selecciona las secciones que aparecerán en cada día y horario del menú"
+                       style="-fx-text-fill: #7f8c8d; -fx-font-style: italic; -fx-font-size: 13px;"/>
+
+                <!-- Grid de días/horarios -->
+                <GridPane fx:id="gridMenu" hgap="15" vgap="15"
+                          style="-fx-background-color: white; -fx-padding: 20; -fx-border-color: #bdc3c7; -fx-border-width: 2; -fx-border-radius: 5;">
+                    
+                    <columnConstraints>
+                        <ColumnConstraints minWidth="100" prefWidth="100"/>
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="150"/>
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="150"/>
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="150"/>
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="150"/>
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="150"/>
+                    </columnConstraints>
+
+                    <!-- Headers -->
+                    <Label text="" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                    <Label text="Lunes" style="-fx-font-weight: bold; -fx-font-size: 14px;"
+                           GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.halignment="CENTER"/>
+                    <Label text="Martes" style="-fx-font-weight: bold; -fx-font-size: 14px;"
+                           GridPane.columnIndex="2" GridPane.rowIndex="0" GridPane.halignment="CENTER"/>
+                    <Label text="Miércoles" style="-fx-font-weight: bold; -fx-font-size: 14px;"
+                           GridPane.columnIndex="3" GridPane.rowIndex="0" GridPane.halignment="CENTER"/>
+                    <Label text="Jueves" style="-fx-font-weight: bold; -fx-font-size: 14px;"
+                           GridPane.columnIndex="4" GridPane.rowIndex="0" GridPane.halignment="CENTER"/>
+                    <Label text="Viernes" style="-fx-font-weight: bold; -fx-font-size: 14px;"
+                           GridPane.columnIndex="5" GridPane.rowIndex="0" GridPane.halignment="CENTER"/>
+
+                    <!-- Desayuno Row -->
+                    <Label text="🌅 Desayuno" style="-fx-font-weight: bold; -fx-font-size: 13px;"
+                           GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.halignment="RIGHT">
+                        <padding><Insets top="10" right="10"/></padding>
+                    </Label>
+                    
+                    <!-- VBoxes con ListView para cada celda - DESAYUNO -->
+                    <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <Label fx:id="lblFechaLunesD" text="--/--/----" style="-fx-font-size: 10px; -fx-text-fill: #7f8c8d;"/>
+                        <ListView fx:id="listLunesDesayuno" prefHeight="120"
+                                  style="-fx-border-color: #3498db; -fx-border-width: 2;"/>
+                        <Button text="➕ Agregar" onAction="#onAgregarLunesDesayuno"
+                                style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 11px;"/>
+                    </VBox>
+                    
+                    <VBox spacing="5" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                        <Label fx:id="lblFechaMartesD" text="--/--/----" style="-fx-font-size: 10px; -fx-text-fill: #7f8c8d;"/>
+                        <ListView fx:id="listMartesDesayuno" prefHeight="120"
+                                  style="-fx-border-color: #3498db; -fx-border-width: 2;"/>
+                        <Button text="➕ Agregar" onAction="#onAgregarMartesDesayuno"
+                                style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 11px;"/>
+                    </VBox>
+                    
+                    <VBox spacing="5" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                        <Label fx:id="lblFechaMiercolesD" text="--/--/----" style="-fx-font-size: 10px; -fx-text-fill: #7f8c8d;"/>
+                        <ListView fx:id="listMiercolesDesayuno" prefHeight="120"
+                                  style="-fx-border-color: #3498db; -fx-border-width: 2;"/>
+                        <Button text="➕ Agregar" onAction="#onAgregarMiercolesDesayuno"
+                                style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 11px;"/>
+                    </VBox>
+                    
+                    <VBox spacing="5" GridPane.columnIndex="4" GridPane.rowIndex="1">
+                        <Label fx:id="lblFechaJuevesD" text="--/--/----" style="-fx-font-size: 10px; -fx-text-fill: #7f8c8d;"/>
+                        <ListView fx:id="listJuevesDesayuno" prefHeight="120"
+                                  style="-fx-border-color: #3498db; -fx-border-width: 2;"/>
+                        <Button text="➕ Agregar" onAction="#onAgregarJuevesDesayuno"
+                                style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 11px;"/>
+                    </VBox>
+                    
+                    <VBox spacing="5" GridPane.columnIndex="5" GridPane.rowIndex="1">
+                        <Label fx:id="lblFechaViernesD" text="--/--/----" style="-fx-font-size: 10px; -fx-text-fill: #7f8c8d;"/>
+                        <ListView fx:id="listViernesDesayuno" prefHeight="120"
+                                  style="-fx-border-color: #3498db; -fx-border-width: 2;"/>
+                        <Button text="➕ Agregar" onAction="#onAgregarViernesDesayuno"
+                                style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 11px;"/>
+                    </VBox>
+
+                    <!-- Comida Row -->
+                    <Label text="🍽️ Comida" style="-fx-font-weight: bold; -fx-font-size: 13px;"
+                           GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.halignment="RIGHT">
+                        <padding><Insets top="10" right="10"/></padding>
+                    </Label>
+                    
+                    <!-- VBoxes con ListView para cada celda - COMIDA -->
+                    <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <Label fx:id="lblFechaLunesC" text="--/--/----" style="-fx-font-size: 10px; -fx-text-fill: #7f8c8d;"/>
+                        <ListView fx:id="listLunesComida" prefHeight="120"
+                                  style="-fx-border-color: #e74c3c; -fx-border-width: 2;"/>
+                        <Button text="➕ Agregar" onAction="#onAgregarLunesComida"
+                                style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-size: 11px;"/>
+                    </VBox>
+                    
+                    <VBox spacing="5" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                        <Label fx:id="lblFechaMartesC" text="--/--/----" style="-fx-font-size: 10px; -fx-text-fill: #7f8c8d;"/>
+                        <ListView fx:id="listMartesComida" prefHeight="120"
+                                  style="-fx-border-color: #e74c3c; -fx-border-width: 2;"/>
+                        <Button text="➕ Agregar" onAction="#onAgregarMartesComida"
+                                style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-size: 11px;"/>
+                    </VBox>
+                    
+                    <VBox spacing="5" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                        <Label fx:id="lblFechaMiercolesC" text="--/--/----" style="-fx-font-size: 10px; -fx-text-fill: #7f8c8d;"/>
+                        <ListView fx:id="listMiercolesComida" prefHeight="120"
+                                  style="-fx-border-color: #e74c3c; -fx-border-width: 2;"/>
+                        <Button text="➕ Agregar" onAction="#onAgregarMiercolesComida"
+                                style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-size: 11px;"/>
+                    </VBox>
+                    
+                    <VBox spacing="5" GridPane.columnIndex="4" GridPane.rowIndex="2">
+                        <Label fx:id="lblFechaJuevesC" text="--/--/----" style="-fx-font-size: 10px; -fx-text-fill: #7f8c8d;"/>
+                        <ListView fx:id="listJuevesComida" prefHeight="120"
+                                  style="-fx-border-color: #e74c3c; -fx-border-width: 2;"/>
+                        <Button text="➕ Agregar" onAction="#onAgregarJuevesComida"
+                                style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-size: 11px;"/>
+                    </VBox>
+                    
+                    <VBox spacing="5" GridPane.columnIndex="5" GridPane.rowIndex="2">
+                        <Label fx:id="lblFechaViernesC" text="--/--/----" style="-fx-font-size: 10px; -fx-text-fill: #7f8c8d;"/>
+                        <ListView fx:id="listViernesComida" prefHeight="120"
+                                  style="-fx-border-color: #e74c3c; -fx-border-width: 2;"/>
+                        <Button text="➕ Agregar" onAction="#onAgregarViernesComida"
+                                style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-size: 11px;"/>
+                    </VBox>
+                </GridPane>
+
+            </VBox>
+        </ScrollPane>
+    </center>
+
+    <bottom>
+        <VBox spacing="10" style="-fx-padding: 15; -fx-background-color: white;">
+            <Separator/>
+            
+            <!-- Botones de acción -->
+            <HBox alignment="CENTER" spacing="20">
+                <Button fx:id="btnGuardar" text="💾 Guardar Menú" onAction="#onGuardarClicked"
+                        style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 12 40;"/>
+                <Button fx:id="btnCancelar" text="❌ Cancelar" onAction="#onCancelarClicked"
+                        style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 12 40;"/>
+            </HBox>
+            
+            <!-- Status -->
+            <Label fx:id="lblStatus" text="✏️ Configura el menú para cada día y horario"
+                   style="-fx-text-fill: #7f8c8d; -fx-font-style: italic; -fx-font-size: 12px;"
+                   wrapText="true"/>
+        </VBox>
+    </bottom>
+</BorderPane>

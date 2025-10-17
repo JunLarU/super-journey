@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="app.controllers.productos.RegistroProductoEspecialController"
+      spacing="15"
+      style="-fx-background-color: #F9FAFB; -fx-padding: 20;"
+      prefWidth="600" prefHeight="650">
+
+    <!-- TÍTULO -->
+    <Label fx:id="lblTitulo" text="⭐ Nuevo Producto Especial"
+           style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+
+    <Separator/>
+
+    <!-- FORMULARIO PRINCIPAL -->
+    <VBox spacing="12" style="-fx-background-color: white; -fx-padding: 20; -fx-border-color: #ddd; -fx-border-radius: 5;">
+        
+        <!-- PRODUCTO -->
+        <GridPane hgap="10" vgap="10">
+            <columnConstraints>
+                <ColumnConstraints prefWidth="120"/>
+                <ColumnConstraints hgrow="ALWAYS"/>
+            </columnConstraints>
+            
+            <Label text="* Producto:" style="-fx-font-weight: bold;"/>
+            <ComboBox fx:id="cmbProducto" promptText="Selecciona un producto..."
+                      GridPane.columnIndex="1"/>
+        </GridPane>
+
+        <!-- DESCRIPCIÓN -->
+        <GridPane hgap="10" vgap="10">
+            <columnConstraints>
+                <ColumnConstraints prefWidth="120"/>
+                <ColumnConstraints hgrow="ALWAYS"/>
+            </columnConstraints>
+            
+            <Label text="Descripción:"/>
+            <TextField fx:id="txtDescripcion" promptText="Descripción de la promoción..."
+                       GridPane.columnIndex="1"/>
+        </GridPane>
+
+        <!-- PRECIO ESPECIAL -->
+        <GridPane hgap="10" vgap="10">
+            <columnConstraints>
+                <ColumnConstraints prefWidth="120"/>
+                <ColumnConstraints hgrow="ALWAYS"/>
+            </columnConstraints>
+            
+            <Label text="* Precio Especial:" style="-fx-font-weight: bold;"/>
+            <TextField fx:id="txtPrecioEspecial" promptText="0.00"
+                       GridPane.columnIndex="1"/>
+        </GridPane>
+
+        <!-- FECHA Y HORA DE INICIO -->
+        <Label text="* Fecha y Hora de Inicio:" style="-fx-font-weight: bold; -fx-padding: 5 0 0 0;"/>
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <DatePicker fx:id="dtpFechaInicio" prefWidth="150"/>
+            <Label text="Hora:"/>
+            <Spinner fx:id="spnHoraInicio" prefWidth="60" editable="true"/>
+            <Label text=":"/>
+            <Spinner fx:id="spnMinutoInicio" prefWidth="60" editable="true"/>
+        </HBox>
+
+        <!-- FECHA Y HORA DE FIN -->
+        <Label text="* Fecha y Hora de Fin:" style="-fx-font-weight: bold; -fx-padding: 5 0 0 0;"/>
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <DatePicker fx:id="dtpFechaFin" prefWidth="150"/>
+            <Label text="Hora:"/>
+            <Spinner fx:id="spnHoraFin" prefWidth="60" editable="true"/>
+            <Label text=":"/>
+            <Spinner fx:id="spnMinutoFin" prefWidth="60" editable="true"/>
+        </HBox>
+
+        <!-- ACTIVO -->
+        <CheckBox fx:id="chkActivo" text="✅ Producto especial activo"
+                  selected="true" style="-fx-font-weight: bold; -fx-padding: 10 0 0 0;"/>
+
+    </VBox>
+
+    <!-- INFORMACIÓN ADICIONAL -->
+    <VBox spacing="5" style="-fx-background-color: #e8f4fd; -fx-padding: 15; -fx-border-color: #3498db; -fx-border-radius: 5;">
+        <Label text="💡 Información:" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+        <Label text="• El producto especial aplicará durante el rango de fecha y hora especificado" 
+               style="-fx-text-fill: #34495e; -fx-font-size: 12px;"/>
+        <Label text="• Puedes crear promociones por horas específicas (ej: Happy Hour 14:00-16:00)" 
+               style="-fx-text-fill: #34495e; -fx-font-size: 12px;"/>
+        <Label text="• Los campos marcados con * son obligatorios" 
+               style="-fx-text-fill: #e74c3c; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+    </VBox>
+
+    <!-- BOTONES -->
+    <HBox spacing="15" alignment="CENTER_RIGHT" style="-fx-padding: 10 0 0 0;">
+        <Button fx:id="btnCancelar" text="❌ Cancelar" onAction="#onCancelarClicked"
+                style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 8 20;"/>
+        <Button fx:id="btnGuardar" text="💾 Guardar" onAction="#onGuardarClicked"
+                style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 8 30;"/>
+    </HBox>
+
+    <!-- STATUS -->
+    <Separator/>
+    <Label fx:id="lblStatus" text="✏️ Completa los campos para crear un producto especial"
+           style="-fx-text-fill: #7f8c8d; -fx-font-style: italic; -fx-font-size: 12px;"
+           wrapText="true"/>
+
+</VBox>

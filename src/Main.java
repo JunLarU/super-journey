@@ -1,7 +1,9 @@
 import core.SessionManager;
 import core.data.Users.AllUsers;
 import core.data.Ingredientes.AllIngredientes;
+import core.data.Menus.AllMenus;
 import core.data.Productos.AllProductos;
+import core.data.Productos.AllProductosEspeciales;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,7 +17,10 @@ public class Main extends Application {
     private final AllUsers allUsers = AllUsers.getInstance();
     private final AllIngredientes allIngredientes = AllIngredientes.getInstance(); // 🧩 NUEVO
     private final AllProductos allProductos = AllProductos.getInstance(); // ��� NUEVO
+    private final AllMenus allMenus = AllMenus.getInstance(); // 🧩 NUEVO
+    private final AllProductosEspeciales allProductosEspeciales = AllProductosEspeciales.getInstance(); // 🧩 NUEVO
     private final SessionManager sessionManager = SessionManager.getInstance();
+
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -50,6 +55,8 @@ public class Main extends Application {
             allUsers.saveUsers();
             allIngredientes.saveToFile();
             allProductos.saveToFile();
+            allMenus.saveToFile();
+            allProductosEspeciales.saveToFile();
             System.out.println("✅ Datos guardados correctamente.");
         }));
 
@@ -59,6 +66,9 @@ public class Main extends Application {
             allUsers.saveUsers();
             allProductos.saveToFile();
             allIngredientes.saveToFile();
+            allMenus.saveToFile();
+            allProductosEspeciales.saveToFile();
+            System.out.println("✅ Datos guardados correctamente.");
         });
     }
 

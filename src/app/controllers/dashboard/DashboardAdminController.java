@@ -54,12 +54,12 @@ public class DashboardAdminController {
     
     @FXML 
     private void onMenusClicked() { 
-        cargarVista("Menus", "/app/views/admin/Menus.fxml"); 
+        cargarVista("Menus", "/app/views/menus/Menus.fxml"); 
     }
     
     @FXML 
     private void onBebidasClicked() { 
-        cargarVista("Bebidas", "/app/views/admin/Bebidas.fxml"); 
+        cargarVista("Bebidas", "/app/views/productos/productosEspeciales.fxml"); 
     }
     
     @FXML 
