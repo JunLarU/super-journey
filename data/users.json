@@ -31,5 +31,16 @@
         "email": "juanlarios.118@gmail.com",
         "username": "317673",
         "apellidoMaterno": "Estrada"
+    },
+    {
+        "apellidoPaterno": "Botello",
+        "clave": "285696",
+        "password": "1234",
+        "phone": "4481515617",
+        "name": "Alberto",
+        "isAdmin": false,
+        "email": "mbotello06@alumnos.uaq.mx",
+        "username": "285696",
+        "apellidoMaterno": "Landero"
     }
 ]

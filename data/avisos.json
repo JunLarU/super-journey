@@ -24,5 +24,18 @@
         "ID": 2,
         "Titulo": "Hola",
         "IDUsuarioCreador": "U001"
+    },
+    {
+        "Prioridad": "Importante",
+        "FechaPublicacion": "2025-10-30T13:42:24.9973663",
+        "FechaFin": "2025-10-30T20:00:00",
+        "TipoAviso": "NoLaboral",
+        "Establecimiento": "Ambos",
+        "FechaInicio": "2025-10-30T08:00:00",
+        "Contenido": "El día de hoy, cerraremos por día de muertos",
+        "Activo": true,
+        "ID": 3,
+        "Titulo": "Cerrado",
+        "IDUsuarioCreador": "U001"
     }
 ]

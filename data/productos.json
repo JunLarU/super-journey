@@ -298,5 +298,74 @@
             "Disponible": true,
             "Precio": 95
         }]
+    },
+    {
+        "Nombre": "Ensalada a la Botello",
+        "Calorias": 400,
+        "PrecioBase": 150,
+        "Categoria": "Ensaladas",
+        "Ingredientes": [
+            {
+                "NombreIngrediente": "Aguacate2",
+                "Orden": 1,
+                "Cantidad": 0,
+                "Sustituible": false,
+                "Sustitutos": [],
+                "IDIngrediente": 22,
+                "Eliminable": true
+            },
+            {
+                "NombreIngrediente": "Carne de Res",
+                "Orden": 2,
+                "Cantidad": 0,
+                "Sustituible": true,
+                "Sustitutos": [{
+                    "NombreIngrediente": "Carne Vegetal",
+                    "CostoExtra": 20,
+                    "IDIngrediente": 18,
+                    "Disponible": true
+                }],
+                "IDIngrediente": 2,
+                "Eliminable": false
+            },
+            {
+                "NombreIngrediente": "Lechuga",
+                "Orden": 3,
+                "Cantidad": 0,
+                "Sustituible": false,
+                "Sustitutos": [],
+                "IDIngrediente": 4,
+                "Eliminable": false
+            }
+        ],
+        "Gramaje": 300,
+        "Descripcion": "Ensalada a la Botello",
+        "ID": 4,
+        "URLFoto": "",
+        "Disponible": true,
+        "Tamanos": [
+            {
+                "Nombre": "Chico",
+                "Orden": 1,
+                "Gramaje": 150,
+                "Descripcion": "Porción chica",
+                "ID": 1,
+                "Piezas": 0,
+                "Capacidad": 0,
+                "Disponible": true,
+                "Precio": 75
+            },
+            {
+                "Nombre": "Mediano",
+                "Orden": 2,
+                "Gramaje": 250,
+                "Descripcion": "Porción mediana",
+                "ID": 2,
+                "Piezas": 0,
+                "Capacidad": 0,
+                "Disponible": true,
+                "Precio": 110
+            }
+        ]
     }
 ]

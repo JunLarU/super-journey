@@ -166,5 +166,21 @@
         "Descripcion": "Tes",
         "Alergeno": true,
         "ID": 21
+    },
+    {
+        "Nombre": "Aguacate2",
+        "Calorias": 500,
+        "categoria": "Vegetales",
+        "Descripcion": "Avocado",
+        "Alergeno": true,
+        "ID": 22
+    },
+    {
+        "Nombre": "Sal",
+        "Calorias": 1,
+        "categoria": "Aderezos",
+        "Descripcion": "Sal",
+        "Alergeno": true,
+        "ID": 23
     }
 ]

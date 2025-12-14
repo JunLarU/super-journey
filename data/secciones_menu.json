@@ -42,5 +42,22 @@
         "ID": 2,
         "URLFoto": "",
         "FechaCreacion": "2025-10-17"
+    },
+    {
+        "Nombre": "Ensaladas",
+        "Productos": [{
+            "Destacado": false,
+            "NombreProducto": "Ensalada a la Botello",
+            "Orden": 1,
+            "IDSeccion": 0,
+            "ID": 0,
+            "IDProducto": 4
+        }],
+        "Activo": true,
+        "Color": "#008000",
+        "Descripcion": "Ensaladas",
+        "ID": 3,
+        "URLFoto": "",
+        "FechaCreacion": "2025-10-30"
     }
 ]
