@@ -5,23 +5,26 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Representa un ingrediente dentro de un producto
- * Incluye sus sustitutos disponibles
- */
 public class ProductoIngrediente {
-    private int idIngrediente;
-    private String nombreIngrediente; // Para mostrar en UI
-    private double cantidad; // en gramos/ml
-    private boolean eliminable; // Si el cliente puede eliminarlo
-    private boolean sustituible; // Si el cliente puede sustituirlo
-    private int orden; // Para ordenar en la lista
-    private List<Sustituto> sustitutos; // Lista de sustitutos disponibles
 
-    public ProductoIngrediente(int idIngrediente, String nombreIngrediente, double cantidad, 
-                              boolean eliminable, boolean sustituible, int orden) {
+    private int id;
+    private int idIngrediente;
+    private String nombre;
+    private double cantidad;
+    private boolean eliminable;
+    private boolean sustituible;
+    private int orden;
+    private List<Sustituto> sustitutos;
+
+    public ProductoIngrediente() {
+        this.sustitutos = new ArrayList<>();
+    }
+
+    // Constructor actualizado con todos los parámetros
+    public ProductoIngrediente(int idIngrediente, String nombre, double cantidad,
+            boolean eliminable, boolean sustituible, int orden) {
         this.idIngrediente = idIngrediente;
-        this.nombreIngrediente = nombreIngrediente;
+        this.nombre = nombre;
         this.cantidad = cantidad;
         this.eliminable = eliminable;
         this.sustituible = sustituible;
@@ -29,76 +32,190 @@ public class ProductoIngrediente {
         this.sustitutos = new ArrayList<>();
     }
 
-    // Constructor desde JSON
     public ProductoIngrediente(JSONObject json) {
-        this.idIngrediente = json.getInt("IDIngrediente");
-        this.nombreIngrediente = json.getString("NombreIngrediente");
-        this.cantidad = json.optDouble("Cantidad", 0.0);
-        this.eliminable = json.optBoolean("Eliminable", false);
-        this.sustituible = json.optBoolean("Sustituible", false);
-        this.orden = json.optInt("Orden", 0);
-        
-        // Cargar sustitutos
         this.sustitutos = new ArrayList<>();
-        if (json.has("Sustitutos")) {
-            JSONArray sustArray = json.getJSONArray("Sustitutos");
-            for (int i = 0; i < sustArray.length(); i++) {
-                sustitutos.add(new Sustituto(sustArray.getJSONObject(i)));
+        
+        // Buscar ID con diferentes nombres
+        if (json.has("ID")) {
+            this.id = json.optInt("ID", 0);
+        } else if (json.has("id")) {
+            this.id = json.optInt("id", 0);
+        }
+        
+        // Buscar IDIngrediente con diferentes nombres
+        if (json.has("IDIngrediente")) {
+            this.idIngrediente = json.optInt("IDIngrediente", 0);
+        } else if (json.has("idIngrediente")) {
+            this.idIngrediente = json.optInt("idIngrediente", 0);
+        }
+        
+        // Buscar Nombre con diferentes nombres
+        if (json.has("Nombre")) {
+            this.nombre = json.optString("Nombre", "");
+        } else if (json.has("nombre")) {
+            this.nombre = json.optString("nombre", "");
+        }
+        
+        // Buscar Cantidad con diferentes nombres
+        if (json.has("Cantidad")) {
+            this.cantidad = json.optDouble("Cantidad", 0.0);
+        } else if (json.has("cantidad")) {
+            this.cantidad = json.optDouble("cantidad", 0.0);
+        }
+        
+        // Buscar Eliminable con diferentes nombres
+        if (json.has("Eliminable")) {
+            this.eliminable = json.optInt("Eliminable", 0) == 1;
+        } else if (json.has("eliminable")) {
+            if (json.get("eliminable") instanceof Boolean) {
+                this.eliminable = json.getBoolean("eliminable");
+            } else {
+                this.eliminable = json.optInt("eliminable", 0) == 1;
+            }
+        }
+        
+        // Buscar Sustituible con diferentes nombres
+        if (json.has("Sustituible")) {
+            this.sustituible = json.optInt("Sustituible", 0) == 1;
+        } else if (json.has("sustituible")) {
+            if (json.get("sustituible") instanceof Boolean) {
+                this.sustituible = json.getBoolean("sustituible");
+            } else {
+                this.sustituible = json.optInt("sustituible", 0) == 1;
+            }
+        }
+        
+        // Buscar Orden con diferentes nombres
+        if (json.has("Orden")) {
+            this.orden = json.optInt("Orden", 1);
+        } else if (json.has("orden")) {
+            this.orden = json.optInt("orden", 1);
+        }
+
+        // Cargar sustitutos si existen
+        if (json.has("Sustitutos") && json.get("Sustitutos") instanceof JSONArray) {
+            JSONArray sustitutosArray = json.getJSONArray("Sustitutos");
+            for (int i = 0; i < sustitutosArray.length(); i++) {
+                JSONObject sustJson = sustitutosArray.getJSONObject(i);
+                Sustituto sust = new Sustituto(sustJson);
+                this.sustitutos.add(sust);
             }
         }
     }
 
-    // Convertir a JSON
+    // Para enviar al servidor
     public JSONObject toJson() {
         JSONObject obj = new JSONObject();
-        obj.put("IDIngrediente", idIngrediente);
-        obj.put("NombreIngrediente", nombreIngrediente);
-        obj.put("Cantidad", cantidad);
-        obj.put("Eliminable", eliminable);
-        obj.put("Sustituible", sustituible);
-        obj.put("Orden", orden);
         
-        // Guardar sustitutos
-        JSONArray sustArray = new JSONArray();
-        for (Sustituto s : sustitutos) {
-            sustArray.put(s.toJson());
+        obj.put("idIngrediente", idIngrediente);
+        obj.put("nombre", nombre);
+        obj.put("cantidad", cantidad);
+        obj.put("eliminable", eliminable ? 1 : 0);
+        obj.put("sustituible", sustituible ? 1 : 0);
+        obj.put("orden", orden);
+
+        // Agregar sustitutos si existen
+        if (sustitutos != null && !sustitutos.isEmpty()) {
+            JSONArray sustArr = new JSONArray();
+            for (Sustituto sust : sustitutos) {
+                sustArr.put(sust.toJson());
+            }
+            obj.put("sustitutos", sustArr);
         }
-        obj.put("Sustitutos", sustArray);
-        
+
         return obj;
     }
 
-    // Métodos para manejar sustitutos
-    public void agregarSustituto(Sustituto sustituto) {
-        sustitutos.add(sustituto);
-    }
+    // Para formularios
+    public JSONObject toJsonForForm() {
+        JSONObject obj = new JSONObject();
+        
+        obj.put("ID", id);
+        obj.put("IDIngrediente", idIngrediente);
+        obj.put("Nombre", nombre);
+        obj.put("Cantidad", cantidad);
+        obj.put("Eliminable", eliminable ? 1 : 0);
+        obj.put("Sustituible", sustituible ? 1 : 0);
+        obj.put("Orden", orden);
 
-    public void eliminarSustituto(int idIngrediente) {
-        sustitutos.removeIf(s -> s.getIdIngrediente() == idIngrediente);
+        // Agregar sustitutos si existen
+        if (sustitutos != null && !sustitutos.isEmpty()) {
+            JSONArray sustArr = new JSONArray();
+            for (Sustituto sust : sustitutos) {
+                sustArr.put(sust.toJsonForForm());
+            }
+            obj.put("Sustitutos", sustArr);
+        }
+
+        return obj;
     }
 
     // Getters y Setters
-    public int getIdIngrediente() { return idIngrediente; }
-    public String getNombreIngrediente() { return nombreIngrediente; }
-    public double getCantidad() { return cantidad; }
-    public boolean isEliminable() { return eliminable; }
-    public boolean isSustituible() { return sustituible; }
-    public int getOrden() { return orden; }
-    public List<Sustituto> getSustitutos() { return new ArrayList<>(sustitutos); }
+    public int getId() {
+        return id;
+    }
 
-    public void setIdIngrediente(int idIngrediente) { this.idIngrediente = idIngrediente; }
-    public void setNombreIngrediente(String nombreIngrediente) { this.nombreIngrediente = nombreIngrediente; }
-    public void setCantidad(double cantidad) { this.cantidad = cantidad; }
-    public void setEliminable(boolean eliminable) { this.eliminable = eliminable; }
-    public void setSustituible(boolean sustituible) { this.sustituible = sustituible; }
-    public void setOrden(int orden) { this.orden = orden; }
-    public void setSustitutos(List<Sustituto> sustitutos) { this.sustitutos = new ArrayList<>(sustitutos); }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    @Override
-    public String toString() {
-        String opciones = "";
-        if (eliminable) opciones += " [Eliminable]";
-        if (sustituible) opciones += " [Sustituible]";
-        return nombreIngrediente + " (" + cantidad + "g)" + opciones;
+    public int getIdIngrediente() {
+        return idIngrediente;
+    }
+
+    public void setIdIngrediente(int idIngrediente) {
+        this.idIngrediente = idIngrediente;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getNombreIngrediente() {
+        return nombre;
+    }
+
+    public double getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(double cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public boolean isEliminable() {
+        return eliminable;
+    }
+
+    public void setEliminable(boolean eliminable) {
+        this.eliminable = eliminable;
+    }
+
+    public boolean isSustituible() {
+        return sustituible;
+    }
+
+    public void setSustituible(boolean sustituible) {
+        this.sustituible = sustituible;
+    }
+
+    public int getOrden() {
+        return orden;
+    }
+
+    public void setOrden(int orden) {
+        this.orden = orden;
+    }
+
+    public List<Sustituto> getSustitutos() {
+        return sustitutos;
+    }
+
+    public void setSustitutos(List<Sustituto> sustitutos) {
+        this.sustitutos = sustitutos;
     }
 }

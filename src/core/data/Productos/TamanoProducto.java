@@ -2,23 +2,94 @@ package core.data.Productos;
 
 import org.json.JSONObject;
 
-/**
- * Representa un tamaño específico de un producto
- * Ejemplo: Chico, Mediano, Grande, Media Orden, etc.
- */
 public class TamanoProducto {
+
     private int id;
-    private String nombre; // Chico, Mediano, Grande, Orden Completa, etc.
-    private String descripcion; // Descripción adicional
-    private double capacidad; // en ml (para bebidas)
-    private double gramaje; // en gramos (para comida)
-    private int piezas; // número de piezas (para tacos, nuggets, etc.)
+    private String nombre;
+    private String descripcion;
+    private Double capacidad;
+    private Double gramaje;
+    private Integer piezas;
     private double precio;
-    private int orden; // Para ordenar (1=más pequeño, 2=mediano, 3=más grande)
+    private int orden;
     private boolean disponible;
 
-    public TamanoProducto(int id, String nombre, String descripcion, double capacidad, 
-                         double gramaje, int piezas, double precio, int orden, boolean disponible) {
+    public TamanoProducto() {
+    }
+
+    public TamanoProducto(JSONObject json) {
+        // Buscar campos con diferentes nombres (mayúsculas/minúsculas)
+        if (json.has("ID")) {
+            this.id = json.optInt("ID", 0);
+        } else if (json.has("id")) {
+            this.id = json.optInt("id", 0);
+        }
+
+        if (json.has("Nombre")) {
+            this.nombre = json.optString("Nombre", "");
+        } else if (json.has("nombre")) {
+            this.nombre = json.optString("nombre", "");
+        }
+
+        if (json.has("Descripcion")) {
+            this.descripcion = json.optString("Descripcion", "");
+        } else if (json.has("descripcion")) {
+            this.descripcion = json.optString("descripcion", "");
+        }
+
+        // Capacidad
+        if (json.has("Capacidad") && !json.isNull("Capacidad")) {
+            this.capacidad = json.optDouble("Capacidad");
+        } else if (json.has("capacidad") && !json.isNull("capacidad")) {
+            this.capacidad = json.optDouble("capacidad");
+        }
+
+        // Gramaje
+        if (json.has("Gramaje") && !json.isNull("Gramaje")) {
+            this.gramaje = json.optDouble("Gramaje");
+        } else if (json.has("gramaje") && !json.isNull("gramaje")) {
+            this.gramaje = json.optDouble("gramaje");
+        }
+
+        // Piezas
+        if (json.has("Piezas") && !json.isNull("Piezas")) {
+            this.piezas = json.optInt("Piezas");
+        } else if (json.has("piezas") && !json.isNull("piezas")) {
+            this.piezas = json.optInt("piezas");
+        }
+
+        // Precio
+        if (json.has("Precio")) {
+            this.precio = json.optDouble("Precio", 0.0);
+        } else if (json.has("precio")) {
+            this.precio = json.optDouble("precio", 0.0);
+        }
+
+        // Orden
+        if (json.has("Orden")) {
+            this.orden = json.optInt("Orden", 1);
+        } else if (json.has("orden")) {
+            this.orden = json.optInt("orden", 1);
+        }
+
+        // Disponible
+        if (json.has("Disponible")) {
+            int disp = json.optInt("Disponible", 1);
+            this.disponible = disp == 1;
+        } else if (json.has("disponible")) {
+            if (json.get("disponible") instanceof Boolean) {
+                this.disponible = json.getBoolean("disponible");
+            } else {
+                int disp = json.optInt("disponible", 1);
+                this.disponible = disp == 1;
+            }
+        }
+    }
+
+    // Constructor con parámetros individuales
+    public TamanoProducto(int id, String nombre, String descripcion,
+            Double capacidad, Double gramaje, Integer piezas,
+            double precio, int orden, boolean disponible) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -30,62 +101,110 @@ public class TamanoProducto {
         this.disponible = disponible;
     }
 
-    // Constructor desde JSON
-    public TamanoProducto(JSONObject json) {
-        this.id = json.optInt("ID", 0);
-        this.nombre = json.getString("Nombre");
-        this.descripcion = json.optString("Descripcion", "");
-        this.capacidad = json.optDouble("Capacidad", 0.0);
-        this.gramaje = json.optDouble("Gramaje", 0.0);
-        this.piezas = json.optInt("Piezas", 0);
-        this.precio = json.getDouble("Precio");
-        this.orden = json.optInt("Orden", 1);
-        this.disponible = json.optBoolean("Disponible", true);
-    }
-
-    // Convertir a JSON
+    // Para enviar al servidor (usando minúsculas)
     public JSONObject toJson() {
         JSONObject obj = new JSONObject();
+
+        obj.put("id", id);
+        obj.put("nombre", nombre);
+        obj.put("descripcion", descripcion);
+        obj.put("capacidad", capacidad != null ? capacidad : JSONObject.NULL);
+        obj.put("gramaje", gramaje != null ? gramaje : JSONObject.NULL);
+        obj.put("piezas", piezas != null ? piezas : JSONObject.NULL);
+        obj.put("precio", precio);
+        obj.put("orden", orden);
+        obj.put("disponible", disponible ? 1 : 0);
+
+        return obj;
+    }
+
+    // Para formularios (usando mayúsculas)
+    public JSONObject toJsonForForm() {
+        JSONObject obj = new JSONObject();
+
         obj.put("ID", id);
         obj.put("Nombre", nombre);
         obj.put("Descripcion", descripcion);
-        obj.put("Capacidad", capacidad);
-        obj.put("Gramaje", gramaje);
-        obj.put("Piezas", piezas);
+        obj.put("Capacidad", capacidad != null ? capacidad : JSONObject.NULL);
+        obj.put("Gramaje", gramaje != null ? gramaje : JSONObject.NULL);
+        obj.put("Piezas", piezas != null ? piezas : JSONObject.NULL);
         obj.put("Precio", precio);
         obj.put("Orden", orden);
-        obj.put("Disponible", disponible);
+        obj.put("Disponible", disponible ? 1 : 0);
+
         return obj;
     }
 
     // Getters y Setters
-    public int getId() { return id; }
-    public String getNombre() { return nombre; }
-    public String getDescripcion() { return descripcion; }
-    public double getCapacidad() { return capacidad; }
-    public double getGramaje() { return gramaje; }
-    public int getPiezas() { return piezas; }
-    public double getPrecio() { return precio; }
-    public int getOrden() { return orden; }
-    public boolean isDisponible() { return disponible; }
+    public int getId() {
+        return id;
+    }
 
-    public void setId(int id) { this.id = id; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
-    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
-    public void setCapacidad(double capacidad) { this.capacidad = capacidad; }
-    public void setGramaje(double gramaje) { this.gramaje = gramaje; }
-    public void setPiezas(int piezas) { this.piezas = piezas; }
-    public void setPrecio(double precio) { this.precio = precio; }
-    public void setOrden(int orden) { this.orden = orden; }
-    public void setDisponible(boolean disponible) { this.disponible = disponible; }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder(nombre);
-        if (capacidad > 0) sb.append(" (").append(capacidad).append("ml)");
-        if (gramaje > 0) sb.append(" (").append(gramaje).append("g)");
-        if (piezas > 0) sb.append(" (").append(piezas).append(" pzas)");
-        sb.append(" - $").append(precio);
-        return sb.toString();
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public Double getCapacidad() {
+        return capacidad;
+    }
+
+    public void setCapacidad(Double capacidad) {
+        this.capacidad = capacidad;
+    }
+
+    public Double getGramaje() {
+        return gramaje;
+    }
+
+    public void setGramaje(Double gramaje) {
+        this.gramaje = gramaje;
+    }
+
+    public Integer getPiezas() {
+        return piezas;
+    }
+
+    public void setPiezas(Integer piezas) {
+        this.piezas = piezas;
+    }
+
+    public double getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(double precio) {
+        this.precio = precio;
+    }
+
+    public int getOrden() {
+        return orden;
+    }
+
+    public void setOrden(int orden) {
+        this.orden = orden;
+    }
+
+    public boolean isDisponible() {
+        return disponible;
+    }
+
+    public void setDisponible(boolean disponible) {
+        this.disponible = disponible;
     }
 }

@@ -2,54 +2,99 @@ package core.data.Productos;
 
 import org.json.JSONObject;
 
-/**
- * Representa un sustituto para un ingrediente específico de un producto
- */
 public class Sustituto {
-    private int idIngrediente; // ID del ingrediente sustituto
-    private String nombreIngrediente; // Nombre para mostrar
-    private double costoExtra; // Costo adicional por la sustitución
+    private int id;
+    private int idIngredienteSustituto;
+    private String nombreIngrediente;
+    private double costoExtra;
     private boolean disponible;
 
-    public Sustituto(int idIngrediente, String nombreIngrediente, double costoExtra, boolean disponible) {
-        this.idIngrediente = idIngrediente;
+    public Sustituto() {}
+
+    public Sustituto(int idIngredienteSustituto, String nombreIngrediente, double costoExtra, boolean disponible) {
+        this.idIngredienteSustituto = idIngredienteSustituto;
         this.nombreIngrediente = nombreIngrediente;
         this.costoExtra = costoExtra;
         this.disponible = disponible;
     }
 
-    // Constructor desde JSON
     public Sustituto(JSONObject json) {
-        this.idIngrediente = json.getInt("IDIngrediente");
-        this.nombreIngrediente = json.getString("NombreIngrediente");
-        this.costoExtra = json.optDouble("CostoExtra", 0.0);
-        this.disponible = json.optBoolean("Disponible", true);
+        // Buscar campos con diferentes nombres
+        if (json.has("ID")) {
+            this.id = json.optInt("ID", 0);
+        } else if (json.has("id")) {
+            this.id = json.optInt("id", 0);
+        }
+        
+        if (json.has("IDIngredienteSustituto")) {
+            this.idIngredienteSustituto = json.optInt("IDIngredienteSustituto", 0);
+        } else if (json.has("idIngredienteSustituto")) {
+            this.idIngredienteSustituto = json.optInt("idIngredienteSustituto", 0);
+        } else if (json.has("idIngrediente")) {
+            this.idIngredienteSustituto = json.optInt("idIngrediente", 0);
+        }
+        
+        if (json.has("Nombre")) {
+            this.nombreIngrediente = json.optString("Nombre", "");
+        } else if (json.has("nombre")) {
+            this.nombreIngrediente = json.optString("nombre", "");
+        }
+        
+        if (json.has("CostoExtra")) {
+            this.costoExtra = json.optDouble("CostoExtra", 0.0);
+        } else if (json.has("costoExtra")) {
+            this.costoExtra = json.optDouble("costoExtra", 0.0);
+        }
+        
+        if (json.has("Disponible")) {
+            this.disponible = json.optInt("Disponible", 1) == 1;
+        } else if (json.has("disponible")) {
+            if (json.get("disponible") instanceof Boolean) {
+                this.disponible = json.getBoolean("disponible");
+            } else {
+                this.disponible = json.optInt("disponible", 1) == 1;
+            }
+        }
     }
 
-    // Convertir a JSON
+    // Para enviar al servidor
     public JSONObject toJson() {
         JSONObject obj = new JSONObject();
-        obj.put("IDIngrediente", idIngrediente);
-        obj.put("NombreIngrediente", nombreIngrediente);
+        obj.put("idIngrediente", idIngredienteSustituto);
+        obj.put("nombre", nombreIngrediente);
+        obj.put("costoExtra", costoExtra);
+        obj.put("disponible", disponible ? 1 : 0);
+        return obj;
+    }
+
+    // Para formularios
+    public JSONObject toJsonForForm() {
+        JSONObject obj = new JSONObject();
+        obj.put("ID", id);
+        obj.put("IDIngredienteSustituto", idIngredienteSustituto);
+        obj.put("Nombre", nombreIngrediente);
         obj.put("CostoExtra", costoExtra);
-        obj.put("Disponible", disponible);
+        obj.put("Disponible", disponible ? 1 : 0);
         return obj;
     }
 
     // Getters y Setters
-    public int getIdIngrediente() { return idIngrediente; }
-    public String getNombreIngrediente() { return nombreIngrediente; }
-    public double getCostoExtra() { return costoExtra; }
-    public boolean isDisponible() { return disponible; }
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
-    public void setIdIngrediente(int idIngrediente) { this.idIngrediente = idIngrediente; }
-    public void setNombreIngrediente(String nombreIngrediente) { this.nombreIngrediente = nombreIngrediente; }
-    public void setCostoExtra(double costoExtra) { this.costoExtra = costoExtra; }
-    public void setDisponible(boolean disponible) { this.disponible = disponible; }
-
-    @Override
-    public String toString() {
-        String extra = costoExtra > 0 ? " (+$" + costoExtra + ")" : "";
-        return nombreIngrediente + extra;
+    public int getIdIngredienteSustituto() { return idIngredienteSustituto; }
+    public void setIdIngredienteSustituto(int idIngredienteSustituto) { 
+        this.idIngredienteSustituto = idIngredienteSustituto; 
     }
+
+    public String getNombreIngrediente() { return nombreIngrediente; }
+    public void setNombreIngrediente(String nombreIngrediente) { 
+        this.nombreIngrediente = nombreIngrediente; 
+    }
+
+    public double getCostoExtra() { return costoExtra; }
+    public void setCostoExtra(double costoExtra) { this.costoExtra = costoExtra; }
+
+    public boolean isDisponible() { return disponible; }
+    public void setDisponible(boolean disponible) { this.disponible = disponible; }
 }

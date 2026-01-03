@@ -1,36 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.control.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" 
+            xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="app.controllers.productos.ProductosController"
             prefWidth="900" prefHeight="600"
             style="-fx-background-color: #F9FAFB;">
 
     <top>
         <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-padding: 15;">
-            <Label text="Productos" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+            <Label text="Gestión de Productos" 
+                   style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
             <Region HBox.hgrow="ALWAYS"/>
-            <TextField fx:id="txtBuscar" promptText="Buscar producto..." style="-fx-pref-width: 250px;"/>
-            <Button fx:id="btnRecargar" text="🔄" onAction="#cargarProductos" style="-fx-background-color: #27AE60; -fx-text-fill: white; -fx-background-radius: 6;"/>
-            <Button fx:id="btnNuevo" text="➕ Nuevo" onAction="#onNuevoClicked" style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-background-radius: 6; -fx-font-weight: bold;"/>
+            <TextField fx:id="txtBuscar" 
+                      promptText="Buscar producto..." 
+                      style="-fx-pref-width: 250px; -fx-background-radius: 6;"/>
+            <Button fx:id="btnRecargar" 
+                    text="🔄 Recargar" 
+                    style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-background-radius: 6; -fx-font-weight: bold;"/>
+            <Button fx:id="btnNuevo" 
+                    text="➕ Nuevo Producto" 
+                    style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-background-radius: 6; -fx-font-weight: bold;"/>
         </HBox>
     </top>
 
     <center>
         <VBox spacing="10" style="-fx-padding: 15;">
-            <TableView fx:id="tablaProductos" prefHeight="480">
+            <TableView fx:id="tablaProductos" 
+                      style="-fx-background-color: white; -fx-border-color: #ddd; -fx-border-radius: 5;"
+                      prefHeight="480">
                 <columns>
                     <TableColumn fx:id="colID" text="ID" prefWidth="60"/>
-                    <TableColumn fx:id="colNombre" text="Nombre" prefWidth="180"/>
-                    <TableColumn fx:id="colCategoria" text="Categoría" prefWidth="120"/>
-                    <TableColumn fx:id="colPrecio" text="Precio Base" prefWidth="100"/>
+                    <TableColumn fx:id="colNombre" text="Nombre" prefWidth="200"/>
+                    <TableColumn fx:id="colCategoria" text="Categoría" prefWidth="150"/>
+                    <TableColumn fx:id="colPrecio" text="Precio Base" prefWidth="120"/>
                     <TableColumn fx:id="colDisponible" text="Disponible" prefWidth="100"/>
-                    <TableColumn fx:id="colAcciones" text="Acciones" prefWidth="120"/>
+                    <TableColumn fx:id="colAcciones" text="Acciones" prefWidth="250"/>
                 </columns>
+                <placeholder>
+                    <Label text="No hay productos registrados" 
+                           style="-fx-text-fill: gray; -fx-font-size: 14px;"/>
+                </placeholder>
             </TableView>
-            <Label fx:id="lblEstado" text="Cargando productos..." style="-fx-text-fill: gray;"/>
+            
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label fx:id="lblEstado" 
+                       text="Cargando productos..." 
+                       style="-fx-text-fill: #7f8c8d; -fx-font-size: 12px;"/>
+            </HBox>
         </VBox>
     </center>
+    
+    <bottom>
+        <HBox spacing="10" alignment="CENTER_RIGHT" style="-fx-padding: 10;">
+            <Label text="Sistema de Gestión de Productos" 
+                   style="-fx-text-fill: #95a5a6; -fx-font-size: 11px;"/>
+        </HBox>
+    </bottom>
+
 </BorderPane>
