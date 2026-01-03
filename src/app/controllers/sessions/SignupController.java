@@ -3,6 +3,7 @@ package app.controllers.sessions;
 import core.SessionManager;
 import core.data.Users.AllUsers;
 import core.data.Users.User;
+import core.services.UserService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -13,17 +14,28 @@ import javafx.stage.Stage;
 
 public class SignupController {
 
-    @FXML private TextField txtExpediente;
-    @FXML private TextField txtNombre;
-    @FXML private TextField txtApellidoPaterno;
-    @FXML private TextField txtApellidoMaterno;
-    @FXML private TextField txtCorreo;
-    @FXML private TextField txtTelefono;
-    @FXML private PasswordField txtNip;
-    @FXML private RadioButton rbUsuario;
-    @FXML private RadioButton rbAdministrador;
-    @FXML private Label lblStatus;
-    @FXML private HBox roleBox;
+    @FXML
+    private TextField txtExpediente;
+    @FXML
+    private TextField txtNombre;
+    @FXML
+    private TextField txtApellidoPaterno;
+    @FXML
+    private TextField txtApellidoMaterno;
+    @FXML
+    private TextField txtCorreo;
+    @FXML
+    private TextField txtTelefono;
+    @FXML
+    private PasswordField txtNip;
+    @FXML
+    private RadioButton rbUsuario;
+    @FXML
+    private RadioButton rbAdministrador;
+    @FXML
+    private Label lblStatus;
+    @FXML
+    private HBox roleBox;
 
     private final AllUsers allUsers = AllUsers.getInstance();
     private final SessionManager sessionManager = SessionManager.getInstance();
@@ -54,7 +66,9 @@ public class SignupController {
      */
     @FXML
     private void onRegistrarClicked() {
-        String clave = txtExpediente.getText().trim();
+        System.out.println("[SignupController] onRegistrarClicked iniciado");
+
+        String expediente = txtExpediente.getText().trim();
         String nombre = txtNombre.getText().trim();
         String apellidoP = txtApellidoPaterno.getText().trim();
         String apellidoM = txtApellidoMaterno.getText().trim();
@@ -62,47 +76,54 @@ public class SignupController {
         String telefono = txtTelefono.getText().trim();
         String nip = txtNip.getText().trim();
 
-        // Validación de campos vacíos
-        if (clave.isEmpty() || nombre.isEmpty() || apellidoP.isEmpty() || correo.isEmpty() || nip.isEmpty()) {
+        System.out.println("[SignupController] Valores recibidos:");
+        System.out.println("  expediente: " + expediente);
+        System.out.println("  nombre: " + nombre);
+        System.out.println("  apellidoP: " + apellidoP);
+        System.out.println("  apellidoM: " + apellidoM);
+        System.out.println("  correo: " + correo);
+        System.out.println("  telefono: " + telefono);
+        System.out.println("  nip: " + nip);
+
+        if (expediente.isEmpty() || nombre.isEmpty() || apellidoP.isEmpty() || correo.isEmpty() || nip.isEmpty()) {
+            System.out.println("[SignupController] Validación falló: campos vacíos");
             lblStatus.setText("⚠️ Complete todos los campos obligatorios.");
             lblStatus.setStyle("-fx-text-fill: red;");
             return;
         }
 
-        // Verificar si ya existe el expediente
-        if (allUsers.getUserByClave(clave) != null) {
-            lblStatus.setText("⚠️ El expediente ya está registrado.");
-            lblStatus.setStyle("-fx-text-fill: red;");
-            return;
+        String tipo = "Usuario";
+        if (sessionManager.isAuthenticated() && sessionManager.isAdmin()) {
+            tipo = rbAdministrador.isSelected() ? "Administrador" : "Usuario";
         }
+        System.out.println("[SignupController] tipo calculado: " + tipo);
 
-        // Crear nuevo usuario
-        User nuevo = new User(
-            clave,           // username
-            nip,             // password
-            nombre,
-            apellidoP,
-            apellidoM,
-            correo,
-            telefono
-        );
-        nuevo.setClave(clave);
+        lblStatus.setText("⏳ Registrando...");
+        lblStatus.setStyle("-fx-text-fill: black;");
 
-        // Solo se puede asignar rol de administrador si el usuario actual es admin
-        User currentUser = sessionManager.getCurrentUser();
-        if (currentUser != null && currentUser.isAdmin()) {
-            nuevo.setAdmin(rbAdministrador.isSelected());
-        } else {
-            nuevo.setAdmin(false); // por defecto, usuario normal
-        }
+        UserService.signup(
+                expediente, nombre, apellidoP, apellidoM,
+                correo, telefono, nip, tipo,
+                new UserService.SignupCallback() {
+                    @Override
+                    public void onSuccess(org.json.JSONObject response) {
+                        System.out.println("[SignupController] callback.onSuccess");
+                        javafx.application.Platform.runLater(() -> {
+                            lblStatus.setText("✅ Usuario registrado correctamente.");
+                            lblStatus.setStyle("-fx-text-fill: green;");
+                            limpiarCampos();
+                        });
+                    }
 
-        // Guardar el nuevo usuario
-        allUsers.addUser(nuevo);
-
-        lblStatus.setText("✅ Usuario registrado correctamente.");
-        lblStatus.setStyle("-fx-text-fill: green;");
-
-        limpiarCampos();
+                    @Override
+                    public void onError(String error) {
+                        System.out.println("[SignupController] callback.onError: " + error);
+                        javafx.application.Platform.runLater(() -> {
+                            lblStatus.setText("⚠️ " + error);
+                            lblStatus.setStyle("-fx-text-fill: red;");
+                        });
+                    }
+                });
     }
 
     /**

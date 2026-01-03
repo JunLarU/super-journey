@@ -104,37 +104,47 @@ public class HTTPConnection {
     }
 
     public Task<HttpResponse<String>> requestAsync(
-        String endpoint,
-        Optional<Integer> method,
-        Optional<String> body,
-        Optional<Integer> bodyOption,
-        Optional<String> errorMessageHeader,
-        Optional<String> errorMessageContent
+    String endpoint,
+    Optional<Integer> method,
+    Optional<String> body,
+    Optional<Integer> bodyOption,
+    Optional<String> errorMessageHeader,
+    Optional<String> errorMessageContent
 ) {
     return new Task<>() {
         @Override
         protected HttpResponse<String> call() throws Exception {
             try {
-                return HTTPConnection.this.sendRequest(endpoint, method, body, bodyOption);
+                System.out.println("[HTTPConnection] Enviando petición a: " + endpoint);
+                System.out.println("[HTTPConnection] Método: " + method.orElse(0));
+                System.out.println("[HTTPConnection] Body: " + body.orElse("(empty)"));
+
+                HttpResponse<String> response = HTTPConnection.this.sendRequest(endpoint, method, body, bodyOption);
+
+                System.out.println("[HTTPConnection] Recibido status " + response.statusCode());
+                return response;
 
             } catch (Exception ex) {
 
-                // Mostrar diálogo en el hilo de JavaFX
+                String msg = errorMessageContent.orElse("") +
+                             (ex.getMessage() != null ? ex.getMessage() : "Error desconocido");
+
+                System.out.println("[HTTPConnection] Error de conexión: " + msg);
+
                 javafx.application.Platform.runLater(() -> {
                     FXDialogs.error(
-                            "Conexión fallida",
-                            errorMessageHeader.orElse("No se pudo conectar al servidor"),
-                            (errorMessageContent.orElse("") +
-                            ex.getMessage() != null ? ex.getMessage() : "Error desconocido")
+                        "Conexión fallida",
+                        errorMessageHeader.orElse("No se pudo conectar al servidor"),
+                        msg
                     );
                 });
 
-                // IMPORTANTE: relanzar la excepción
                 throw ex;
             }
         }
     };
 }
+
 
 
     public void setBaseURL(String baseURL) {

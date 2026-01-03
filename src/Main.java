@@ -23,14 +23,6 @@ public class Main extends Application {
     // Instancias de los Singleton utilizados para el almacenamiento de todos los
     // datos.
     // Se empieza cargando todo a memoria, para poderlo usar en la aplicación
-    private final AllUsers allUsers = AllUsers.getInstance();
-    private final AllIngredientes allIngredientes = AllIngredientes.getInstance();
-    private final AllProductos allProductos = AllProductos.getInstance();
-    private final AllMenus allMenus = AllMenus.getInstance();
-    private final AllProductosEspeciales allProductosEspeciales = AllProductosEspeciales.getInstance();
-    private final AllAvisos allAvisos = AllAvisos.getInstance();
-    private final SessionManager sessionManager = SessionManager.getInstance();
-
     @Override
     public void start(Stage primaryStage) throws Exception {
         
@@ -98,12 +90,6 @@ public class Main extends Application {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             // System.out.println("Guardando usuarios e ingredientes en JSON antes de
             // salir...");
-            allUsers.saveUsers();
-            allIngredientes.saveToFile();
-            allProductos.saveToFile();
-            allMenus.saveToFile();
-            allProductosEspeciales.saveToFile();
-            allAvisos.saveToFile();
             // System.out.println("Datos guardados correctamente.");
         }));
 
@@ -111,12 +97,6 @@ public class Main extends Application {
         primaryStage.setOnCloseRequest(event -> {
             // System.out.println("Evento de cierre detectado. Guardando usuarios e
             // ingredientes...");
-            allUsers.saveUsers();
-            allProductos.saveToFile();
-            allIngredientes.saveToFile();
-            allMenus.saveToFile();
-            allProductosEspeciales.saveToFile();
-            allAvisos.saveToFile();
             // System.out.println("Datos guardados correctamente.");
         });
     }

@@ -2,6 +2,7 @@ package app.controllers.sessions;
 
 import core.data.Users.AllUsers;
 import core.data.Users.User;
+import core.services.UserService;
 import app.controllers.dashboard.DashboardRouter;
 import core.SessionManager;
 
@@ -14,10 +15,14 @@ import javafx.stage.Stage;
 
 public class LoginController {
 
-    @FXML private TextField txtExpediente;   // campo de clave
-    @FXML private PasswordField txtNip;      // campo de password
-    @FXML private Label lblStatus;
-    @FXML private Button btnGoSignup;
+    @FXML
+    private TextField txtExpediente; // campo de clave
+    @FXML
+    private PasswordField txtNip; // campo de password
+    @FXML
+    private Label lblStatus;
+    @FXML
+    private Button btnGoSignup;
 
     private final AllUsers allUsers = AllUsers.getInstance();
     private final SessionManager sessionManager = SessionManager.getInstance();
@@ -25,42 +30,58 @@ public class LoginController {
     /**
      * Acción al presionar el botón "Iniciar Sesión"
      */
-     @FXML
+    @FXML
     private void onLoginClicked() {
         String expediente = txtExpediente.getText().trim();
         String nip = txtNip.getText().trim();
 
-        // Validaciones básicas
         if (expediente.isEmpty() || nip.isEmpty()) {
             lblStatus.setText("⚠️ Ingrese su expediente y NIP.");
             lblStatus.setStyle("-fx-text-fill: red;");
             return;
         }
 
-        // Buscar usuario
-        User user = allUsers.getUserByClave(expediente);
-        if (user == null) {
-            lblStatus.setText("❌ Usuario no encontrado.");
-            lblStatus.setStyle("-fx-text-fill: red;");
-            return;
-        }
+        lblStatus.setText("⏳ Iniciando sesión...");
+        lblStatus.setStyle("-fx-text-fill: black;");
 
-        // Validar NIP
-        if (!user.getPassword().equals(nip)) {
-            lblStatus.setText("❌ NIP incorrecto.");
-            lblStatus.setStyle("-fx-text-fill: red;");
-            return;
-        }
+        UserService.login(expediente, nip, new UserService.LoginCallback() {
+            @Override
+            public void onSuccess(org.json.JSONObject userJson) {
+                System.out.println("[LoginController] Login exitoso: " + userJson);
 
-        // Guardar sesión
-        sessionManager.setCurrentUser(user);
+                javafx.application.Platform.runLater(() -> {
+                    // Crear usuario local a partir del JSON
+                    User loggedIn = new User();
+                    loggedIn.setClave(userJson.optString("Expediente"));
+                    loggedIn.setName(userJson.optString("Nombre"));
+                    loggedIn.setApellidoPaterno(userJson.optString("ApellidoPaterno"));
+                    loggedIn.setApellidoMaterno(userJson.optString("ApellidoMaterno"));
+                    loggedIn.setEmail(userJson.optString("Correo"));
+                    loggedIn.setPhone(userJson.optString("Telefono"));
+                    loggedIn.setAdmin("Administrador".equals(userJson.optString("Tipo")));
 
-        lblStatus.setText("✅ Bienvenido, " + user.getName());
-        lblStatus.setStyle("-fx-text-fill: green;");
+                    // Guardar sesión
+                    sessionManager.setCurrentUser(loggedIn);
 
-        // Cargar Dashboard correspondiente
-        Stage currentStage = (Stage) txtExpediente.getScene().getWindow();
-        DashboardRouter.loadDashboard(currentStage);
+                    // Mostrar éxito
+                    lblStatus.setText("✅ Bienvenido, " + loggedIn.getName());
+                    lblStatus.setStyle("-fx-text-fill: green;");
+
+                    // Cargar Dashboard
+                    Stage currentStage = (Stage) txtExpediente.getScene().getWindow();
+                    DashboardRouter.loadDashboard(currentStage);
+                });
+            }
+
+            @Override
+            public void onError(String error) {
+                System.out.println("[LoginController] Login error: " + error);
+                javafx.application.Platform.runLater(() -> {
+                    lblStatus.setText("❌ " + error);
+                    lblStatus.setStyle("-fx-text-fill: red;");
+                });
+            }
+        });
     }
 
     /**
@@ -75,7 +96,7 @@ public class LoginController {
             stage.setScene(new Scene(root, 600, 500));
             stage.setTitle("CAFI - Registro de Usuario");
             stage.centerOnScreen();
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
