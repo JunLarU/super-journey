@@ -1,13 +1,12 @@
 package app.controllers.productos;
 
 import core.SessionManager;
-import core.data.Ingredientes.AllIngredientes;
 import core.data.Ingredientes.Ingrediente;
-import core.data.Productos.AllProductos;
-import core.data.Productos.Producto;
-import core.data.Productos.ProductoIngrediente;
-import core.data.Productos.Sustituto;
-import core.data.Productos.TamanoProducto;
+import core.data.Productos.*;
+import core.services.CategoriaService;
+import core.services.IngredienteService;
+import core.services.ProductoService;
+
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -21,317 +20,199 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Controlador del formulario de registro/edición de productos.
- * Ahora usa AllProductos y AllIngredientes localmente.
- */
 public class RegistroProductoController {
 
-    
-    // Campos principales
-    
-    @FXML private TextField txtNombre;
-    @FXML private TextArea txtDescripcion;
-    @FXML private ComboBox<String> cmbCategoria;
-    @FXML private TextField txtPrecio;
-    @FXML private TextField txtCalorias;
-    @FXML private TextField txtGramaje;
-    @FXML private CheckBox chkDisponible;
-    @FXML private Button btnLimpiar;
+    // ================= BASICOS =================
+    @FXML
+    private TextField txtNombre;
+    @FXML
+    private TextArea txtDescripcion;
+    @FXML
+    private ComboBox<CategoriaProducto> cmbCategoria;
+    @FXML
+    private TextField txtPrecio;
+    @FXML
+    private TextField txtCalorias;
+    @FXML
+    private TextField txtGramaje;
+    @FXML
+    private CheckBox chkDisponible;
 
-    
-    // Campos para control de visualización
-    
-    @FXML private Label lblTitulo;
-    @FXML private VBox vboxInfo;
+    @FXML
+    private Label lblTitulo;
+    @FXML
+    private Label lblStatus;
+    @FXML
+    private VBox vboxInfo;
 
-    
-    // Ingredientes
-    
-    @FXML private TextField txtBuscarIngrediente;
-    @FXML private ListView<String> listaIngredientesBuscados;
-    @FXML private TableView<ProductoIngrediente> tablaIngredientes;
-    @FXML private TableColumn<ProductoIngrediente, String> colIngNombre;
-    @FXML private TableColumn<ProductoIngrediente, String> colIngSustitutos;
-    @FXML private TableColumn<ProductoIngrediente, Boolean> colIngEliminar;
-    @FXML private TableColumn<ProductoIngrediente, Boolean> colIngSustituible;
-    @FXML private TableColumn<ProductoIngrediente, Void> colIngAcciones;
+    @FXML
+    private Button btnLimpiar;
+    @FXML
+    private Button btnRegistrar;
 
-    
-    // Tamaños (NUEVO - ahora funcional)
-    
-    @FXML private TableView<TamanoProducto> tablaTamanos;
-    @FXML private TableColumn<TamanoProducto, String> colTamNombre;
-    @FXML private TableColumn<TamanoProducto, String> colTamDescripcion;
-    @FXML private TableColumn<TamanoProducto, String> colTamPrecio;
-    @FXML private TableColumn<TamanoProducto, Void> colTamAcciones;
-    
-    @FXML private TextField txtTamNombre;
-    @FXML private TextField txtTamDescripcion;
-    @FXML private TextField txtTamPrecio;
-    @FXML private TextField txtTamCapacidad;
-    @FXML private TextField txtTamGramaje;
-    @FXML private TextField txtTamPiezas;
-    @FXML private Button btnAgregarTamano;
+    // ================= INGREDIENTES =================
+    @FXML
+    private TextField txtBuscarIngrediente;
+    @FXML
+    private ListView<String> listaIngredientesBuscados;
 
-    @FXML private Button btnRegistrar;
-    @FXML private Label lblStatus;
+    @FXML
+    private TableView<ProductoIngrediente> tablaIngredientes;
+    @FXML
+    private TableColumn<ProductoIngrediente, String> colIngNombre;
+    @FXML
+    private TableColumn<ProductoIngrediente, String> colIngSustitutos;
+    @FXML
+    private TableColumn<ProductoIngrediente, Boolean> colIngEliminar;
+    @FXML
+    private TableColumn<ProductoIngrediente, Boolean> colIngSustituible;
+    @FXML
+    private TableColumn<ProductoIngrediente, Void> colIngAcciones;
 
-    
-    // Objetos de datos
-    
-    private final AllProductos allProductos = AllProductos.getInstance();
-    private final AllIngredientes allIngredientes = AllIngredientes.getInstance();
+    // ================= TAMAÑOS =================
+    @FXML
+    private TableView<TamanoProducto> tablaTamanos;
+    @FXML
+    private TableColumn<TamanoProducto, String> colTamNombre;
+    @FXML
+    private TableColumn<TamanoProducto, String> colTamDescripcion;
+    @FXML
+    private TableColumn<TamanoProducto, String> colTamPrecio;
+    @FXML
+    private TableColumn<TamanoProducto, Void> colTamAcciones;
+
+    @FXML
+    private TextField txtTamNombre;
+    @FXML
+    private TextField txtTamDescripcion;
+    @FXML
+    private TextField txtTamPrecio;
+    @FXML
+    private TextField txtTamCapacidad;
+    @FXML
+    private TextField txtTamGramaje;
+    @FXML
+    private TextField txtTamPiezas;
+    @FXML
+    private Button btnAgregarTamano;
+
+    // ================= ESTADO =================
     private final SessionManager session = SessionManager.getInstance();
 
-    private final ObservableList<ProductoIngrediente> ingredientesSeleccionados = FXCollections.observableArrayList();
-    private final ObservableList<TamanoProducto> tamanosDefinidos = FXCollections.observableArrayList(); // NUEVO
+    private final ObservableList<ProductoIngrediente> ingredientes = FXCollections.observableArrayList();
+    private final ObservableList<TamanoProducto> tamanos = FXCollections.observableArrayList();
+    private final ObservableList<CategoriaProducto> categorias = FXCollections.observableArrayList();
 
-    // Control de modo edición
     private boolean modoEdicion = false;
     private boolean modoVisualizacion = false;
-    private int idProductoEditando = 0;
-    private int nextTamanoId = 1; // NUEVO: Para generar IDs de tamaños
+    private int idProducto = 0;
+    private int nextTamanoId = 1;
 
-    
-    // Categorías hardcoded
-    
-    private final ObservableList<String> categoriasDisponibles = FXCollections.observableArrayList(
-            "Desayuno Mexicano", "Desayuno Continental", "Desayuno Express",
-            "Plato Fuerte", "Antojitos Mexicanos", "Hamburguesas", "Tortas y Sandwiches",
-            "Ensaladas", "Sopas y Cremas", "Pastas", "Alitas y Boneless",
-            "Guarniciones", "Extras", "Postres", "Repostería",
-            "Café", "Té e Infusiones", "Chocolate Caliente", "Bebidas de Temporada Calientes",
-            "Café Frío", "Smoothies", "Jugos y Licuados", "Aguas Frescas", "Refrescos",
-            "Bebidas Energéticas", "Bebidas de Temporada Frías",
-            "Snacks Dulces", "Snacks Salados", "Panadería", "Baguettes y Croissants", "Yogurt y Parfait");
-
-    
-    // Inicialización
-    
     @FXML
     public void initialize() {
-        // Verificar permisos
         if (!session.isAdmin()) {
-            mostrarAlerta("Acceso denegado", "Solo los administradores pueden acceder a esta función.");
+            mostrarAlerta("Acceso denegado", "Solo administradores.");
             return;
         }
 
-        configurarCategorias();
-        configurarTablas();
-        configurarBusquedaIngredientes();
         configurarValidaciones();
-        configurarTamanos(); // NUEVO
+        configurarCategoriasDesdeBD();
+
+        configurarTablaIngredientes(); // ✅ aqui se arregla “Sustituible”
+        configurarBusquedaIngredientes();
+        configurarTamanos();
     }
 
-    // ---------------------------------------------------
-    // ⚙️ Configuración de Tamaños (NUEVO)
-    // ---------------------------------------------------
-    private void configurarTamanos() {
-        // Configurar tabla de tamaños
-        colTamNombre.setCellValueFactory(data -> 
-            new SimpleStringProperty(data.getValue().getNombre()));
-        
-        colTamDescripcion.setCellValueFactory(data -> 
-            new SimpleStringProperty(data.getValue().getDescripcion()));
-        
-        colTamPrecio.setCellValueFactory(data -> 
-            new SimpleStringProperty(String.format("$%.2f", data.getValue().getPrecio())));
+    // =====================================================
+    // CATEGORIAS DESDE BD
+    // =====================================================
+    private void configurarCategoriasDesdeBD() {
 
-        colTamAcciones.setCellFactory(tc -> new TableCell<>() {
-            private final Button btnEliminar = new Button("Eliminar");
-            {
-                btnEliminar.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-cursor: hand; -fx-background-radius: 5;");
-                btnEliminar.setTooltip(new Tooltip("Eliminar tamaño"));
-                btnEliminar.setOnAction(e -> {
-                    int idx = getIndex();
-                    if (idx >= 0 && idx < tamanosDefinidos.size()) {
-                        String nombreTam = tamanosDefinidos.get(idx).getNombre();
-                        tamanosDefinidos.remove(idx);
-                        lblStatus.setText("Eliminar Tamaño eliminado: " + nombreTam);
-                    }
-                });
+        CategoriaService.listCategoriasProductos(new CategoriaService.ListCallback() {
+            @Override
+            public void onSuccess(List<JSONObject> list) {
+                var nombres = list.stream()
+                        .map(j -> j.getString("Nombre"))
+                        .toList();
+
+                javafx.application.Platform.runLater(() -> cmbCategoria.getItems().setAll(nombres));
             }
 
             @Override
-            protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                setGraphic(empty ? null : btnEliminar);
-            }
-        });
-
-        tablaTamanos.setItems(tamanosDefinidos);
-
-        // Configurar botón agregar tamaño
-        btnAgregarTamano.setOnAction(e -> agregarTamano());
-    }
-
-    // ---------------------------------------------------
-    // ➕ Agregar Tamaño (NUEVO)
-    // ---------------------------------------------------
-    private void agregarTamano() {
-        String nombre = txtTamNombre.getText().trim();
-        String precioStr = txtTamPrecio.getText().trim();
-
-        if (nombre.isEmpty() || precioStr.isEmpty()) {
-            mostrarAlerta("⚠️ Campos requeridos", "Ingresa al menos el nombre y precio del tamaño.");
-            return;
-        }
-
-        try {
-            double precio = Double.parseDouble(precioStr);
-            
-            // Obtener valores opcionales
-            String descripcion = txtTamDescripcion.getText().trim();
-            double capacidad = txtTamCapacidad.getText().trim().isEmpty() ? 0.0 : Double.parseDouble(txtTamCapacidad.getText().trim());
-            double gramaje = txtTamGramaje.getText().trim().isEmpty() ? 0.0 : Double.parseDouble(txtTamGramaje.getText().trim());
-            int piezas = txtTamPiezas.getText().trim().isEmpty() ? 0 : Integer.parseInt(txtTamPiezas.getText().trim());
-
-            // Crear nuevo tamaño
-            TamanoProducto tamano = new TamanoProducto(
-                nextTamanoId++, // ID autoincremental
-                nombre,
-                descripcion,
-                capacidad,
-                gramaje,
-                piezas,
-                precio,
-                tamanosDefinidos.size() + 1, // orden
-                true // disponible por defecto
-            );
-
-            tamanosDefinidos.add(tamano);
-
-            // Limpiar campos
-            txtTamNombre.clear();
-            txtTamDescripcion.clear();
-            txtTamPrecio.clear();
-            txtTamCapacidad.clear();
-            txtTamGramaje.clear();
-            txtTamPiezas.clear();
-
-            lblStatus.setText("✅ Tamaño agregado: " + nombre);
-        } catch (NumberFormatException e) {
-            mostrarAlerta("⚠️ Formato inválido", "El precio, capacidad, gramaje y piezas deben ser números válidos.");
-        }
-    }
-
-    // ---------------------------------------------------
-    // ⚙️ Configuración de Categorías
-    // ---------------------------------------------------
-    private void configurarCategorias() {
-        cmbCategoria.setEditable(true);
-        cmbCategoria.setItems(categoriasDisponibles);
-
-        final boolean[] isUpdating = { false };
-
-        cmbCategoria.getEditor().textProperty().addListener((obs, oldValue, newValue) -> {
-            if (isUpdating[0]) return;
-
-            try {
-                isUpdating[0] = true;
-                final String texto = newValue;
-
-                if (texto == null || texto.isEmpty()) {
-                    cmbCategoria.setItems(categoriasDisponibles);
-                } else {
-                    final String lower = texto.toLowerCase();
-                    ObservableList<String> filtradas = categoriasDisponibles.filtered(
-                            c -> c.toLowerCase().contains(lower));
-                    cmbCategoria.setItems(filtradas);
-                }
-
-                if (!cmbCategoria.getItems().isEmpty() && cmbCategoria.isFocused()) {
-                    cmbCategoria.show();
-                }
-            } finally {
-                isUpdating[0] = false;
+            public void onError(String error) {
+                javafx.application.Platform.runLater(() -> lblStatus.setText("❌ " + error));
             }
         });
     }
 
-    // ---------------------------------------------------
-    // ⚙️ Configuración de Tablas
-    // ---------------------------------------------------
-    private void configurarTablas() {
+    // =====================================================
+    // TABLA INGREDIENTES (FIX Sustituible + Acciones + Conteo)
+    // =====================================================
+    private void configurarTablaIngredientes() {
+
+        // ✅ NECESARIO para CheckBoxTableCell
         tablaIngredientes.setEditable(true);
+        colIngEliminar.setEditable(true);
+        colIngSustituible.setEditable(true);
 
-        // Columna: Nombre
-        colIngNombre.setCellValueFactory(data -> 
-            new SimpleStringProperty(data.getValue().getNombreIngrediente()));
+        colIngNombre.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getNombreIngrediente()));
 
-        // Columna: Cantidad de sustitutos
-        colIngSustitutos.setCellValueFactory(data -> {
-            int cantidad = data.getValue().getSustitutos().size();
-            return new SimpleStringProperty(cantidad > 0 ? cantidad + " sustituto(s)" : "-");
+        colIngSustitutos.setCellValueFactory(d -> {
+            int n = d.getValue().getSustitutos() == null ? 0 : d.getValue().getSustitutos().size();
+            return new SimpleStringProperty(n == 0 ? "-" : (n + " sustituto(s)"));
         });
 
-        // Columna: Eliminable (checkbox editable)
-        colIngEliminar.setCellValueFactory(data -> {
-            ProductoIngrediente ing = data.getValue();
-            SimpleBooleanProperty prop = new SimpleBooleanProperty(ing.isEliminable());
-            
-            prop.addListener((obs, oldVal, newVal) -> {
-                ing.setEliminable(newVal);
-                //System.out.println("✅ Eliminable actualizado: " + ing.getNombreIngrediente() + " = " + newVal);
-            });
-            
-            return prop;
+        colIngEliminar.setCellValueFactory(d -> {
+            ProductoIngrediente ing = d.getValue();
+            SimpleBooleanProperty p = new SimpleBooleanProperty(ing.isEliminable());
+            p.addListener((o, ov, nv) -> ing.setEliminable(nv));
+            return p;
         });
-        colIngEliminar.setCellFactory(tc -> new CheckBoxTableCell<>());
+        colIngEliminar.setCellFactory(CheckBoxTableCell.forTableColumn(colIngEliminar));
 
-        // Columna: Sustituible (checkbox editable)
-        colIngSustituible.setCellValueFactory(data -> {
-            ProductoIngrediente ing = data.getValue();
-            SimpleBooleanProperty prop = new SimpleBooleanProperty(ing.isSustituible());
-            
-            prop.addListener((obs, oldVal, newVal) -> {
-                ing.setSustituible(newVal);
-                //System.out.println("✅ Sustituible actualizado: " + ing.getNombreIngrediente() + " = " + newVal);
+        colIngSustituible.setCellValueFactory(d -> {
+            ProductoIngrediente ing = d.getValue();
+            SimpleBooleanProperty p = new SimpleBooleanProperty(ing.isSustituible());
+            p.addListener((o, ov, nv) -> {
+                ing.setSustituible(nv);
+
+                // si lo desmarcan, puedes opcionalmente limpiar sustitutos
+                // if (!nv) ing.setSustitutos(new ArrayList<>());
                 tablaIngredientes.refresh();
             });
-            
-            return prop;
+            return p;
         });
-        colIngSustituible.setCellFactory(tc -> new CheckBoxTableCell<>());
+        colIngSustituible.setCellFactory(CheckBoxTableCell.forTableColumn(colIngSustituible));
 
-        // Columna: Acciones
+        // Acciones: Eliminar + ♻️
         colIngAcciones.setCellFactory(tc -> new TableCell<>() {
+
             private final Button btnEliminar = new Button("Eliminar");
             private final Button btnSustituir = new Button("♻️");
 
             {
-                btnEliminar.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-cursor: hand; -fx-background-radius: 5;");
-                btnSustituir.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-cursor: hand; -fx-background-radius: 5;");
-
-                btnEliminar.setTooltip(new Tooltip("Eliminar ingrediente"));
-                btnSustituir.setTooltip(new Tooltip("Definir sustitutos"));
+                btnEliminar.setStyle("-fx-background-color:#e74c3c;-fx-text-fill:white;");
+                btnSustituir.setStyle("-fx-background-color:#3498db;-fx-text-fill:white;");
 
                 btnEliminar.setOnAction(e -> {
-                    int idx = getIndex();
-                    if (idx >= 0 && idx < ingredientesSeleccionados.size()) {
-                        String nombreIng = ingredientesSeleccionados.get(idx).getNombreIngrediente();
-                        ingredientesSeleccionados.remove(idx);
-                        lblStatus.setText("Eliminar Ingrediente eliminado: " + nombreIng);
-                    }
+                    ProductoIngrediente ing = getTableView().getItems().get(getIndex());
+                    ingredientes.remove(ing);
+                    lblStatus.setText("🗑️ Ingrediente eliminado: " + ing.getNombreIngrediente());
                 });
 
                 btnSustituir.setOnAction(e -> {
-                    int idx = getIndex();
-                    if (idx >= 0 && idx < ingredientesSeleccionados.size()) {
-                        ProductoIngrediente ing = ingredientesSeleccionados.get(idx);
-                        
-                        if (ing.isSustituible()) {
-                            mostrarDialogoSustitutos(ing);
-                        } else {
-                            mostrarAlerta("⚠️ Ingrediente no sustituible",
-                                    "Primero marca el checkbox 'Sustituible' para este ingrediente.");
-                        }
+                    ProductoIngrediente ing = getTableView().getItems().get(getIndex());
+                    if (!ing.isSustituible()) {
+                        mostrarAlerta("No sustituible", "Primero marca el checkbox 'Sustituible'.");
+                        return;
                     }
+                    mostrarDialogoSustitutos(ing);
                 });
             }
 
@@ -340,561 +221,398 @@ public class RegistroProductoController {
                 super.updateItem(item, empty);
                 if (empty) {
                     setGraphic(null);
-                } else {
-                    HBox hbox = new HBox(5, btnEliminar, btnSustituir);
-                    hbox.setAlignment(Pos.CENTER);
-                    setGraphic(hbox);
+                    return;
                 }
+                HBox box = new HBox(6, btnEliminar, btnSustituir);
+                box.setAlignment(Pos.CENTER);
+                setGraphic(box);
             }
         });
 
-        tablaIngredientes.setItems(ingredientesSeleccionados);
+        tablaIngredientes.setItems(ingredientes);
     }
 
-    // ---------------------------------------------------
-    // 🔍 Búsqueda y selección de ingredientes
-    // ---------------------------------------------------
+    // =====================================================
+    // BUSQUEDA INGREDIENTES (API)
+    // =====================================================
     private void configurarBusquedaIngredientes() {
-        txtBuscarIngrediente.textProperty().addListener((obs, o, n) -> {
-            if (n.length() > 1)
-                buscarIngrediente(n);
-            else
+
+        txtBuscarIngrediente.textProperty().addListener((o, ov, nv) -> {
+            if (nv == null || nv.trim().length() < 2) {
                 listaIngredientesBuscados.getItems().clear();
+                return;
+            }
+
+            IngredienteService.listIngredientes(new IngredienteService.ListCallback() {
+                @Override
+                public void onSuccess(List<JSONObject> list) {
+
+                    String q = nv.toLowerCase().trim();
+
+                    List<String> nombres = list.stream()
+                            .map(Ingrediente::new)
+                            .map(Ingrediente::getNombre)
+                            .filter(n -> n.toLowerCase().contains(q))
+                            .filter(n -> ingredientes.stream()
+                                    .noneMatch(i -> i.getNombreIngrediente().equalsIgnoreCase(n)))
+                            .collect(Collectors.toList());
+
+                    Platform.runLater(() -> listaIngredientesBuscados.getItems().setAll(nombres));
+                }
+
+                @Override
+                public void onError(String error) {
+                    Platform.runLater(() -> lblStatus.setText("❌ " + error));
+                }
+            });
         });
 
         listaIngredientesBuscados.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
-                String nombre = listaIngredientesBuscados.getSelectionModel().getSelectedItem();
-                if (nombre != null) {
-                    agregarIngredienteSeleccionado(nombre);
-                }
+                String n = listaIngredientesBuscados.getSelectionModel().getSelectedItem();
+                if (n == null)
+                    return;
+
+                // OJO: aquí aún no tienes el ID del ingrediente si tu API no lo trae por
+                // nombre.
+                // Lo correcto es que IngredienteService retorne objetos completos y selecciones
+                // el ID.
+                ingredientes.add(new ProductoIngrediente(
+                        0, n, 0.0, false, false, ingredientes.size() + 1));
+
+                listaIngredientesBuscados.getItems().remove(n);
+                txtBuscarIngrediente.clear();
+                lblStatus.setText("✅ Ingrediente agregado: " + n);
             }
         });
     }
 
-    private void buscarIngrediente(String query) {
-        new Thread(() -> {
-            try {
-                List<Ingrediente> todos = allIngredientes.getAll();
-                String queryLower = query.toLowerCase();
-                
-                List<String> resultados = todos.stream()
-                    .filter(ing -> ing.getNombre().toLowerCase().contains(queryLower))
-                    .map(Ingrediente::getNombre)
-                    .filter(nombre -> {
-                        // Filtrar los que ya están seleccionados
-                        return ingredientesSeleccionados.stream()
-                                .noneMatch(pi -> pi.getNombreIngrediente().equalsIgnoreCase(nombre));
-                    })
-                    .collect(Collectors.toList());
-
-                Platform.runLater(() -> {
-                    listaIngredientesBuscados.getItems().clear();
-                    listaIngredientesBuscados.getItems().addAll(resultados);
-                });
-            } catch (Exception e) {
-                Platform.runLater(() -> lblStatus.setText("❌ Error buscando ingredientes: " + e.getMessage()));
-            }
-        }).start();
-    }
-
-    private void agregarIngredienteSeleccionado(String nombreIngrediente) {
-        // Buscar el ingrediente en AllIngredientes para obtener su ID
-        Ingrediente ing = allIngredientes.getByNombre(nombreIngrediente);
-        
-        if (ing == null) {
-            mostrarAlerta("Error", "No se encontró el ingrediente: " + nombreIngrediente);
-            return;
-        }
-
-        ProductoIngrediente pi = new ProductoIngrediente(
-            ing.getId(),
-            nombreIngrediente,
-            0.0, // cantidad por defecto
-            false, // no eliminable por defecto
-            false, // no sustituible por defecto
-            ingredientesSeleccionados.size() + 1 // orden
-        );
-
-        ingredientesSeleccionados.add(pi);
-        listaIngredientesBuscados.getItems().remove(nombreIngrediente);
-        txtBuscarIngrediente.clear();
-        lblStatus.setText("✅ Ingrediente agregado: " + nombreIngrediente);
-    }
-
-    // ---------------------------------------------------
-    // 🔄 Diálogo para seleccionar sustitutos
-    // ---------------------------------------------------
+    // =====================================================
+    // DIALOGO SUSTITUTOS (mínimo funcional)
+    // =====================================================
     private void mostrarDialogoSustitutos(ProductoIngrediente ingrediente) {
+
         Dialog<Void> dialog = new Dialog<>();
         dialog.setTitle("Sustitutos de: " + ingrediente.getNombreIngrediente());
-        dialog.setHeaderText("Selecciona ingredientes sustitutos y define el costo adicional");
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
 
-        VBox content = new VBox(15);
-        content.setPadding(new Insets(20));
-        content.setPrefWidth(600);
+        VBox root = new VBox(10);
+        root.setPadding(new Insets(15));
 
-        // Búsqueda
-        Label lblBuscar = new Label("🔍 Buscar ingrediente sustituto:");
         TextField txtBuscar = new TextField();
-        txtBuscar.setPromptText("Escribe para buscar...");
+        txtBuscar.setPromptText("Buscar ingrediente sustituto...");
 
-        ListView<String> listaBusqueda = new ListView<>();
-        listaBusqueda.setPrefHeight(120);
+        ListView<String> lista = new ListView<>();
+        lista.setPrefHeight(160);
 
-        // Agregar con costo
-        HBox hboxAgregar = new HBox(10);
-        hboxAgregar.setAlignment(Pos.CENTER_LEFT);
-        TextField txtCostoExtra = new TextField("0.00");
-        txtCostoExtra.setPromptText("Costo extra");
-        txtCostoExtra.setPrefWidth(100);
-        Button btnAgregar = new Button("➕ Agregar");
-        btnAgregar.setStyle("-fx-background-color: #27ae60; -fx-text-fill: white;");
-        hboxAgregar.getChildren().addAll(new Label("Costo adicional: $"), txtCostoExtra, btnAgregar);
+        TableView<Sustituto> tabla = new TableView<>();
+        tabla.setPrefHeight(160);
 
-        // Tabla de sustitutos
-        Label lblActuales = new Label("📋 Sustitutos actuales:");
-        TableView<Sustituto> tablaSustitutos = new TableView<>();
-        tablaSustitutos.setPrefHeight(150);
+        TableColumn<Sustituto, String> cNom = new TableColumn<>("Ingrediente");
+        cNom.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getNombreIngrediente()));
+        cNom.setPrefWidth(280);
 
-        TableColumn<Sustituto, String> colNombre = new TableColumn<>("Ingrediente");
-        colNombre.setPrefWidth(300);
-        colNombre.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getNombreIngrediente()));
+        TableColumn<Sustituto, String> cCosto = new TableColumn<>("Costo");
+        cCosto.setCellValueFactory(d -> new SimpleStringProperty(String.format("$%.2f", d.getValue().getCostoExtra())));
+        cCosto.setPrefWidth(100);
 
-        TableColumn<Sustituto, String> colCosto = new TableColumn<>("Costo Extra");
-        colCosto.setPrefWidth(120);
-        colCosto.setCellValueFactory(d -> new SimpleStringProperty(String.format("$%.2f", d.getValue().getCostoExtra())));
-
-        TableColumn<Sustituto, Void> colAccion = new TableColumn<>("Acción");
-        colAccion.setPrefWidth(80);
-        colAccion.setCellFactory(tc -> new TableCell<>() {
-            private final Button btnQuitar = new Button("❌");
+        TableColumn<Sustituto, Void> cAcc = new TableColumn<>("Quitar");
+        cAcc.setCellFactory(tc -> new TableCell<>() {
+            private final Button b = new Button("❌");
             {
-                btnQuitar.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
-                btnQuitar.setOnAction(e -> tablaSustitutos.getItems().remove(getTableView().getItems().get(getIndex())));
+                b.setOnAction(e -> tabla.getItems().remove(getTableView().getItems().get(getIndex())));
             }
 
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
-                setGraphic(empty ? null : btnQuitar);
+                setGraphic(empty ? null : b);
             }
         });
+        cAcc.setPrefWidth(70);
 
-        tablaSustitutos.getColumns().addAll(colNombre, colCosto, colAccion);
+        tabla.getColumns().addAll(cNom, cCosto, cAcc);
 
-        // Cargar sustitutos existentes
-        ObservableList<Sustituto> listaSustitutos = FXCollections.observableArrayList(ingrediente.getSustitutos());
-        tablaSustitutos.setItems(listaSustitutos);
+        ObservableList<Sustituto> actuales = FXCollections.observableArrayList(
+                ingrediente.getSustitutos() == null ? new ArrayList<>() : ingrediente.getSustitutos());
+        tabla.setItems(actuales);
 
-        // Búsqueda de ingredientes
-        txtBuscar.textProperty().addListener((o, ov, nv) -> {
-            if (nv.length() > 1) {
-                new Thread(() -> {
-                    try {
-                        List<Ingrediente> todos = allIngredientes.getAll();
-                        String queryLower = nv.toLowerCase();
-                        
-                        List<String> resultados = todos.stream()
-                            .filter(ing -> ing.getNombre().toLowerCase().contains(queryLower))
-                            .filter(ing -> !ing.getNombre().equalsIgnoreCase(ingrediente.getNombreIngrediente()))
-                            .map(Ingrediente::getNombre)
-                            .filter(nombre -> {
-                                // Filtrar los que ya están agregados como sustitutos
-                                return listaSustitutos.stream()
-                                        .noneMatch(s -> s.getNombreIngrediente().equalsIgnoreCase(nombre));
-                            })
-                            .collect(Collectors.toList());
+        TextField txtCosto = new TextField("0.00");
+        txtCosto.setPrefWidth(90);
 
-                        Platform.runLater(() -> {
-                            listaBusqueda.getItems().clear();
-                            listaBusqueda.getItems().addAll(resultados);
-                        });
-                    } catch (Exception ex) {
-                        Platform.runLater(() -> lblStatus.setText("Error: " + ex.getMessage()));
-                    }
-                }).start();
-            } else {
-                listaBusqueda.getItems().clear();
-            }
-        });
+        Button btnAdd = new Button("➕ Agregar");
+        btnAdd.setOnAction(e -> {
+            String sel = lista.getSelectionModel().getSelectedItem();
+            if (sel == null)
+                return;
 
-        // Agregar sustituto
-        btnAgregar.setOnAction(e -> {
-            String seleccionado = listaBusqueda.getSelectionModel().getSelectedItem();
-            if (seleccionado == null) {
-                mostrarAlerta("⚠️ Selección requerida", "Selecciona un ingrediente de la lista.");
+            double costo;
+            try {
+                costo = Double.parseDouble(txtCosto.getText().trim());
+            } catch (Exception ex) {
+                mostrarAlerta("Costo inválido", "Debe ser número");
                 return;
             }
 
-            try {
-                double costo = Double.parseDouble(txtCostoExtra.getText());
-                
-                // Obtener ID del ingrediente sustituto
-                Ingrediente ingSustituto = allIngredientes.getByNombre(seleccionado);
-                if (ingSustituto == null) {
-                    mostrarAlerta("Error", "No se encontró el ingrediente.");
-                    return;
-                }
-
-                Sustituto nuevoSustituto = new Sustituto(
-                    ingSustituto.getId(),
-                    seleccionado,
-                    costo,
-                    true
-                );
-
-                listaSustitutos.add(nuevoSustituto);
-                listaBusqueda.getItems().remove(seleccionado);
-                txtCostoExtra.setText("0.00");
-                txtBuscar.clear();
-            } catch (NumberFormatException ex) {
-                mostrarAlerta("⚠️ Formato inválido", "El costo debe ser un número válido.");
-            }
+            actuales.add(new Sustituto(0, sel, costo, true));
+            lista.getItems().remove(sel);
+            txtCosto.setText("0.00");
         });
 
-        // Guardar
-        Button btnGuardar = new Button("💾 Guardar Sustitutos");
-        btnGuardar.setStyle("-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-pref-width: 200;");
+        Button btnGuardar = new Button("💾 Guardar");
+        btnGuardar.setStyle("-fx-background-color:#2ecc71;-fx-text-fill:white;");
         btnGuardar.setOnAction(e -> {
-            ingrediente.setSustitutos(new ArrayList<>(listaSustitutos));
+            ingrediente.setSustitutos(new ArrayList<>(actuales));
             tablaIngredientes.refresh();
-            lblStatus.setText("✅ Sustitutos guardados para: " + ingrediente.getNombreIngrediente());
             dialog.close();
         });
 
-        content.getChildren().addAll(
-                lblBuscar, txtBuscar, listaBusqueda,
+        // búsqueda API
+        txtBuscar.textProperty().addListener((o, ov, nv) -> {
+            if (nv == null || nv.trim().length() < 2) {
+                lista.getItems().clear();
+                return;
+            }
+
+            IngredienteService.listIngredientes(new IngredienteService.ListCallback() {
+                @Override
+                public void onSuccess(List<JSONObject> list) {
+                    String q = nv.toLowerCase().trim();
+                    List<String> nombres = list.stream()
+                            .map(Ingrediente::new)
+                            .map(Ingrediente::getNombre)
+                            .filter(n -> n.toLowerCase().contains(q))
+                            .filter(n -> !n.equalsIgnoreCase(ingrediente.getNombreIngrediente()))
+                            .filter(n -> actuales.stream().noneMatch(s -> s.getNombreIngrediente().equalsIgnoreCase(n)))
+                            .toList();
+
+                    Platform.runLater(() -> lista.getItems().setAll(nombres));
+                }
+
+                @Override
+                public void onError(String error) {
+                    Platform.runLater(() -> lblStatus.setText("❌ " + error));
+                }
+            });
+        });
+
+        HBox addBox = new HBox(8, new Label("Costo:"), txtCosto, btnAdd);
+        addBox.setAlignment(Pos.CENTER_LEFT);
+
+        root.getChildren().addAll(
+                new Label("Buscar sustituto:"),
+                txtBuscar,
+                lista,
                 new Separator(),
-                hboxAgregar,
+                addBox,
                 new Separator(),
-                lblActuales, tablaSustitutos,
+                new Label("Sustitutos actuales:"),
+                tabla,
                 new Separator(),
                 btnGuardar);
 
-        dialog.getDialogPane().setContent(content);
-        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+        dialog.getDialogPane().setContent(root);
         dialog.showAndWait();
     }
 
-    // ---------------------------------------------------
-    // ⚙️ Configurar validaciones
-    // ---------------------------------------------------
-    private void configurarValidaciones() {
-        txtPrecio.textProperty().addListener((obs, old, nw) -> {
-            if (!nw.matches("\\d*(\\.\\d*)?")) {
-                txtPrecio.setText(old);
-            }
-        });
+    // =====================================================
+    // TAMAÑOS (igual que traías)
+    // =====================================================
+    private void configurarTamanos() {
 
-        txtCalorias.textProperty().addListener((obs, old, nw) -> {
-            if (!nw.matches("\\d*(\\.\\d*)?")) {
-                txtCalorias.setText(old);
-            }
-        });
+        colTamNombre.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getNombre()));
+        colTamDescripcion.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getDescripcion()));
+        colTamPrecio
+                .setCellValueFactory(d -> new SimpleStringProperty(String.format("$%.2f", d.getValue().getPrecio())));
 
-        txtGramaje.textProperty().addListener((obs, old, nw) -> {
-            if (!nw.matches("\\d*(\\.\\d*)?")) {
-                txtGramaje.setText(old);
-            }
-        });
+        tablaTamanos.setItems(tamanos);
 
-        // NUEVO: Validaciones para campos de tamaños
-        txtTamPrecio.textProperty().addListener((obs, old, nw) -> {
-            if (!nw.matches("\\d*(\\.\\d*)?")) {
-                txtTamPrecio.setText(old);
-            }
-        });
+        btnAgregarTamano.setOnAction(e -> {
+            if (txtTamNombre.getText().isBlank() || txtTamPrecio.getText().isBlank())
+                return;
 
-        txtTamCapacidad.textProperty().addListener((obs, old, nw) -> {
-            if (!nw.matches("\\d*(\\.\\d*)?")) {
-                txtTamCapacidad.setText(old);
+            double precio;
+            try {
+                precio = Double.parseDouble(txtTamPrecio.getText().trim());
+            } catch (Exception ex) {
+                mostrarAlerta("Precio inválido", "Debe ser número");
+                return;
             }
-        });
 
-        txtTamGramaje.textProperty().addListener((obs, old, nw) -> {
-            if (!nw.matches("\\d*(\\.\\d*)?")) {
-                txtTamGramaje.setText(old);
-            }
-        });
+            double capacidad = txtTamCapacidad.getText().isBlank() ? 0 : Double.parseDouble(txtTamCapacidad.getText());
+            double gramaje = txtTamGramaje.getText().isBlank() ? 0 : Double.parseDouble(txtTamGramaje.getText());
+            int piezas = txtTamPiezas.getText().isBlank() ? 0 : Integer.parseInt(txtTamPiezas.getText());
 
-        txtTamPiezas.textProperty().addListener((obs, old, nw) -> {
-            if (!nw.matches("\\d*")) {
-                txtTamPiezas.setText(old);
-            }
+            tamanos.add(new TamanoProducto(
+                    nextTamanoId++,
+                    txtTamNombre.getText().trim(),
+                    txtTamDescripcion.getText().trim(),
+                    capacidad,
+                    gramaje,
+                    piezas,
+                    precio,
+                    tamanos.size() + 1,
+                    true));
+
+            txtTamNombre.clear();
+            txtTamDescripcion.clear();
+            txtTamPrecio.clear();
+            txtTamCapacidad.clear();
+            txtTamGramaje.clear();
+            txtTamPiezas.clear();
         });
     }
 
-    // ---------------------------------------------------
-    // 💾 Guardar producto
-    // ---------------------------------------------------
+    // =====================================================
+    // GUARDAR (manda idCategoria)
+    // =====================================================
     @FXML
     private void onRegistrarClicked() {
-        if (!validarCampos()) return;
 
-        btnRegistrar.setDisable(true);
-        lblStatus.setText("Guardando producto...");
-
-        new Thread(() -> {
-            try {
-                String nombre = txtNombre.getText().trim();
-                String descripcion = txtDescripcion.getText().trim();
-                String categoria = cmbCategoria.getValue();
-                double precio = Double.parseDouble(txtPrecio.getText().trim());
-                double calorias = txtCalorias.getText().trim().isEmpty() ? 0.0 : Double.parseDouble(txtCalorias.getText().trim());
-                double gramaje = txtGramaje.getText().trim().isEmpty() ? 0.0 : Double.parseDouble(txtGramaje.getText().trim());
-                boolean disponible = chkDisponible.isSelected();
-
-                if (modoEdicion) {
-                    // Actualizar producto existente
-                    Producto producto = allProductos.getById(idProductoEditando);
-                    if (producto == null) {
-                        Platform.runLater(() -> {
-                            lblStatus.setText("❌ Producto no encontrado.");
-                            btnRegistrar.setDisable(false);
-                        });
-                        return;
-                    }
-
-                    producto.setNombre(nombre);
-                    producto.setDescripcion(descripcion);
-                    producto.setCategoria(categoria);
-                    producto.setPrecioBase(precio);
-                    producto.setCalorias(calorias);
-                    producto.setGramaje(gramaje);
-                    producto.setDisponible(disponible);
-                    producto.setIngredientes(new ArrayList<>(ingredientesSeleccionados));
-                    producto.setTamanos(new ArrayList<>(tamanosDefinidos)); // NUEVO: Guardar tamaños
-
-                    allProductos.updateProducto(producto);
-
-                    Platform.runLater(() -> {
-                        lblStatus.setText("✅ Producto actualizado correctamente.");
-                        btnRegistrar.setDisable(false);
-                    });
-                } else {
-                    // Verificar que no exista un producto con el mismo nombre
-                    Producto existente = allProductos.getByNombre(nombre);
-                    if (existente != null) {
-                        Platform.runLater(() -> {
-                            lblStatus.setText("⚠️ Ya existe un producto con ese nombre.");
-                            btnRegistrar.setDisable(false);
-                        });
-                        return;
-                    }
-
-                    // Crear nuevo producto
-                    Producto nuevoProducto = new Producto(
-                        0, // AllProductos asignará el ID
-                        nombre,
-                        descripcion,
-                        precio,
-                        categoria,
-                        gramaje,
-                        calorias,
-                        "", // urlFoto vacía por ahora
-                        disponible
-                    );
-
-                    // Agregar ingredientes
-                    nuevoProducto.setIngredientes(new ArrayList<>(ingredientesSeleccionados));
-                    // NUEVO: Agregar tamaños
-                    nuevoProducto.setTamanos(new ArrayList<>(tamanosDefinidos));
-
-                    allProductos.addProducto(nuevoProducto);
-
-                    Platform.runLater(() -> {
-                        lblStatus.setText("✅ Producto registrado correctamente.");
-                        limpiarCampos();
-                        btnRegistrar.setDisable(false);
-                    });
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                Platform.runLater(() -> {
-                    lblStatus.setText("❌ Error: " + e.getMessage());
-                    btnRegistrar.setDisable(false);
-                });
-            }
-        }).start();
-    }
-
-    // ---------------------------------------------------
-    // ✅ Validar campos
-    // ---------------------------------------------------
-    private boolean validarCampos() {
-        if (txtNombre.getText().trim().isEmpty()) {
-            mostrarAlerta("⚠️ Campo requerido", "El nombre del producto es obligatorio.");
-            return false;
+        if (txtNombre.getText().isBlank()) {
+            mostrarAlerta("Falta nombre", "Nombre requerido");
+            return;
         }
-
-        if (cmbCategoria.getValue() == null || cmbCategoria.getValue().isEmpty()) {
-            mostrarAlerta("⚠️ Campo requerido", "Selecciona una categoría.");
-            return false;
+        if (cmbCategoria.getValue() == null) {
+            mostrarAlerta("Falta categoría", "Selecciona categoría");
+            return;
         }
-
-        if (txtPrecio.getText().trim().isEmpty()) {
-            mostrarAlerta("⚠️ Campo requerido", "El precio base es obligatorio.");
-            return false;
-        }
-
-        try {
-            double precio = Double.parseDouble(txtPrecio.getText().trim());
-            if (precio <= 0) {
-                mostrarAlerta("⚠️ Precio inválido", "El precio debe ser mayor a cero.");
-                return false;
-            }
-        } catch (NumberFormatException e) {
-            mostrarAlerta("⚠️ Formato inválido", "El precio debe ser un número válido.");
-            return false;
-        }
-
-        return true;
-    }
-
-    // ---------------------------------------------------
-    // 📥 Cargar datos existentes
-    // ---------------------------------------------------
-    public void cargarDatosExistentes(Producto producto) {
-        if (producto == null) {
-            //System.err.println("⚠️ Producto nulo recibido");
+        if (txtPrecio.getText().isBlank()) {
+            mostrarAlerta("Falta precio", "Precio requerido");
             return;
         }
 
-        //System.out.println("🔍 Cargando producto: " + producto.getNombre());
-        lblTitulo.setText("Editar Producto");
-        modoEdicion = true;
-        idProductoEditando = producto.getId();
-
-        // Datos básicos
-        txtNombre.setText(producto.getNombre());
-        txtDescripcion.setText(producto.getDescripcion());
-        cmbCategoria.setValue(producto.getCategoria());
-        txtPrecio.setText(String.valueOf(producto.getPrecioBase()));
-        txtCalorias.setText(producto.getCalorias() > 0 ? String.valueOf(producto.getCalorias()) : "");
-        txtGramaje.setText(producto.getGramaje() > 0 ? String.valueOf(producto.getGramaje()) : "");
-        chkDisponible.setSelected(producto.isDisponible());
-
-        // Cargar ingredientes
-        ingredientesSeleccionados.clear();
-        ingredientesSeleccionados.addAll(producto.getIngredientes());
-
-        // NUEVO: Cargar tamaños
-        tamanosDefinidos.clear();
-        tamanosDefinidos.addAll(producto.getTamanos());
-        
-        // Actualizar el nextTamanoId basado en los tamaños existentes
-        if (!tamanosDefinidos.isEmpty()) {
-            nextTamanoId = tamanosDefinidos.stream()
-                    .mapToInt(TamanoProducto::getId)
-                    .max()
-                    .orElse(0) + 1;
+        double precio;
+        try {
+            precio = Double.parseDouble(txtPrecio.getText().trim());
+        } catch (Exception ex) {
+            mostrarAlerta("Precio inválido", "Debe ser número");
+            return;
         }
 
-        // Actualizar UI
-        btnRegistrar.setText("💾 Actualizar Producto");
-        lblStatus.setText("📝 Editando producto: " + producto.getNombre());
+        CategoriaProducto cat = cmbCategoria.getValue();
 
-        Platform.runLater(() -> {
-            tablaIngredientes.refresh();
-            tablaTamanos.refresh(); // NUEVO: Refrescar tabla de tamaños
-        });
+        Producto p = new Producto();
+        p.setId(modoEdicion ? idProducto : 0);
+        p.setNombre(txtNombre.getText().trim());
+        p.setDescripcion(txtDescripcion.getText().trim());
+        p.setPrecioBase(precio);
+
+        // ✅ lo importante:
+        p.setIdCategoria(cat.getId());
+        p.setCategoria(cat.getNombre()); // opcional, para UI
+
+        p.setCalorias(txtCalorias.getText().isBlank() ? 0 : Double.parseDouble(txtCalorias.getText()));
+        p.setGramaje(txtGramaje.getText().isBlank() ? 0 : Double.parseDouble(txtGramaje.getText()));
+        p.setDisponible(chkDisponible.isSelected());
+
+        p.setIngredientes(new ArrayList<>(ingredientes));
+        p.setTamanos(new ArrayList<>(tamanos));
+
+        ProductoService.saveProducto(
+                p.toJson(), // asegúrate que incluya idCategoria
+                () -> Platform.runLater(() -> lblStatus.setText("✅ Producto guardado")),
+                err -> Platform.runLater(() -> lblStatus.setText("❌ " + err)));
     }
 
-    // ---------------------------------------------------
-    // visualizar producto (solo lectura)
-    // ---------------------------------------------------
-    public void visualizarProducto(Producto producto) {
-        cargarDatosExistentes(producto);
-        lblTitulo.setText("Visualizar Producto");
+    // =====================================================
+    // CARGAR / VISUALIZAR
+    // =====================================================
+    public void cargarDatosExistentes(Producto p) {
+        modoEdicion = true;
+        idProducto = p.getId();
+
+        txtNombre.setText(p.getNombre());
+        txtDescripcion.setText(p.getDescripcion());
+        txtPrecio.setText(String.valueOf(p.getPrecioBase()));
+        txtCalorias.setText(String.valueOf(p.getCalorias()));
+        txtGramaje.setText(String.valueOf(p.getGramaje()));
+        chkDisponible.setSelected(p.isDisponible());
+
+        // Seleccionar categoría por ID si ya la tienes
+        if (p.getIdCategoria() > 0) {
+            categorias.stream()
+                    .filter(c -> c.getId() == p.getIdCategoria())
+                    .findFirst()
+                    .ifPresent(c -> cmbCategoria.setValue(c));
+        }
+
+        ingredientes.setAll(p.getIngredientes());
+        tamanos.setAll(p.getTamanos());
+        tablaIngredientes.refresh();
+        tablaTamanos.refresh();
+    }
+
+    public void visualizarProducto(Producto p) {
+        cargarDatosExistentes(p);
         modoVisualizacion = true;
 
-        vboxInfo.setVisible(false);
-        vboxInfo.setManaged(false);
-
-        // Deshabilitar todos los campos
-        txtNombre.setDisable(true);
-        txtDescripcion.setDisable(true);
-        cmbCategoria.setDisable(true);
-        txtPrecio.setDisable(true);
-        txtCalorias.setDisable(true);
-        txtGramaje.setDisable(true);
-        chkDisponible.setDisable(true);
-        txtBuscarIngrediente.setDisable(true);
-        listaIngredientesBuscados.setDisable(true);
-
-        // NUEVO: Deshabilitar campos de tamaños
-        txtTamNombre.setDisable(true);
-        txtTamDescripcion.setDisable(true);
-        txtTamPrecio.setDisable(true);
-        txtTamCapacidad.setDisable(true);
-        txtTamGramaje.setDisable(true);
-        txtTamPiezas.setDisable(true);
-        btnAgregarTamano.setDisable(true);
-
-        // Deshabilitar tabla de ingredientes
-        tablaIngredientes.setEditable(false);
-        tablaIngredientes.setMouseTransparent(true);
-        tablaIngredientes.setFocusTraversable(false);
-        tablaIngredientes.setStyle("-fx-opacity: 0.8;");
-
-        // NUEVO: Deshabilitar tabla de tamaños
-        tablaTamanos.setEditable(false);
-        tablaTamanos.setMouseTransparent(true);
-        tablaTamanos.setFocusTraversable(false);
-        tablaTamanos.setStyle("-fx-opacity: 0.8;");
-
-        colIngEliminar.setEditable(false);
-        colIngSustituible.setEditable(false);
-
-        // Ocultar botones
         btnRegistrar.setVisible(false);
-        btnRegistrar.setManaged(false);
         btnLimpiar.setVisible(false);
-        btnLimpiar.setManaged(false);
 
-        lblStatus.setText("visualizando producto: " + producto.getNombre());
-        lblStatus.setStyle("-fx-text-fill: #3498db; -fx-font-weight: bold; -fx-font-size: 13px;");
+        // deshabilitar edición
+        tablaIngredientes.setEditable(false);
+        tablaTamanos.setEditable(false);
+        vboxInfo.setDisable(true);
     }
 
-    // ---------------------------------------------------
-    // 🔄 Limpiar campos
-    // ---------------------------------------------------
+    // =====================================================
+    // LIMPIAR (requerido por FXML)
+    // =====================================================
     @FXML
     private void limpiarCampos() {
+
         txtNombre.clear();
         txtDescripcion.clear();
-        cmbCategoria.setValue(null);
         txtPrecio.clear();
         txtCalorias.clear();
         txtGramaje.clear();
         chkDisponible.setSelected(true);
-        ingredientesSeleccionados.clear();
-        
-        // NUEVO: Limpiar tamaños
-        tamanosDefinidos.clear();
+
+        txtBuscarIngrediente.clear();
+        listaIngredientesBuscados.getItems().clear();
+
+        ingredientes.clear();
+        tamanos.clear();
+
         txtTamNombre.clear();
         txtTamDescripcion.clear();
         txtTamPrecio.clear();
         txtTamCapacidad.clear();
         txtTamGramaje.clear();
         txtTamPiezas.clear();
-        nextTamanoId = 1;
 
         modoEdicion = false;
         modoVisualizacion = false;
-        idProductoEditando = 0;
-        btnRegistrar.setText("💾 Guardar Producto");
-        lblStatus.setText("Editar Completa los campos marcados con * y guarda el producto");
+        idProducto = 0;
+        nextTamanoId = 1;
+
+        lblStatus.setText("🧹 Campos limpiados");
     }
 
-    private void mostrarAlerta(String titulo, String mensaje) {
-        Platform.runLater(() -> {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle(titulo);
-            alert.setHeaderText(null);
-            alert.setContentText(mensaje);
-            alert.showAndWait();
+    // =====================================================
+    // VALIDACIONES
+    // =====================================================
+    private void configurarValidaciones() {
+        txtPrecio.textProperty().addListener((obs, old, nw) -> {
+            if (!nw.matches("\\d*(\\.\\d*)?"))
+                txtPrecio.setText(old);
         });
+        txtCalorias.textProperty().addListener((obs, old, nw) -> {
+            if (!nw.matches("\\d*(\\.\\d*)?"))
+                txtCalorias.setText(old);
+        });
+        txtGramaje.textProperty().addListener((obs, old, nw) -> {
+            if (!nw.matches("\\d*(\\.\\d*)?"))
+                txtGramaje.setText(old);
+        });
+    }
+
+    private void mostrarAlerta(String t, String m) {
+        Alert a = new Alert(Alert.AlertType.WARNING);
+        a.setTitle(t);
+        a.setHeaderText(null);
+        a.setContentText(m);
+        a.showAndWait();
     }
 }

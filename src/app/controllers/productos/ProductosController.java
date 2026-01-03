@@ -1,7 +1,7 @@
 package app.controllers.productos;
 
 import core.SessionManager;
-import core.data.Productos.AllProductos;
+import core.services.ProductoService;
 import core.data.Productos.Producto;
 import javafx.application.Platform;
 import javafx.fxml.*;
@@ -13,12 +13,13 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import org.json.JSONObject;
 
 import java.util.List;
 
 /**
  * Controlador para la gestión de productos.
- * Ahora usa AllProductos en lugar del servidor.
+ * Ahora usa ProductoService (servidor) en lugar de AllProductos.
  */
 public class ProductosController {
 
@@ -29,251 +30,234 @@ public class ProductosController {
     @FXML private TableColumn<Producto, Void> colAcciones;
     @FXML private Label lblEstado;
 
-    private final AllProductos allProductos = AllProductos.getInstance();
     private final SessionManager session = SessionManager.getInstance();
 
     @FXML
     public void initialize() {
-        // Verificar permisos de administrador
+
+        // 🔐 Validar permisos
         if (!session.isAdmin()) {
-            mostrarError("Acceso denegado", "Solo los administradores pueden acceder a esta función.");
+            mostrarError("Acceso denegado", "Solo administradores pueden acceder.");
             return;
         }
 
         configurarTabla();
         cargarProductos();
-        
+
         txtBuscar.textProperty().addListener((obs, o, n) -> {
-            if (n.isBlank())
+            if (n == null || n.isBlank()) {
                 cargarProductos();
-            else
+            } else {
                 buscarProductos(n);
+            }
         });
     }
 
+    // ==========================================================
+    // CONFIGURACIÓN DE TABLA
+    // ==========================================================
     private void configurarTabla() {
-        // Configurar columnas usando PropertyValueFactory para objetos Producto
-        colID.setCellValueFactory(data -> 
-            new javafx.beans.property.SimpleStringProperty(String.valueOf(data.getValue().getId())));
-        
+
+        colID.setCellValueFactory(d ->
+            new javafx.beans.property.SimpleStringProperty(
+                String.valueOf(d.getValue().getId())
+            )
+        );
+
         colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-        
         colCategoria.setCellValueFactory(new PropertyValueFactory<>("categoria"));
-        
-        colPrecio.setCellValueFactory(data -> 
-            new javafx.beans.property.SimpleStringProperty(
-                String.format("$%.2f", data.getValue().getPrecioBase())));
-        
-        colDisponible.setCellValueFactory(data -> 
-            new javafx.beans.property.SimpleStringProperty(
-                data.getValue().isDisponible() ? "Sí" : "No"));
 
-        // Configurar columna de acciones con botones
-        colAcciones.setReorderable(false);
-        colAcciones.setResizable(false);
-        colAcciones.setSortable(false);
-        colAcciones.setMinWidth(310);
+        colPrecio.setCellValueFactory(d ->
+            new javafx.beans.property.SimpleStringProperty(
+                String.format("$%.2f", d.getValue().getPrecioBase())
+            )
+        );
+
+        colDisponible.setCellValueFactory(d ->
+            new javafx.beans.property.SimpleStringProperty(
+                d.getValue().isDisponible() ? "Sí" : "No"
+            )
+        );
+
         colAcciones.setCellFactory(
-            (Callback<TableColumn<Producto, Void>, TableCell<Producto, Void>>) param -> new TableCell<>() {
-                private final Button btnVer = new Button("Ver");
-                private final Button btnEditar = new Button("Editar");
-                private final Button btnEliminar = new Button("Eliminar");
+            (Callback<TableColumn<Producto, Void>, TableCell<Producto, Void>>) param ->
+                new TableCell<>() {
 
-                {
-                    btnVer.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
-                    btnVer.setMinWidth(100);
-                    btnEditar.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
-                    btnEditar.setMinWidth(100);
-                    btnEliminar.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
-                    btnEliminar.setMinWidth(100);
-                    // Estilos de botones
-                    btnVer.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-cursor: hand; -fx-background-radius: 5;");
-                    btnEditar.setStyle("-fx-background-color: #f1c40f; -fx-cursor: hand; -fx-background-radius: 5;");
-                    btnEliminar.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-cursor: hand; -fx-background-radius: 5;");
+                    private final Button btnVer = new Button("Ver");
+                    private final Button btnEditar = new Button("Editar");
+                    private final Button btnEliminar = new Button("Eliminar");
 
-                    // Tooltips
-                    btnVer.setTooltip(new Tooltip("Ver detalles"));
-                    btnEditar.setTooltip(new Tooltip("Editar producto"));
-                    btnEliminar.setTooltip(new Tooltip("Eliminar producto"));
+                    {
+                        btnVer.setMinWidth(90);
+                        btnEditar.setMinWidth(90);
+                        btnEliminar.setMinWidth(90);
 
-                    // Acciones
-                    btnVer.setOnAction(e -> {
-                        Producto producto = getTableView().getItems().get(getIndex());
-                        abrirFormularioSoloLectura(producto);
-                    });
-                    
-                    btnEditar.setOnAction(e -> {
-                        Producto producto = getTableView().getItems().get(getIndex());
-                        abrirFormulario(producto);
-                    });
-                    
-                    btnEliminar.setOnAction(e -> {
-                        Producto producto = getTableView().getItems().get(getIndex());
-                        eliminarProducto(producto);
-                    });
+                        btnVer.setStyle("-fx-background-color:#3498db;-fx-text-fill:white;");
+                        btnEditar.setStyle("-fx-background-color:#f1c40f;");
+                        btnEliminar.setStyle("-fx-background-color:#e74c3c;-fx-text-fill:white;");
+
+                        btnVer.setOnAction(e ->
+                            abrirFormularioSoloLectura(getTableView().getItems().get(getIndex()))
+                        );
+
+                        btnEditar.setOnAction(e ->
+                            abrirFormulario(getTableView().getItems().get(getIndex()))
+                        );
+
+                        btnEliminar.setOnAction(e ->
+                            eliminarProducto(getTableView().getItems().get(getIndex()))
+                        );
+                    }
+
+                    private final HBox box = new HBox(5, btnVer, btnEditar, btnEliminar);
+
+                    @Override
+                    protected void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        setGraphic(empty ? null : box);
+                    }
                 }
-
-                private final HBox pane = new HBox(5, btnVer, btnEditar, btnEliminar);
-
-                @Override
-                protected void updateItem(Void item, boolean empty) {
-                    super.updateItem(item, empty);
-                    setGraphic(empty ? null : pane);
-                }
-            });
+        );
     }
 
+    // ==========================================================
+    // CARGAR PRODUCTOS DESDE SERVIDOR
+    // ==========================================================
     @FXML
-    private void cargarProductos() {
-        lblEstado.setText("Cargando productos...");
-        tablaProductos.getItems().clear();
+private void cargarProductos() {
+    lblEstado.setText("Cargando productos...");
+    tablaProductos.getItems().clear();
 
-        new Thread(() -> {
-            try {
-                List<Producto> productos = allProductos.getAll();
-                
-                Platform.runLater(() -> {
-                    tablaProductos.getItems().addAll(productos);
-                    lblEstado.setText("✅ " + productos.size() + " productos cargados.");
-                });
-            } catch (Exception e) {
-                e.printStackTrace();
-                Platform.runLater(() -> lblEstado.setText("❌ Error al cargar productos."));
-            }
-        }).start();
-    }
+    ProductoService.listProductos(new ProductoService.ListCallback() {
 
-    /**
-     * Buscar productos por nombre, categoría o descripción
-     */
-    private void buscarProductos(String query) {
-        lblEstado.setText("Buscando \"" + query + "\"...");
-        tablaProductos.getItems().clear();
-
-        new Thread(() -> {
-            try {
-                List<Producto> todos = allProductos.getAll();
-                String queryLower = query.toLowerCase();
-                
-                List<Producto> resultados = todos.stream()
-                    .filter(p -> 
-                        p.getNombre().toLowerCase().contains(queryLower) ||
-                        (p.getCategoria() != null && p.getCategoria().toLowerCase().contains(queryLower)) ||
-                        (p.getDescripcion() != null && p.getDescripcion().toLowerCase().contains(queryLower))
-                    )
-                    .toList();
-
-                Platform.runLater(() -> {
-                    tablaProductos.getItems().addAll(resultados);
-                    lblEstado.setText("🔍 " + resultados.size() + " resultado(s).");
-                });
-            } catch (Exception e) {
-                e.printStackTrace();
-                Platform.runLater(() -> lblEstado.setText("❌ Error en búsqueda."));
-            }
-        }).start();
-    }
-
-    /**
-     * Abrir formulario en modo solo lectura (visualización)
-     */
-    private void abrirFormularioSoloLectura(Producto producto) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/app/views/productos/RegistroProducto.fxml"));
-            Parent root = loader.load();
-            
-            RegistroProductoController controller = loader.getController();
-            controller.visualizarProducto(producto);
-
-            Stage stage = new Stage();
-            stage.setTitle("Visualizar producto");
-            stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setResizable(false);
-            stage.showAndWait();
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-            lblEstado.setText("❌ Error al abrir vista: " + e.getMessage());
+        @Override
+        public void onSuccess(List<org.json.JSONObject> list) {
+            Platform.runLater(() -> {
+                tablaProductos.getItems().setAll(
+                    list.stream()
+                        .map(Producto::fromJSON)
+                        .toList()
+                );
+                lblEstado.setText("✅ " + list.size() + " productos cargados");
+            });
         }
+
+        @Override
+        public void onError(String error) {
+            Platform.runLater(() ->
+                lblEstado.setText("❌ " + error)
+            );
+        }
+    });
+}
+
+
+    // ==========================================================
+    // BÚSQUEDA LOCAL (sobre datos ya cargados)
+    // ==========================================================
+    private void buscarProductos(String q) {
+        String query = q.toLowerCase();
+
+        List<Producto> filtrados = tablaProductos.getItems().stream()
+            .filter(p ->
+                p.getNombre().toLowerCase().contains(query) ||
+                (p.getCategoria() != null && p.getCategoria().toLowerCase().contains(query)) ||
+                (p.getDescripcion() != null && p.getDescripcion().toLowerCase().contains(query))
+            )
+            .toList();
+
+        tablaProductos.getItems().setAll(filtrados);
+        lblEstado.setText("🔍 " + filtrados.size() + " resultado(s)");
     }
 
-    /**
-     * Eliminar producto
-     */
-    private void eliminarProducto(Producto producto) {
-        String nombre = producto.getNombre();
-        int id = producto.getId();
+    // ==========================================================
+    // ELIMINAR PRODUCTO
+    // ==========================================================
+    private void eliminarProducto(Producto p) {
 
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
         confirm.setTitle("Eliminar producto");
-        confirm.setHeaderText("¿Eliminar \"" + nombre + "\"?");
+        confirm.setHeaderText("¿Eliminar \"" + p.getNombre() + "\"?");
         confirm.setContentText("Esta acción no se puede deshacer.");
-        
-        confirm.showAndWait().ifPresent(btn -> {
-            if (btn == ButtonType.OK) {
-                new Thread(() -> {
-                    try {
-                        allProductos.removeProducto(id);
-                        
-                        Platform.runLater(() -> {
-                            lblEstado.setText("Eliminar Producto eliminado correctamente.");
-                            cargarProductos();
-                        });
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Platform.runLater(() -> lblEstado.setText("❌ Error al eliminar."));
-                    }
-                }).start();
+
+        confirm.showAndWait().ifPresent(b -> {
+            if (b == ButtonType.OK) {
+
+                ProductoService.deleteProducto(
+                    p.getId(),
+                    () -> Platform.runLater(this::cargarProductos),
+                    err -> Platform.runLater(() ->
+                        lblEstado.setText("❌ " + err)
+                    )
+                );
             }
         });
     }
 
-    /**
-     * Abrir formulario para nuevo producto
-     */
+    // ==========================================================
+    // FORMULARIOS
+    // ==========================================================
     @FXML
     private void onNuevoClicked() {
         abrirFormulario(null);
     }
 
-    /**
-     * Abrir formulario para editar producto existente o crear uno nuevo
-     */
     private void abrirFormulario(Producto producto) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/app/views/productos/RegistroProducto.fxml"));
+            FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/app/views/productos/RegistroProducto.fxml")
+            );
             Parent root = loader.load();
-            
-            RegistroProductoController controller = loader.getController();
-            
+
+            RegistroProductoController ctrl = loader.getController();
             if (producto != null) {
-                controller.cargarDatosExistentes(producto);
+                ctrl.cargarDatosExistentes(producto);
             }
 
-            Stage stage = new Stage();
-            stage.setTitle(producto == null ? "Nuevo producto" : "Editar producto");
-            stage.setScene(new Scene(root));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setResizable(false);
-            stage.showAndWait();
+            Stage s = new Stage();
+            s.setTitle(producto == null ? "Nuevo producto" : "Editar producto");
+            s.setScene(new Scene(root));
+            s.initModality(Modality.APPLICATION_MODAL);
+            s.setResizable(false);
+            s.showAndWait();
 
             cargarProductos();
-            
+
         } catch (Exception e) {
             e.printStackTrace();
-            lblEstado.setText("❌ Error al abrir formulario: " + e.getMessage());
+            lblEstado.setText("❌ Error al abrir formulario");
         }
     }
 
-    /**
-     * Mostrar mensaje de error
-     */
-    private void mostrarError(String titulo, String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
-        alert.showAndWait();
+    private void abrirFormularioSoloLectura(Producto producto) {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/app/views/productos/RegistroProducto.fxml")
+            );
+            Parent root = loader.load();
+
+            RegistroProductoController ctrl = loader.getController();
+            ctrl.visualizarProducto(producto);
+
+            Stage s = new Stage();
+            s.setTitle("Visualizar producto");
+            s.setScene(new Scene(root));
+            s.initModality(Modality.APPLICATION_MODAL);
+            s.setResizable(false);
+            s.showAndWait();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // ==========================================================
+    // UTILIDAD
+    // ==========================================================
+    private void mostrarError(String t, String m) {
+        Alert a = new Alert(Alert.AlertType.ERROR);
+        a.setTitle(t);
+        a.setContentText(m);
+        a.showAndWait();
     }
 }

@@ -1,8 +1,8 @@
 package app.controllers.administradores;
 
 import core.SessionManager;
-import core.data.Users.AllUsers;
 import core.data.Users.User;
+import core.services.UserService;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,12 +15,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Controlador para la gestión de administradores.
- */
 public class AdministradoresController {
 
     @FXML private TextField txtBuscar;
@@ -30,12 +28,11 @@ public class AdministradoresController {
     @FXML private TableColumn<User, Void> colAcciones;
     @FXML private Label lblEstado;
 
-    private final AllUsers allUsers = AllUsers.getInstance();
     private final SessionManager sessionManager = SessionManager.getInstance();
+    private List<User> listaAdminsCache = new ArrayList<>();
 
     @FXML
     public void initialize() {
-        // Verificar permisos de administrador
         if (!sessionManager.isAdmin()) {
             mostrarError("Acceso denegado", "Solo los administradores pueden acceder a esta función.");
             return;
@@ -53,25 +50,25 @@ public class AdministradoresController {
     }
 
     private void configurarTabla() {
-        // Configurar columnas
         colExpediente.setCellValueFactory(new PropertyValueFactory<>("clave"));
         colNombre.setCellValueFactory(new PropertyValueFactory<>("name"));
         
-        colApellidos.setCellValueFactory(data -> 
+        colApellidos.setCellValueFactory(data ->
             new javafx.beans.property.SimpleStringProperty(
-                data.getValue().getApellidoPaterno() + " " + 
+                data.getValue().getApellidoPaterno() + " " +
                 (data.getValue().getApellidoMaterno() != null ? data.getValue().getApellidoMaterno() : "")
-            ));
-        
+            )
+        );
+
         colCorreo.setCellValueFactory(new PropertyValueFactory<>("email"));
         colTelefono.setCellValueFactory(new PropertyValueFactory<>("phone"));
-        
-        colEstado.setCellValueFactory(data -> 
+
+        colEstado.setCellValueFactory(data ->
             new javafx.beans.property.SimpleStringProperty(
                 data.getValue().isAdmin() ? "👑 Administrador" : "👤 Usuario"
-            ));
+            )
+        );
 
-        // Configurar columna de acciones con botones
         colAcciones.setReorderable(false);
         colAcciones.setResizable(false);
         colAcciones.setSortable(false);
@@ -82,19 +79,12 @@ public class AdministradoresController {
                 private final Button btnEliminar = new Button("Eliminar");
 
                 {
-                    btnEditar.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
-                    btnEditar.setMinWidth(100);
-                    btnEliminar.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
-                    btnEliminar.setMinWidth(100);
-                    // Estilos de botones
                     btnEditar.setStyle("-fx-background-color: #f1c40f; -fx-text-fill: black; -fx-font-weight: bold; -fx-background-radius: 5; -fx-cursor: hand;");
                     btnEliminar.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-cursor: hand;");
 
-                    // Tooltips
                     btnEditar.setTooltip(new Tooltip("Editar administrador"));
                     btnEliminar.setTooltip(new Tooltip("Eliminar administrador"));
 
-                    // Acciones
                     btnEditar.setOnAction(e -> {
                         User administrador = getTableView().getItems().get(getIndex());
                         editarAdministrador(administrador);
@@ -115,8 +105,6 @@ public class AdministradoresController {
                         setGraphic(null);
                     } else {
                         User administrador = getTableView().getItems().get(getIndex());
-                        
-                        // No mostrar botones para el usuario actual
                         if (esUsuarioActual(administrador)) {
                             setGraphic(null);
                         } else {
@@ -132,64 +120,56 @@ public class AdministradoresController {
         lblEstado.setText("Cargando administradores...");
         tablaAdministradores.getItems().clear();
 
-        new Thread(() -> {
-            try {
-                List<User> administradores = allUsers.getUsers().stream()
-                    .filter(User::isAdmin)
-                    .collect(Collectors.toList());
-                
+        UserService.getAdmins(new UserService.GetAdminsCallback() {
+            @Override
+            public void onSuccess(List<org.json.JSONObject> admins) {
                 Platform.runLater(() -> {
-                    tablaAdministradores.getItems().addAll(administradores);
-                    actualizarEstadisticas(administradores);
+                    listaAdminsCache = admins.stream().map(json -> {
+                        User u = new User();
+                        u.setClave(json.optString("Expediente"));
+                        u.setName(json.optString("Nombre"));
+                        u.setApellidoPaterno(json.optString("ApellidoPaterno"));
+                        u.setApellidoMaterno(json.optString("ApellidoMaterno"));
+                        u.setEmail(json.optString("Correo"));
+                        u.setPhone(json.optString("Telefono"));
+                        u.setAdmin(true);
+                        return u;
+                    }).collect(Collectors.toList());
+
+                    tablaAdministradores.getItems().setAll(listaAdminsCache);
+                    actualizarEstadisticas(listaAdminsCache);
+                    lblEstado.setText("✔ Administradores cargados");
                 });
-            } catch (Exception e) {
-                e.printStackTrace();
-                Platform.runLater(() -> lblEstado.setText("❌ Error al cargar administradores."));
             }
-        }).start();
+
+            @Override
+            public void onError(String error) {
+                Platform.runLater(() -> lblEstado.setText("❌ " + error));
+            }
+        });
     }
 
-    /**
-     * Buscar administradores por nombre, apellidos, expediente o correo
-     */
     private void buscarAdministradores(String query) {
         lblEstado.setText("Buscando \"" + query + "\"...");
-        tablaAdministradores.getItems().clear();
+        String queryLower = query.toLowerCase();
 
-        new Thread(() -> {
-            try {
-                List<User> todosAdmins = allUsers.getUsers().stream()
-                    .filter(User::isAdmin)
-                    .collect(Collectors.toList());
-                
-                String queryLower = query.toLowerCase();
-                
-                List<User> resultados = todosAdmins.stream()
-                    .filter(admin -> 
-                        admin.getClave().toLowerCase().contains(queryLower) ||
-                        admin.getName().toLowerCase().contains(queryLower) ||
-                        admin.getApellidoPaterno().toLowerCase().contains(queryLower) ||
-                        (admin.getApellidoMaterno() != null && admin.getApellidoMaterno().toLowerCase().contains(queryLower)) ||
-                        admin.getEmail().toLowerCase().contains(queryLower)
-                    )
-                    .collect(Collectors.toList());
+        List<User> resultados = listaAdminsCache.stream()
+            .filter(admin ->
+                admin.getClave().toLowerCase().contains(queryLower) ||
+                admin.getName().toLowerCase().contains(queryLower) ||
+                admin.getApellidoPaterno().toLowerCase().contains(queryLower) ||
+                (admin.getApellidoMaterno() != null && admin.getApellidoMaterno().toLowerCase().contains(queryLower)) ||
+                admin.getEmail().toLowerCase().contains(queryLower)
+            ).collect(Collectors.toList());
 
-                Platform.runLater(() -> {
-                    tablaAdministradores.getItems().addAll(resultados);
-                    lblEstado.setText("🔍 " + resultados.size() + " resultado(s) encontrado(s).");
-                });
-            } catch (Exception e) {
-                e.printStackTrace();
-                Platform.runLater(() -> lblEstado.setText("❌ Error en búsqueda."));
-            }
-        }).start();
+        tablaAdministradores.getItems().setAll(resultados);
+        lblEstado.setText("🔍 " + resultados.size() + " resultado(s) encontrado(s).");
     }
 
     private void actualizarEstadisticas(List<User> administradores) {
         int total = administradores.size();
         int usuarioActual = esUsuarioActualEnLista(administradores) ? 1 : 0;
-        
-        lblEstado.setText(String.format("📊 Total: %d administrador(es) | 👤 Tú: %s", 
+        lblEstado.setText(String.format("📊 Total: %d administrador(es) | 👤 Tú: %s",
             total, usuarioActual > 0 ? "Sí" : "No"));
     }
 
@@ -209,7 +189,6 @@ public class AdministradoresController {
     }
 
     private void eliminarAdministrador(User administrador) {
-        // No permitir eliminar al usuario actual
         if (esUsuarioActual(administrador)) {
             mostrarError("Acción no permitida", "No puedes eliminar tu propia cuenta.");
             return;
@@ -222,20 +201,19 @@ public class AdministradoresController {
         
         alert.showAndWait().ifPresent(btn -> {
             if (btn == ButtonType.OK) {
-                new Thread(() -> {
-                    try {
-                        allUsers.getUsers().remove(administrador);
-                        allUsers.saveUsers();
-                        
+                UserService.deleteAdmin(administrador.getClave(), new UserService.DeleteCallback() {
+                    @Override
+                    public void onSuccess() {
                         Platform.runLater(() -> {
-                            lblEstado.setText("Eliminar Administrador eliminado correctamente.");
+                            lblEstado.setText("✔ Administrador eliminado");
                             cargarAdministradores();
                         });
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Platform.runLater(() -> lblEstado.setText("❌ Error al eliminar."));
                     }
-                }).start();
+                    @Override
+                    public void onError(String error) {
+                        Platform.runLater(() -> lblEstado.setText("❌ " + error));
+                    }
+                });
             }
         });
     }
@@ -246,20 +224,17 @@ public class AdministradoresController {
             Parent root = loader.load();
 
             RegisterAdministradorController controller = loader.getController();
-            
             if (administrador != null) {
                 controller.cargarDatosExistentes(administrador);
             }
 
             Stage stage = new Stage();
-            stage.setTitle(administrador == null ? "👑 Nuevo Administrador" : "Editar Editar Administrador");
+            stage.setTitle(administrador == null ? "👑 Nuevo Administrador" : "Editar Administrador");
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setResizable(false);
-            
-            // Recargar cuando se cierre el formulario
+
             stage.setOnHidden(e -> cargarAdministradores());
-            
             stage.showAndWait();
 
         } catch (Exception e) {
@@ -268,22 +243,14 @@ public class AdministradoresController {
         }
     }
 
-    /**
-     * Verificar si un usuario es el usuario actual
-     */
     private boolean esUsuarioActual(User usuario) {
         User currentUser = sessionManager.getCurrentUser();
         return currentUser != null && currentUser.getClave().equals(usuario.getClave());
     }
 
-    /**
-     * Verificar si el usuario actual está en la lista
-     */
     private boolean esUsuarioActualEnLista(List<User> administradores) {
         User currentUser = sessionManager.getCurrentUser();
-        if (currentUser == null) return false;
-        
-        return administradores.stream()
+        return currentUser != null && administradores.stream()
             .anyMatch(admin -> admin.getClave().equals(currentUser.getClave()));
     }
 

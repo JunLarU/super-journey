@@ -1,6 +1,8 @@
 package core.services;
 
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import core.HTTPConnection;
@@ -129,6 +131,117 @@ public class UserService {
             String msg = (t != null ? t.getMessage() : "Error de red");
             callback.onError("Login fallido: " + msg);
         });
+
+        new Thread(task).start();
+    }
+
+    public interface GetAdminsCallback {
+        void onSuccess(List<org.json.JSONObject> admins);
+
+        void onError(String error);
+    }
+
+    public static void getAdmins(GetAdminsCallback callback) {
+        var task = HTTPConnection.getInstance().requestAsync(
+                "api/users?role=admin",
+                Optional.of(0), // GET
+                Optional.empty(),
+                Optional.of(0),
+                Optional.of("Error al obtener administradores"),
+                Optional.of("No se pudo conectar al servidor.\n"));
+
+        task.setOnSucceeded(evt -> {
+            HttpResponse<String> resp = task.getValue();
+            if (resp.statusCode() == 200) {
+                org.json.JSONObject json = new org.json.JSONObject(resp.body());
+                org.json.JSONArray arr = json.getJSONArray("admins");
+                List<org.json.JSONObject> list = new ArrayList<>();
+                for (int i = 0; i < arr.length(); i++) {
+                    list.add(arr.getJSONObject(i));
+                }
+                callback.onSuccess(list);
+            } else {
+                try {
+                    String err = new org.json.JSONObject(resp.body()).optString("error", "Error desconocido");
+                    callback.onError(err);
+                } catch (Exception e) {
+                    callback.onError("Error inesperado");
+                }
+            }
+        });
+
+        task.setOnFailed(evt -> callback.onError("Error en solicitud"));
+
+        new Thread(task).start();
+    }
+
+    public interface DeleteCallback {
+        void onSuccess();
+
+        void onError(String error);
+    }
+
+    public static void deleteAdmin(String expediente, DeleteCallback callback) {
+        JSONObject body = new JSONObject();
+        body.put("expediente", expediente);
+
+        var task = HTTPConnection.getInstance().requestAsync(
+                "api/users/delete",
+                Optional.of(1),
+                Optional.of(body.toString()),
+                Optional.of(0),
+                Optional.of("Error al eliminar administrador"),
+                Optional.of(""));
+
+        task.setOnSucceeded(evt -> {
+            HttpResponse<String> resp = task.getValue();
+            if (resp.statusCode() == 200) {
+                callback.onSuccess();
+            } else {
+                try {
+                    String error = new JSONObject(resp.body()).optString("error", "Error desconocido");
+                    callback.onError(error);
+                } catch (Exception e) {
+                    callback.onError("Error inesperado");
+                }
+            }
+        });
+
+        task.setOnFailed(evt -> callback.onError("Error en solicitud"));
+
+        new Thread(task).start();
+    }
+
+    public interface UpdateCallback {
+        void onSuccess();
+
+        void onError(String error);
+    }
+
+    public static void updateUser(JSONObject body, UpdateCallback callback) {
+        var task = HTTPConnection.getInstance().requestAsync(
+                "api/users/update",
+                Optional.of(1),
+                Optional.of(body.toString()),
+                Optional.of(0),
+                Optional.of("Error al actualizar usuario"),
+                Optional.of(""));
+
+        task.setOnSucceeded(evt -> {
+            HttpResponse<String> resp = task.getValue();
+            if (resp.statusCode() == 200) {
+                callback.onSuccess();
+            } else {
+                try {
+                    String error = new JSONObject(resp.body()).optString("error", "Error desconocido");
+                    callback.onError(error);
+                } catch (Exception e) {
+                    callback.onError("Error inesperado");
+                }
+            }
+        });
+
+        task.setOnFailed(evt -> callback.onError("Error en solicitud"));
 
         new Thread(task).start();
     }

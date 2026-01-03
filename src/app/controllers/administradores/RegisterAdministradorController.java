@@ -1,14 +1,15 @@
 package app.controllers.administradores;
 
 import core.SessionManager;
-import core.data.Users.AllUsers;
 import core.data.Users.User;
+import core.services.UserService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import org.json.JSONObject;
 
 public class RegisterAdministradorController {
 
@@ -23,221 +24,165 @@ public class RegisterAdministradorController {
     @FXML private Button btnRegistrar;
     @FXML private Button btnCancelar;
 
-    private final AllUsers allUsers = AllUsers.getInstance();
     private final SessionManager sessionManager = SessionManager.getInstance();
 
-    // Control de modo edición
     private boolean modoEdicion = false;
     private User administradorEditando = null;
 
     @FXML
     private void initialize() {
-        // Verificar permisos de administrador
         if (!sessionManager.isAdmin()) {
             mostrarAlerta("Acceso denegado", "Solo los administradores pueden acceder a esta función.");
-            return;
+            btnRegistrar.setDisable(true);
         }
-        
         configurarValidaciones();
     }
 
-    /**
-     * Acción del botón "Registrar Administrador"
-     */
     @FXML
     private void onRegistrarClicked() {
-        String clave = txtExpediente.getText().trim();
-        String nombre = txtNombre.getText().trim();
-        String apellidoP = txtApellidoPaterno.getText().trim();
-        String apellidoM = txtApellidoMaterno.getText().trim();
-        String correo = txtCorreo.getText().trim();
-        String telefono = txtTelefono.getText().trim();
-        String nip = txtNip.getText().trim();
+        String clave      = txtExpediente.getText().trim();
+        String nombre     = txtNombre.getText().trim();
+        String apellidoP  = txtApellidoPaterno.getText().trim();
+        String apellidoM  = txtApellidoMaterno.getText().trim();
+        String correo     = txtCorreo.getText().trim();
+        String telefono   = txtTelefono.getText().trim();
+        String nip        = txtNip.getText().trim();
 
-        // Validación de campos vacíos
-        if (clave.isEmpty() || nombre.isEmpty() || apellidoP.isEmpty() || correo.isEmpty() || nip.isEmpty()) {
-            lblStatus.setText("⚠️ Complete todos los campos obligatorios.");
+        if (clave.isEmpty() || nombre.isEmpty() || apellidoP.isEmpty() || correo.isEmpty()) {
+            lblStatus.setText("⚠️ Complete los campos obligatorios.");
             lblStatus.setStyle("-fx-text-fill: red;");
             return;
         }
 
-        // Validar formato de correo
         if (!correo.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
-            lblStatus.setText("⚠️ Ingrese un correo electrónico válido.");
+            lblStatus.setText("⚠️ Correo no válido.");
             lblStatus.setStyle("-fx-text-fill: red;");
             return;
         }
 
-        // Validar formato de teléfono (opcional)
         if (!telefono.isEmpty() && !telefono.matches("\\d{10}")) {
-            lblStatus.setText("⚠️ El teléfono debe tener 10 dígitos.");
+            lblStatus.setText("⚠️ Teléfono debe tener 10 dígitos.");
             lblStatus.setStyle("-fx-text-fill: red;");
             return;
         }
 
-        if (modoEdicion && administradorEditando != null) {
-            // Modo edición
+        if (modoEdicion) {
             actualizarAdministrador(clave, nombre, apellidoP, apellidoM, correo, telefono, nip);
         } else {
-            // Modo registro
             registrarNuevoAdministrador(clave, nombre, apellidoP, apellidoM, correo, telefono, nip);
         }
     }
 
-    private void registrarNuevoAdministrador(String clave, String nombre, String apellidoP, String apellidoM, 
-                                           String correo, String telefono, String nip) {
-        // Verificar si ya existe el expediente
-        if (allUsers.getUserByClave(clave) != null) {
-            lblStatus.setText("⚠️ El expediente ya está registrado.");
-            lblStatus.setStyle("-fx-text-fill: red;");
-            return;
-        }
+    private void registrarNuevoAdministrador(
+        String clave, String nombre, String apellidoP, String apellidoM,
+        String correo, String telefono, String nip
+    ) {
+        lblStatus.setText("⏳ Registrando...");
+        lblStatus.setStyle("-fx-text-fill: black;");
 
-        // Verificar si ya existe el correo
-        if (existeCorreo(correo)) {
-            lblStatus.setText("⚠️ El correo electrónico ya está registrado.");
-            lblStatus.setStyle("-fx-text-fill: red;");
-            return;
-        }
-
-        // Crear nuevo administrador
-        User nuevoAdmin = new User(
-            clave,           // username
-            nip,             // password
-            nombre,
-            apellidoP,
-            apellidoM,
-            correo,
-            telefono
-        );
-        nuevoAdmin.setClave(clave);
-        nuevoAdmin.setAdmin(true); // Siempre será administrador
-
-        // Guardar el nuevo administrador
-        allUsers.addUser(nuevoAdmin);
-
-        lblStatus.setText("✅ Administrador registrado correctamente.");
-        lblStatus.setStyle("-fx-text-fill: green;");
-
-        limpiarCampos();
-    }
-
-    private void actualizarAdministrador(String clave, String nombre, String apellidoP, String apellidoM, 
-                                       String correo, String telefono, String nip) {
-        // Verificar si el correo ya existe en otro usuario
-        if (existeCorreo(correo) && !administradorEditando.getEmail().equalsIgnoreCase(correo)) {
-            lblStatus.setText("⚠️ El correo electrónico ya está registrado en otra cuenta.");
-            lblStatus.setStyle("-fx-text-fill: red;");
-            return;
-        }
-
-        // Actualizar datos del administrador
-        administradorEditando.setClave(clave);
-        administradorEditando.setName(nombre);
-        administradorEditando.setApellidoPaterno(apellidoP);
-        administradorEditando.setApellidoMaterno(apellidoM);
-        administradorEditando.setEmail(correo);
-        administradorEditando.setPhone(telefono);
-        
-        // Solo actualizar password si se proporcionó uno nuevo
-        if (!nip.isEmpty()) {
-            // En un sistema real aquí se debería hashear la contraseña
-            // Por ahora usamos el texto plano como en el sistema actual
-        }
-
-        // Guardar cambios
-        allUsers.saveUsers();
-
-        lblStatus.setText("✅ Administrador actualizado correctamente.");
-        lblStatus.setStyle("-fx-text-fill: green;");
-
-        // Cerrar ventana después de actualizar
-        cerrarVentana();
-    }
-
-    private boolean existeCorreo(String correo) {
-        for (User user : allUsers.getUsers()) {
-            if (user.getEmail().equalsIgnoreCase(correo)) {
-                return true;
+        UserService.signup(
+            clave, nombre, apellidoP, apellidoM,
+            correo, telefono, nip, "Administrador",
+            new UserService.SignupCallback() {
+                @Override
+                public void onSuccess(JSONObject response) {
+                    javafx.application.Platform.runLater(() -> {
+                        lblStatus.setText("✅ Administrador registrado.");
+                        lblStatus.setStyle("-fx-text-fill: green;");
+                        limpiarCampos();
+                    });
+                }
+                @Override
+                public void onError(String error) {
+                    javafx.application.Platform.runLater(() -> {
+                        lblStatus.setText("❌ " + error);
+                        lblStatus.setStyle("-fx-text-fill: red;");
+                    });
+                }
             }
-        }
-        return false;
+        );
     }
 
-    /**
-     * Cancelar y regresar al listado
-     */
-    @FXML
-    private void onCancelarClicked() {
-        cerrarVentana();
+    private void actualizarAdministrador(
+        String clave, String nombre, String apellidoP, String apellidoM,
+        String correo, String telefono, String nip
+    ) {
+        lblStatus.setText("⏳ Actualizando...");
+        lblStatus.setStyle("-fx-text-fill: black;");
+
+        JSONObject body = new JSONObject();
+        body.put("expediente", clave);
+        body.put("nombre", nombre);
+        body.put("apellidoPaterno", apellidoP);
+        body.put("apellidoMaterno", apellidoM);
+        body.put("correo", correo);
+        body.put("telefono", telefono);
+        body.put("tipo", "Administrador");
+        // Si nip está vacío, backend lo ignorará (mantendrá el anterior)
+        body.put("nip", nip);
+
+        UserService.updateUser(body, new UserService.UpdateCallback() {
+            @Override
+            public void onSuccess() {
+                javafx.application.Platform.runLater(() -> {
+                    lblStatus.setText("✅ Administrador actualizado.");
+                    lblStatus.setStyle("-fx-text-fill: green;");
+                    cerrarVentana();
+                });
+            }
+            @Override
+            public void onError(String error) {
+                javafx.application.Platform.runLater(() -> {
+                    lblStatus.setText("❌ " + error);
+                    lblStatus.setStyle("-fx-text-fill: red;");
+                });
+            }
+        });
     }
 
-    /**
-     * Cargar datos existentes para edición
-     */
     public void cargarDatosExistentes(User administrador) {
         if (administrador == null) return;
-
         modoEdicion = true;
         administradorEditando = administrador;
 
-        // Cargar datos en los campos
         txtExpediente.setText(administrador.getClave());
         txtNombre.setText(administrador.getName());
         txtApellidoPaterno.setText(administrador.getApellidoPaterno());
         txtApellidoMaterno.setText(administrador.getApellidoMaterno());
         txtCorreo.setText(administrador.getEmail());
         txtTelefono.setText(administrador.getPhone());
-        
-        // El NIP se deja vacío por seguridad
 
-        // Actualizar UI para modo edición
         btnRegistrar.setText("💾 Actualizar Administrador");
         lblStatus.setText("📝 Editando administrador: " + administrador.getName());
     }
 
-    /**
-     * Configurar validaciones de campos
-     */
+    @FXML
+    private void onCancelarClicked() {
+        cerrarVentana();
+    }
+
     private void configurarValidaciones() {
-        // Validar que el expediente solo contenga letras y números
-        txtExpediente.textProperty().addListener((obs, oldValue, newValue) -> {
-            if (!newValue.matches("[A-Za-z0-9]*")) {
-                txtExpediente.setText(oldValue);
-            }
+        txtExpediente.textProperty().addListener((obs, o, n) -> {
+            if (!n.matches("[A-Za-z0-9]*")) txtExpediente.setText(o);
         });
 
-        // Validar que el nombre solo contenga letras y espacios
-        txtNombre.textProperty().addListener((obs, oldValue, newValue) -> {
-            if (!newValue.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]*")) {
-                txtNombre.setText(oldValue);
-            }
+        txtNombre.textProperty().addListener((obs, o, n) -> {
+            if (!n.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]*")) txtNombre.setText(o);
         });
 
-        // Validar que los apellidos solo contengan letras
-        txtApellidoPaterno.textProperty().addListener((obs, oldValue, newValue) -> {
-            if (!newValue.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]*")) {
-                txtApellidoPaterno.setText(oldValue);
-            }
+        txtApellidoPaterno.textProperty().addListener((obs, o, n) -> {
+            if (!n.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]*")) txtApellidoPaterno.setText(o);
         });
 
-        txtApellidoMaterno.textProperty().addListener((obs, oldValue, newValue) -> {
-            if (!newValue.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]*")) {
-                txtApellidoMaterno.setText(oldValue);
-            }
+        txtApellidoMaterno.textProperty().addListener((obs, o, n) -> {
+            if (!n.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]*")) txtApellidoMaterno.setText(o);
         });
 
-        // Validar que el teléfono solo contenga números
-        txtTelefono.textProperty().addListener((obs, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {
-                txtTelefono.setText(oldValue);
-            }
+        txtTelefono.textProperty().addListener((obs, o, n) -> {
+            if (!n.matches("\\d*")) txtTelefono.setText(o);
         });
     }
 
-    /**
-     * Limpia los campos del formulario
-     */
     private void limpiarCampos() {
         txtExpediente.clear();
         txtNombre.clear();
