@@ -87,15 +87,50 @@ public class IngredientesController {
                     private final HBox box = new HBox(5, btnEditar, btnEliminar);
 
                     {
-                        btnEditar.setOnAction(e -> abrirFormulario(getTableView().getItems().get(getIndex())));
+                        // Configurar tamaño y estilos de los botones
+                        btnEditar.setMinWidth(70);
+                        btnEliminar.setMinWidth(70);
 
-                        btnEliminar.setOnAction(e -> eliminarIngrediente(getTableView().getItems().get(getIndex())));
+                        // Estilos para los botones
+                        btnEditar.setStyle(
+                                "-fx-background-color: #f1c40f; -fx-text-fill: black; -fx-font-weight: bold;");
+                        btnEliminar.setStyle(
+                                "-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold;");
+
+                        // Agregar hover effects
+                        btnEditar.setOnMouseEntered(e -> btnEditar.setStyle(
+                                "-fx-background-color: #f39c12; -fx-text-fill: black; -fx-font-weight: bold;"));
+                        btnEditar.setOnMouseExited(e -> btnEditar.setStyle(
+                                "-fx-background-color: #f1c40f; -fx-text-fill: black; -fx-font-weight: bold;"));
+
+                        btnEliminar.setOnMouseEntered(e -> btnEliminar.setStyle(
+                                "-fx-background-color: #c0392b; -fx-text-fill: white; -fx-font-weight: bold;"));
+                        btnEliminar.setOnMouseExited(e -> btnEliminar.setStyle(
+                                "-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold;"));
+
+                        btnEditar.setOnAction(e -> {
+                            Ingrediente ingrediente = getTableView().getItems().get(getIndex());
+                            if (ingrediente != null) {
+                                abrirFormulario(ingrediente);
+                            }
+                        });
+
+                        btnEliminar.setOnAction(e -> {
+                            Ingrediente ingrediente = getTableView().getItems().get(getIndex());
+                            if (ingrediente != null) {
+                                eliminarIngrediente(ingrediente);
+                            }
+                        });
                     }
 
                     @Override
                     protected void updateItem(Void item, boolean empty) {
                         super.updateItem(item, empty);
-                        setGraphic(empty ? null : box);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(box);
+                        }
                     }
                 });
     }
@@ -152,27 +187,56 @@ public class IngredientesController {
      */
 
     private void eliminarIngrediente(Ingrediente ing) {
-        Alert a = new Alert(Alert.AlertType.CONFIRMATION,
-                "¿Eliminar \"" + ing.getNombre() + "\"?",
-                ButtonType.OK, ButtonType.CANCEL);
+        Alert a = new Alert(Alert.AlertType.CONFIRMATION);
+        a.setTitle("Confirmar eliminación");
+        a.setHeaderText("¿Eliminar ingrediente \"" + ing.getNombre() + "\"?");
+        a.setContentText("Esta acción no se puede deshacer. El ingrediente será eliminado permanentemente.");
+        a.getDialogPane().setMinWidth(400);
 
         a.showAndWait().ifPresent(b -> {
             if (b == ButtonType.OK) {
+                lblEstado.setText("Eliminando ingrediente...");
                 IngredienteService.deleteIngrediente(ing.getId(), new CrudCallback() {
                     @Override
                     public void onSuccess() {
                         Platform.runLater(() -> {
-                            lblEstado.setText("🗑️ Eliminado correctamente");
+                            mostrarExito("Éxito", "Ingrediente \"" + ing.getNombre() + "\" eliminado correctamente");
                             cargarIngredientes();
                         });
                     }
 
                     @Override
                     public void onError(String error) {
-                        Platform.runLater(() -> lblEstado.setText("❌ " + error));
+                        Platform.runLater(() -> {
+                            mostrarError("Error al eliminar", error);
+                            lblEstado.setText("❌ " + error);
+                        });
                     }
                 });
             }
+        });
+    }
+
+    // Métodos de utilidad para mostrar alertas
+    private void mostrarError(String titulo, String mensaje) {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle(titulo);
+            alert.setHeaderText(null);
+            alert.setContentText(mensaje);
+            alert.getDialogPane().setMinWidth(400);
+            alert.showAndWait();
+        });
+    }
+
+    private void mostrarExito(String titulo, String mensaje) {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle(titulo);
+            alert.setHeaderText(null);
+            alert.setContentText(mensaje);
+            alert.getDialogPane().setMinWidth(400);
+            alert.showAndWait();
         });
     }
 
@@ -225,10 +289,6 @@ public class IngredientesController {
         i.setCalorias(o.optDouble("Calorias", 0));
         i.setAlergenico(o.optInt("Alergeno", 0) == 1);
         return i;
-    }
-
-    private void mostrarError(String t, String m) {
-        new Alert(Alert.AlertType.ERROR, m).showAndWait();
     }
 
     @FXML

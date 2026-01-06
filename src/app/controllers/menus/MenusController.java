@@ -1,12 +1,13 @@
 package app.controllers.menus;
 
-import core.data.Menus.AllMenus;
+import core.data.Menus.MenuSemanal;
 import core.data.Menus.Menu;
 import core.data.Menus.MenuSeccion;
 import core.data.Menus.SeccionMenu;
 import core.data.Menus.SeccionProducto;
-import core.data.Productos.AllProductos;
 import core.data.Productos.Producto;
+import core.services.MenuService;
+import core.services.ProductoService;
 import core.SessionManager;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -25,20 +26,20 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.WeekFields;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import org.json.JSONObject;
+
 /**
- * Controlador mejorado para gestión de menús semanales y secciones con
- * productos
- * Ahora usando archivos JSON en lugar de base de datos
+ * Controlador para gestión de menús semanales y secciones con productos
+ * Funciona con servidor y base de datos MySQL
  */
 public class MenusController {
 
-    
     // 📌 COMPONENTES MENÚS
-    
     @FXML
     private TabPane tabPane;
     @FXML
@@ -65,11 +66,9 @@ public class MenusController {
     private VBox vboxJuevesComida, vboxViernesComida;
 
     @FXML
-    private Button btnNuevoMenu, btnEditarMenu, btnEliminarMenu;
+    private Button btnNuevoMenu, btnEditarMenu, btnEliminarMenu, btnGenerarMenu, btnVisualizarMenu;
 
-    
     // 📌 COMPONENTES SECCIONES
-    
     @FXML
     private TableView<SeccionMenu> tablaSecciones;
     @FXML
@@ -79,32 +78,27 @@ public class MenusController {
     @FXML
     private TableColumn<SeccionMenu, Void> colSecAcciones;
     @FXML
-    private Button btnNuevaSeccion;
+    private Button btnNuevaSeccion, btnActualizarSecciones;
 
-    
     // 📌 MODELOS Y DATOS
-    
-    private final AllMenus allMenus = AllMenus.getInstance();
-    private final AllProductos allProductos = AllProductos.getInstance();
     private final SessionManager session = SessionManager.getInstance();
     private final ObservableList<SeccionMenu> seccionesData = FXCollections.observableArrayList();
-    private List<Producto> productosDisponibles = new ArrayList<>();
+    private final ObservableList<Producto> productosData = FXCollections.observableArrayList();
 
     private Map<String, VBox> mapaCeldas = new HashMap<>();
-    private Menu menuSemanalActual = null;
+    private MenuSemanal menuSemanalActual = null;
     private int semanaActual = 0;
     private int anioActual = 0;
+    private LocalDate fechaInicioSemanaActual = null;
 
-    
     // 📌 INICIALIZACIÓN
-    
     @FXML
     public void initialize() {
         configurarSpinners();
         configurarMapa();
         configurarTablaSecciones();
         cargarDatosIniciales();
-        lblStatus.setText("✅ Sistema listo");
+        lblStatus.setText("✅ Sistema listo. Conectado a base de datos.");
     }
 
     private void configurarSpinners() {
@@ -142,17 +136,49 @@ public class MenusController {
         cargarSecciones();
     }
 
+    // In the cargarProductosDisponibles() method, fix the Producto creation:
     private void cargarProductosDisponibles() {
-        productosDisponibles = allProductos.getAll().stream()
-                .filter(Producto::isDisponible)
-                .collect(Collectors.toList());
-        //System.out.println("✅ " + productosDisponibles.size() + " productos disponibles cargados");
+        ProductoService.listProductos(new ProductoService.ListCallback() {
+            @Override
+            public void onSuccess(List<org.json.JSONObject> list) {
+                productosData.clear();
+                for (org.json.JSONObject json : list) {
+                    Producto producto = Producto.fromJSON(json); // Fixed: Use static method
+                    if (producto.isDisponible()) {
+                        productosData.add(producto);
+                    }
+                }
+                Platform.runLater(() -> {
+                    lblStatus.setText("✅ " + productosData.size() + " productos disponibles cargados");
+                });
+            }
+
+            @Override
+            public void onError(String error) {
+                Platform.runLater(() -> {
+                    lblStatus.setText("❌ Error cargando productos: " + error);
+                });
+            }
+        });
     }
 
-    
-    // 📅 GESTIÓN DE MENÚS
-    
+    // En el método onCargarSemanaClicked, verifica si los botones existen antes de
+    // usarlos:
+    private void habilitarDeshabilitarBotones(boolean tieneMenu) {
+        Platform.runLater(() -> {
+            if (btnEditarMenu != null) {
+                btnEditarMenu.setDisable(!tieneMenu);
+            }
+            if (btnEliminarMenu != null) {
+                btnEliminarMenu.setDisable(!tieneMenu);
+            }
+            if (btnVisualizarMenu != null) {
+                btnVisualizarMenu.setDisable(!tieneMenu);
+            }
+        });
+    }
 
+    // 📅 GESTIÓN DE MENÚS SEMANALES
     @FXML
     private void onCargarSemanaClicked() {
         semanaActual = spinSemana.getValue();
@@ -161,39 +187,66 @@ public class MenusController {
         lblStatus.setText("Cargando menú de la semana " + semanaActual + "/" + anioActual + "...");
         limpiarCalendario();
 
-        new Thread(() -> {
-            try {
-                List<Menu> menus = allMenus.getMenusBySemana(semanaActual, anioActual);
+        // Calcular fechas primero
+        calcularFechasSemana(semanaActual, anioActual);
 
+        MenuService.getMenuSemanal(semanaActual, anioActual, new MenuService.MenuSemanalCallback() {
+            @Override
+            public void onSuccess(MenuSemanal menuSemanal) {
                 Platform.runLater(() -> {
-                    if (!menus.isEmpty()) {
-                        mostrarMenuEnCalendario(menus);
-                        lblStatus.setText("✅ Menú cargado correctamente");
+                    menuSemanalActual = menuSemanal;
+
+                    if (menuSemanal != null) {
+                        // Mostrar mensaje de depuración
+                        System.out.println("[DEBUG] Menú cargado: " +
+                                (menuSemanal.getMenus() != null ? menuSemanal.getMenus().size() : 0) + " menús");
+
+                        if (menuSemanal.getMenus() != null && !menuSemanal.getMenus().isEmpty()) {
+                            mostrarMenuEnCalendario(menuSemanal);
+                            lblStatus.setText("✅ Menú cargado correctamente (" +
+                                    menuSemanal.getMenus().size() + " menús encontrados)");
+                        } else {
+                            mostrarCalendarioVacio();
+                            lblStatus.setText("⚠️ No hay menús asignados para esta semana");
+                        }
                     } else {
-                        lblStatus.setText("⚠️ No hay menú para esta semana");
-                        menuSemanalActual = null;
+                        mostrarCalendarioVacio();
+                        lblStatus.setText("⚠️ No se encontró menú para esta semana");
                     }
+
+                    // Habilitar botones de edición/eliminación si hay menú
+                    boolean tieneMenu = menuSemanal != null &&
+                            menuSemanal.getMenus() != null &&
+                            !menuSemanal.getMenus().isEmpty();
+                    habilitarDeshabilitarBotones(tieneMenu);
                 });
-            } catch (Exception e) {
-                Platform.runLater(() -> {
-                    lblStatus.setText("❌ Error al cargar menú: " + e.getMessage());
-                    menuSemanalActual = null;
-                });
-                e.printStackTrace();
             }
-        }).start();
+
+            @Override
+            public void onError(String error) {
+                Platform.runLater(() -> {
+                    lblStatus.setText("❌ Error al cargar menú: " + error);
+                    menuSemanalActual = null;
+                    mostrarCalendarioVacio();
+                    btnEditarMenu.setDisable(true);
+                    btnEliminarMenu.setDisable(true);
+                    btnVisualizarMenu.setDisable(true);
+                });
+            }
+        });
     }
 
-    private void mostrarMenuEnCalendario(List<Menu> menus) {
-        if (menus.isEmpty()) {
-            lblRangoFechas.setText("No hay menú para esta semana");
-            return;
+    private void mostrarCalendarioVacio() {
+        for (VBox celda : mapaCeldas.values()) {
+            celda.getChildren().clear();
+            Label lblVacio = new Label("(Sin asignar)");
+            lblVacio.setStyle("-fx-text-fill: #95a5a6; -fx-font-style: italic;");
+            celda.getChildren().add(lblVacio);
         }
+    }
 
-        // Calcular rango de fechas
-        LocalDate primeraFecha = menus.get(0).getFecha();
-        LocalDate ultimaFecha = menus.get(menus.size() - 1).getFecha();
-        lblRangoFechas.setText("📆 " + primeraFecha + " al " + ultimaFecha);
+    private void mostrarMenuEnCalendario(MenuSemanal menuSemanal) {
+        List<Menu> menus = menuSemanal.getMenus();
 
         for (Menu menu : menus) {
             String dia = menu.getDiaSemana();
@@ -219,26 +272,55 @@ public class MenusController {
     }
 
     private void agregarSeccionACelda(VBox celda, MenuSeccion menuSeccion) {
-        String nombre = menuSeccion.getNombreSeccion();
-        String color = "#3498db"; // Color por defecto
-
-        // Buscar la sección para obtener su color
-        SeccionMenu seccion = allMenus.getSeccionById(menuSeccion.getIdSeccion());
-        if (seccion != null) {
-            color = seccion.getColor();
+        if (menuSeccion == null) {
+            return;
         }
 
-        Label lblSeccion = new Label("📦 " + nombre);
-        lblSeccion.setStyle(
-                "-fx-background-color: " + color + "; " +
-                        "-fx-text-fill: white; " +
-                        "-fx-padding: 5 10; " +
-                        "-fx-background-radius: 5; " +
-                        "-fx-font-size: 11px; " +
-                        "-fx-font-weight: bold;");
-        lblSeccion.setMaxWidth(Double.MAX_VALUE);
+        String nombre = menuSeccion.getNombre() != null ? menuSeccion.getNombre() : "Sin nombre";
+        String color = menuSeccion.getColor() != null ? menuSeccion.getColor() : "#3498db";
 
-        celda.getChildren().add(lblSeccion);
+        HBox seccionContainer = new HBox();
+        seccionContainer.setAlignment(Pos.CENTER_LEFT);
+        seccionContainer.setSpacing(5);
+        seccionContainer.setStyle("-fx-padding: 2 0;");
+
+        // Color indicator
+        Region colorIndicator = new Region();
+        colorIndicator.setPrefSize(10, 10);
+        colorIndicator.setStyle("-fx-background-color: " + color + "; -fx-background-radius: 2;");
+
+        Label lblSeccion = new Label(nombre);
+        lblSeccion.setStyle("-fx-font-size: 11px; -fx-font-weight: bold;");
+
+        // Tooltip con más información
+        StringBuilder tooltipText = new StringBuilder(nombre);
+
+        if (menuSeccion.getDescripcion() != null && !menuSeccion.getDescripcion().isEmpty()) {
+            tooltipText.append("\n\n").append(menuSeccion.getDescripcion());
+        }
+
+        if (menuSeccion.getFechaAsignacion() != null && !menuSeccion.getFechaAsignacion().isEmpty()) {
+            tooltipText.append("\n\nAsignado: ").append(menuSeccion.getFechaAsignacion());
+        }
+
+        Tooltip tooltip = new Tooltip(tooltipText.toString());
+        Tooltip.install(seccionContainer, tooltip);
+
+        seccionContainer.getChildren().addAll(colorIndicator, lblSeccion);
+        celda.getChildren().add(seccionContainer);
+    }
+
+    private void calcularFechasSemana(int semana, int anio) {
+        LocalDate fecha = LocalDate.now()
+                .withYear(anio)
+                .with(WeekFields.ISO.weekOfYear(), semana)
+                .with(WeekFields.ISO.dayOfWeek(), 1);
+
+        fechaInicioSemanaActual = fecha;
+        LocalDate fechaFin = fecha.plusDays(4);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        lblRangoFechas.setText("📆 " + fecha.format(formatter) + " al " + fechaFin.format(formatter));
     }
 
     private void limpiarCalendario() {
@@ -254,7 +336,7 @@ public class MenusController {
 
     @FXML
     private void onEditarMenuClicked() {
-        if (semanaActual == 0 || anioActual == 0) {
+        if (semanaActual == 0 || anioActual == 0 || menuSemanalActual == null) {
             mostrarAlerta("⚠️ Sin menú cargado", "Primero carga un menú existente.");
             return;
         }
@@ -263,16 +345,91 @@ public class MenusController {
 
     @FXML
     private void onVisualizarMenuClicked() {
-        if (semanaActual == 0 || anioActual == 0) {
+        if (semanaActual == 0 || anioActual == 0 || menuSemanalActual == null) {
             mostrarAlerta("⚠️ Sin menú cargado", "Primero carga un menú existente.");
             return;
         }
         abrirRegistroMenu(true, semanaActual, anioActual, true);
     }
 
-    /**
-     * Abre la ventana de registro/edición de menú
-     */
+    @FXML
+    private void onGenerarMenuClicked() {
+        if (fechaInicioSemanaActual == null) {
+            mostrarAlerta("⚠️ Error", "No se pudo determinar la fecha de inicio de la semana.");
+            return;
+        }
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Generar Menú Semanal");
+        confirm.setHeaderText("¿Generar nuevo menú semanal?");
+        confirm.setContentText("Se generará un menú para la semana " + semanaActual + "/" + anioActual +
+                "\n\nEsta acción creará slots vacíos para Lunes a Viernes, Desayuno y Comida.");
+
+        if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
+            generarMenuSemana();
+        }
+    }
+
+    private void generarMenuSemana() {
+        if (semanaActual == 0 || anioActual == 0) {
+            mostrarAlerta("⚠️ Error", "Selecciona una semana válida primero.");
+            return;
+        }
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Generar Menú Semanal");
+        confirm.setHeaderText("¿Generar nuevo menú semanal?");
+        confirm.setContentText("Se generará un menú para la semana " + semanaActual + "/" + anioActual +
+                "\n\nEsta acción creará slots vacíos para Lunes a Viernes, Desayuno y Comida.");
+
+        if (confirm.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
+            lblStatus.setText("Generando menú semanal...");
+
+            // Obtener el ID del usuario actual
+            int userId = session.isAuthenticated() && session.getCurrentUser() != null
+                    ? session.getCurrentUser().getId()
+                    : 1;
+
+            // Calcular la fecha de inicio (lunes de la semana)
+            LocalDate fechaInicio = calcularFechaInicioSemana(semanaActual, anioActual);
+
+            MenuService.generarMenuSemanal(fechaInicio.toString(), userId, new MenuService.Callback() {
+                @Override
+                public void onSuccess(org.json.JSONObject response) {
+                    Platform.runLater(() -> {
+                        if (response.optBoolean("success", false)) {
+                            lblStatus.setText("✅ Menú semanal generado correctamente");
+                            onCargarSemanaClicked(); // Recargar
+                        } else {
+                            String error = response.optString("error", "Error desconocido");
+                            lblStatus.setText("❌ Error: " + error);
+                            mostrarAlerta("Error", error);
+                        }
+                    });
+                }
+
+                @Override
+                public void onError(String error) {
+                    Platform.runLater(() -> {
+                        lblStatus.setText("❌ Error al generar menú: " + error);
+                        mostrarAlerta("Error", error);
+                    });
+                }
+            });
+        }
+    }
+
+    private LocalDate calcularFechaInicioSemana(int semana, int anio) {
+        try {
+            return LocalDate.now()
+                    .withYear(anio)
+                    .with(WeekFields.ISO.weekOfYear(), semana)
+                    .with(WeekFields.ISO.dayOfWeek(), 1); // Lunes
+        } catch (Exception e) {
+            return LocalDate.now();
+        }
+    }
+
     private void abrirRegistroMenu(boolean esEdicion, int semana, int anio) {
         abrirRegistroMenu(esEdicion, semana, anio, false);
     }
@@ -283,25 +440,28 @@ public class MenusController {
             Parent root = loader.load();
 
             RegistroMenuController controller = loader.getController();
-            
+
             if (soloLectura) {
                 controller.visualizarMenu(semana, anio);
             } else if (esEdicion) {
                 controller.cargarDatosMenu(semana, anio);
+            } else {
+                // Modo creación nueva
+                controller.modoEdicion(true);
+                controller.calcularFechasSemana();
             }
-            // Si no es edición ni visualización, se queda en modo nuevo menú
 
             Stage stage = new Stage();
-            stage.setTitle(esEdicion ? "Editar Menú Semanal" : "Nuevo Menú Semanal");
+            stage.setTitle(esEdicion ? (soloLectura ? "Visualizar Menú Semanal" : "Editar Menú Semanal")
+                    : "Nuevo Menú Semanal");
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setResizable(true);
-            
-            // Cuando se cierra la ventana, recargar los datos
+
             stage.setOnHidden(e -> {
                 onCargarSemanaClicked(); // Recargar la vista actual
             });
-            
+
             stage.showAndWait();
 
         } catch (Exception e) {
@@ -310,75 +470,97 @@ public class MenusController {
         }
     }
 
-    private void generarMenuSemana() {
-        LocalDate fechaInicio = LocalDate.now();
-        int idUsuario = 1; // Por defecto, podrías obtenerlo de la sesión
-
-        allMenus.generarMenusSemana(fechaInicio, idUsuario);
-
-        semanaActual = fechaInicio.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear());
-        anioActual = fechaInicio.getYear();
-
-        spinSemana.getValueFactory().setValue(semanaActual);
-        spinAnio.getValueFactory().setValue(anioActual);
-
-        onCargarSemanaClicked();
-        lblStatus.setText("✅ Menú semanal generado correctamente");
-    }
-
     @FXML
     private void onEliminarMenuClicked() {
-        if (semanaActual == 0 || anioActual == 0) {
+        if (semanaActual == 0 || anioActual == 0 || menuSemanalActual == null) {
             mostrarAlerta("⚠️ Sin menú cargado", "Primero carga un menú existente.");
             return;
         }
 
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
-                "¿Eliminar el menú de la semana " + semanaActual + "/" + anioActual + "?\n\n" +
-                        "Esta acción no se puede deshacer.",
-                ButtonType.YES, ButtonType.NO);
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
         confirm.setTitle("Confirmar eliminación");
+        confirm.setHeaderText("¿Eliminar el menú de la semana " + semanaActual + "/" + anioActual + "?");
+        confirm.setContentText("Esta acción eliminará:\n" +
+                "• Todos los slots del menú (Lunes-Viernes, Desayuno-Comida)\n" +
+                "• Todas las asignaciones de secciones\n" +
+                "• No afecta a las secciones ni productos\n\n" +
+                "⚠️ Esta acción no se puede deshacer.");
 
         confirm.showAndWait().ifPresent(btn -> {
-            if (btn == ButtonType.YES) {
+            if (btn == ButtonType.OK) {
                 eliminarMenu();
             }
         });
     }
 
     private void eliminarMenu() {
-        lblStatus.setText("Eliminando menú...");
+        if (semanaActual == 0 || anioActual == 0) {
+            mostrarAlerta("⚠️ Error", "No hay un menú seleccionado para eliminar.");
+            return;
+        }
 
-        new Thread(() -> {
-            try {
-                List<Menu> menus = allMenus.getMenusBySemana(semanaActual, anioActual);
-                for (Menu menu : menus) {
-                    allMenus.removeMenu(menu.getId());
-                }
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Confirmar eliminación");
+        confirm.setHeaderText("¿Eliminar el menú de la semana " + semanaActual + "/" + anioActual + "?");
+        confirm.setContentText("Esta acción eliminará:\n" +
+                "• Todos los slots del menú (Lunes-Viernes, Desayuno-Comida)\n" +
+                "• Todas las asignaciones de secciones\n" +
+                "• No afecta a las secciones ni productos\n\n" +
+                "⚠️ Esta acción no se puede deshacer.");
 
-                Platform.runLater(() -> {
-                    lblStatus.setText("✅ Menú eliminado correctamente");
-                    limpiarCalendario();
-                    menuSemanalActual = null;
-                    lblRangoFechas.setText("Selecciona una semana");
+        confirm.showAndWait().ifPresent(btn -> {
+            if (btn == ButtonType.OK) {
+                lblStatus.setText("Eliminando menú semana " + semanaActual + "/" + anioActual + "...");
+
+                // DEBUG
+                System.out.println("[DEBUG] Intentando eliminar semana: " + semanaActual + ", año: " + anioActual);
+
+                MenuService.eliminarMenuCompleto(semanaActual, anioActual, new MenuService.Callback() {
+                    @Override
+                    public void onSuccess(JSONObject response) {
+                        Platform.runLater(() -> {
+                            System.out.println("[DEBUG] Respuesta eliminación: " + response.toString());
+
+                            if (response.optBoolean("success", false)) {
+                                lblStatus.setText("✅ Menú eliminado correctamente");
+                                limpiarCalendario();
+                                menuSemanalActual = null;
+                                lblRangoFechas.setText("Menú eliminado - Semana " + semanaActual + "/" + anioActual);
+
+                                // Deshabilitar botones
+                                btnEditarMenu.setDisable(true);
+                                btnEliminarMenu.setDisable(true);
+                                btnVisualizarMenu.setDisable(true);
+
+                                mostrarAlerta("✅ Éxito", "Menú eliminado correctamente.");
+                            } else {
+                                String error = response.optString("error", "Error desconocido");
+                                String debug = response.optString("debug", "");
+                                lblStatus.setText("❌ Error: " + error);
+                                mostrarAlerta("Error", error + (debug.isEmpty() ? "" : "\n\nDebug: " + debug));
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        Platform.runLater(() -> {
+                            System.err.println("[ERROR] Error eliminando menú: " + error);
+                            lblStatus.setText("❌ Error al eliminar menú: " + error);
+                            mostrarAlerta("Error", "Error al eliminar menú: " + error);
+                        });
+                    }
                 });
-            } catch (Exception e) {
-                Platform.runLater(() -> {
-                    lblStatus.setText("❌ Error: " + e.getMessage());
-                });
-                e.printStackTrace();
             }
-        }).start();
+        });
     }
 
-    
     // 📦 GESTIÓN DE SECCIONES CON PRODUCTOS
-    
-
     private void configurarTablaSecciones() {
         colSecID.setCellValueFactory(data -> new SimpleStringProperty(String.valueOf(data.getValue().getId())));
         colSecNombre.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNombre()));
-        colSecDescripcion.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDescripcion()));
+        colSecDescripcion.setCellValueFactory(data -> new SimpleStringProperty(
+                data.getValue().getDescripcion() != null ? data.getValue().getDescripcion() : ""));
 
         colSecColor.setCellFactory(tc -> new TableCell<SeccionMenu, String>() {
             @Override
@@ -389,7 +571,7 @@ public class MenusController {
                     setGraphic(null);
                 } else {
                     SeccionMenu seccion = getTableRow().getItem();
-                    String color = seccion.getColor();
+                    String color = seccion.getColor() != null ? seccion.getColor() : "#3498db";
 
                     Label circulo = new Label("●");
                     circulo.setStyle("-fx-font-size: 20px; -fx-text-fill: " + color + ";");
@@ -398,11 +580,11 @@ public class MenusController {
             }
         });
 
-        // Mostrar cantidad de productos
         colSecProductos.setCellValueFactory(data -> {
             int cantidad = data.getValue().getProductos().size();
             return new SimpleStringProperty(cantidad + " producto(s)");
         });
+
         colSecAcciones.setReorderable(false);
         colSecAcciones.setResizable(false);
         colSecAcciones.setSortable(false);
@@ -419,7 +601,7 @@ public class MenusController {
                 btnEditar.setMinWidth(100);
                 btnEliminar.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
                 btnEliminar.setMinWidth(100);
-                
+
                 btnVer.setStyle("-fx-background-color: #3498db; -fx-text-fill: white;");
                 btnEditar.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white;");
                 btnEliminar.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
@@ -470,21 +652,22 @@ public class MenusController {
         lblStatus.setText("Cargando secciones...");
         seccionesData.clear();
 
-        new Thread(() -> {
-            try {
-                List<SeccionMenu> secciones = allMenus.getAllSecciones();
-
+        MenuService.listSecciones(new MenuService.SeccionesCallback() {
+            @Override
+            public void onSuccess(List<SeccionMenu> secciones) {
                 Platform.runLater(() -> {
                     seccionesData.addAll(secciones);
-                    lblStatus.setText("✅ " + seccionesData.size() + " secciones cargadas");
+                    lblStatus.setText("✅ " + seccionesData.size() + " secciones cargadas desde base de datos");
                 });
-            } catch (Exception e) {
-                Platform.runLater(() -> {
-                    lblStatus.setText("❌ Error al cargar secciones: " + e.getMessage());
-                });
-                e.printStackTrace();
             }
-        }).start();
+
+            @Override
+            public void onError(String error) {
+                Platform.runLater(() -> {
+                    lblStatus.setText("❌ Error al cargar secciones: " + error);
+                });
+            }
+        });
     }
 
     @FXML
@@ -492,18 +675,24 @@ public class MenusController {
         abrirDialogoSeccion(true, null);
     }
 
+    @FXML
+    private void onActualizarSeccionesClicked() {
+        cargarSecciones();
+    }
+
     /**
-     * Diálogo mejorado para crear/editar secciones CON selector de productos
+     * Diálogo para crear/editar secciones con selector de productos
      */
     private void abrirDialogoSeccion(boolean esNueva, SeccionMenu seccionExistente) {
         Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.setTitle(esNueva ? "Nueva Sección" : "Editar Editar Sección");
+        dialog.setTitle(esNueva ? "Nueva Sección" : "Editar Sección");
+        dialog.initModality(Modality.APPLICATION_MODAL);
 
         // Crear formulario
         VBox content = new VBox(15);
         content.setPadding(new Insets(20));
         content.setPrefWidth(600);
-        content.setPrefHeight(500);
+        content.setPrefHeight(550);
 
         // === DATOS BÁSICOS ===
         Label lblNombre = new Label("* Nombre:");
@@ -526,17 +715,16 @@ public class MenusController {
         ListView<CheckBox> listaProductos = new ListView<>();
         ObservableList<CheckBox> itemsProductos = FXCollections.observableArrayList();
 
-        // Cargar productos actuales si es edición - CORREGIDO
+        // Cargar productos actuales si es edición
         final Set<Integer> productosActuales = new HashSet<>();
         if (!esNueva && seccionExistente != null) {
-            // En lugar de reasignar, agregamos elementos al Set existente
             productosActuales.addAll(seccionExistente.getProductos().stream()
                     .map(SeccionProducto::getIdProducto)
                     .collect(Collectors.toSet()));
         }
 
         // Llenar lista de productos disponibles
-        for (Producto producto : productosDisponibles) {
+        for (Producto producto : productosData) {
             int id = producto.getId();
             String nombre = producto.getNombre();
             String categoria = producto.getCategoria();
@@ -545,7 +733,8 @@ public class MenusController {
                 categoria = "Sin categoría";
             }
 
-            CheckBox cb = new CheckBox(nombre + " (" + categoria + ") - $" + producto.getPrecioBase());
+            CheckBox cb = new CheckBox(String.format("%s (%s) - $%.2f",
+                    nombre, categoria, producto.getPrecioBase()));
             cb.setUserData(id);
             cb.setStyle("-fx-font-size: 12px;");
 
@@ -582,9 +771,15 @@ public class MenusController {
         // Cargar datos si es edición
         if (!esNueva && seccionExistente != null) {
             txtNombre.setText(seccionExistente.getNombre());
-            txtDescripcion.setText(seccionExistente.getDescripcion());
+            txtDescripcion.setText(seccionExistente.getDescripcion() != null ? seccionExistente.getDescripcion() : "");
             String colorHex = seccionExistente.getColor();
-            colorPicker.setValue(Color.web(colorHex));
+            if (colorHex != null && !colorHex.isEmpty()) {
+                try {
+                    colorPicker.setValue(Color.web(colorHex));
+                } catch (Exception e) {
+                    colorPicker.setValue(Color.web("#3498db"));
+                }
+            }
         }
 
         // Campo de búsqueda
@@ -646,7 +841,7 @@ public class MenusController {
                             nombre,
                             descripcion,
                             color,
-                            productosActuales, // ✅ Ahora funciona porque no se reasigna
+                            productosActuales,
                             productosSeleccionados);
                 }
             }
@@ -658,7 +853,7 @@ public class MenusController {
      */
     private void verProductosSeccion(SeccionMenu seccion) {
         Dialog<Void> dialog = new Dialog<>();
-        dialog.setTitle("Ver Productos de: " + seccion.getNombre());
+        dialog.setTitle("Productos de: " + seccion.getNombre());
 
         VBox content = new VBox(10);
         content.setPadding(new Insets(20));
@@ -671,15 +866,28 @@ public class MenusController {
             ObservableList<String> items = FXCollections.observableArrayList();
 
             for (SeccionProducto seccionProducto : productos) {
-                Producto producto = allProductos.getById(seccionProducto.getIdProducto());
+                // Buscar el producto en los datos cargados
+                Producto producto = productosData.stream()
+                        .filter(p -> p.getId() == seccionProducto.getIdProducto())
+                        .findFirst()
+                        .orElse(null);
+
                 if (producto != null) {
                     String categoria = producto.getCategoria();
                     if (categoria == null || categoria.isEmpty()) {
                         categoria = "Sin categoría";
                     }
 
-                    items.add(String.format("%s (%s) - $%.2f",
-                            producto.getNombre(), categoria, producto.getPrecioBase()));
+                    String item = String.format("%s (%s) - $%.2f",
+                            producto.getNombre(), categoria, producto.getPrecioBase());
+
+                    if (seccionProducto.isDestacado()) {
+                        item += " ⭐";
+                    }
+
+                    items.add(item);
+                } else {
+                    items.add("Producto ID: " + seccionProducto.getIdProducto() + " (no encontrado)");
                 }
             }
 
@@ -708,38 +916,44 @@ public class MenusController {
             List<Integer> productosSeleccionados) {
         lblStatus.setText("Creando sección...");
 
-        new Thread(() -> {
-            try {
-                // 1. Crear la sección
-                SeccionMenu nuevaSeccion = new SeccionMenu(
-                        0, nombre, descripcion, "", color, true, LocalDate.now().toString());
+        // Crear objeto SeccionMenu
+        SeccionMenu nuevaSeccion = new SeccionMenu();
+        nuevaSeccion.setNombre(nombre);
+        nuevaSeccion.setDescripcion(descripcion);
+        nuevaSeccion.setColor(color);
+        nuevaSeccion.setActivo(true);
+        nuevaSeccion.setFechaCreacion(LocalDate.now().toString());
 
-                // 2. Agregar productos a la sección
-                int orden = 1;
-                for (Integer idProducto : productosSeleccionados) {
-                    Producto producto = allProductos.getById(idProducto);
-                    String nombreProducto = producto != null ? producto.getNombre() : "Producto";
+        // Agregar productos
+        List<SeccionProducto> productos = new ArrayList<>();
+        int orden = 1;
+        for (Integer idProducto : productosSeleccionados) {
+            SeccionProducto seccionProducto = new SeccionProducto();
+            seccionProducto.setIdProducto(idProducto);
+            seccionProducto.setOrden(orden);
+            seccionProducto.setDestacado(false);
+            productos.add(seccionProducto);
+            orden++;
+        }
+        nuevaSeccion.setProductos(productos);
 
-                    SeccionProducto seccionProducto = new SeccionProducto(
-                            0, 0, idProducto, nombreProducto, orden, false);
-                    nuevaSeccion.agregarProducto(seccionProducto);
-                    orden++;
-                }
-
-                allMenus.addSeccion(nuevaSeccion);
-
+        MenuService.createSeccion(nuevaSeccion, new MenuService.CrudCallback() {
+            @Override
+            public void onSuccess() {
                 Platform.runLater(() -> {
                     lblStatus.setText("✅ Sección creada con " +
                             productosSeleccionados.size() + " productos");
                     cargarSecciones();
                 });
-            } catch (Exception e) {
-                Platform.runLater(() -> {
-                    lblStatus.setText("❌ Error: " + e.getMessage());
-                });
-                e.printStackTrace();
             }
-        }).start();
+
+            @Override
+            public void onError(String error) {
+                Platform.runLater(() -> {
+                    lblStatus.setText("❌ Error al crear sección: " + error);
+                });
+            }
+        });
     }
 
     /**
@@ -750,61 +964,57 @@ public class MenusController {
             List<Integer> productosNuevos) {
         lblStatus.setText("Actualizando sección...");
 
-        new Thread(() -> {
-            try {
-                // 1. Obtener la sección existente
-                SeccionMenu seccion = allMenus.getSeccionById(id);
-                if (seccion == null) {
-                    throw new Exception("Sección no encontrada");
-                }
+        // Crear objeto SeccionMenu actualizado
+        SeccionMenu seccionActualizada = new SeccionMenu();
+        seccionActualizada.setId(id);
+        seccionActualizada.setNombre(nombre);
+        seccionActualizada.setDescripcion(descripcion);
+        seccionActualizada.setColor(color);
+        seccionActualizada.setActivo(true);
 
-                // 2. Actualizar datos básicos
-                seccion.setNombre(nombre);
-                seccion.setDescripcion(descripcion);
-                seccion.setColor(color);
+        // Agregar productos actualizados
+        List<SeccionProducto> productos = new ArrayList<>();
+        int orden = 1;
+        for (Integer idProducto : productosNuevos) {
+            SeccionProducto seccionProducto = new SeccionProducto();
+            seccionProducto.setIdProducto(idProducto);
+            seccionProducto.setOrden(orden);
+            seccionProducto.setDestacado(false);
+            productos.add(seccionProducto);
+            orden++;
+        }
+        seccionActualizada.setProductos(productos);
 
-                // 3. Actualizar productos
-                List<SeccionProducto> nuevosProductos = new ArrayList<>();
-                int orden = 1;
-
-                for (Integer idProducto : productosNuevos) {
-                    Producto producto = allProductos.getById(idProducto);
-                    String nombreProducto = producto != null ? producto.getNombre() : "Producto";
-
-                    SeccionProducto seccionProducto = new SeccionProducto(
-                            0, id, idProducto, nombreProducto, orden, false);
-                    nuevosProductos.add(seccionProducto);
-                    orden++;
-                }
-
-                seccion.setProductos(nuevosProductos);
-
-                // 4. Guardar cambios
-                allMenus.updateSeccion(seccion);
-
+        MenuService.updateSeccion(seccionActualizada, new MenuService.CrudCallback() {
+            @Override
+            public void onSuccess() {
                 Platform.runLater(() -> {
                     lblStatus.setText("✅ Sección actualizada correctamente");
                     cargarSecciones();
                 });
-            } catch (Exception e) {
-                Platform.runLater(() -> {
-                    lblStatus.setText("❌ Error: " + e.getMessage());
-                });
-                e.printStackTrace();
             }
-        }).start();
+
+            @Override
+            public void onError(String error) {
+                Platform.runLater(() -> {
+                    lblStatus.setText("❌ Error al actualizar sección: " + error);
+                });
+            }
+        });
     }
 
     private void confirmarEliminarSeccion(SeccionMenu seccion) {
-        String nombre = seccion.getNombre();
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
-                "¿Eliminar la sección \"" + nombre + "\"?\n\n" +
-                        "Se eliminarán " + seccion.getProductos().size() + " productos asociados.",
-                ButtonType.YES, ButtonType.NO);
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
         confirm.setTitle("Confirmar eliminación");
+        confirm.setHeaderText("¿Eliminar la sección \"" + seccion.getNombre() + "\"?");
+        confirm.setContentText("Esta acción eliminará:\n" +
+                "• La sección del menú\n" +
+                "• " + seccion.getProductos().size() + " productos asociados\n" +
+                "• Todas las asignaciones a menús\n\n" +
+                "⚠️ Esta acción no se puede deshacer.");
 
         confirm.showAndWait().ifPresent(btn -> {
-            if (btn == ButtonType.YES) {
+            if (btn == ButtonType.OK) {
                 eliminarSeccion(seccion.getId());
             }
         });
@@ -813,32 +1023,32 @@ public class MenusController {
     private void eliminarSeccion(int id) {
         lblStatus.setText("Eliminando sección...");
 
-        new Thread(() -> {
-            try {
-                allMenus.removeSeccion(id);
-
+        MenuService.deleteSeccion(id, new MenuService.CrudCallback() {
+            @Override
+            public void onSuccess() {
                 Platform.runLater(() -> {
                     lblStatus.setText("✅ Sección eliminada correctamente");
                     cargarSecciones();
                 });
-            } catch (Exception e) {
-                Platform.runLater(() -> {
-                    lblStatus.setText("❌ Error: " + e.getMessage());
-                });
-                e.printStackTrace();
             }
-        }).start();
+
+            @Override
+            public void onError(String error) {
+                Platform.runLater(() -> {
+                    lblStatus.setText("❌ Error al eliminar sección: " + error);
+                });
+            }
+        });
     }
 
-    
     // 🔧 UTILIDADES
-    
-
     private void mostrarAlerta(String titulo, String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
-        alert.showAndWait();
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle(titulo);
+            alert.setHeaderText(null);
+            alert.setContentText(mensaje);
+            alert.showAndWait();
+        });
     }
 }

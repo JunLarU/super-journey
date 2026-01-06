@@ -14,11 +14,13 @@ public class IngredienteService {
 
     public interface ListCallback {
         void onSuccess(List<JSONObject> list);
+
         void onError(String error);
     }
 
     public interface CrudCallback {
         void onSuccess();
+
         void onError(String error);
     }
 
@@ -74,29 +76,33 @@ public class IngredienteService {
             Throwable cause = evt.getSource().getException();
             callback.onError("Error en solicitud: " + (cause != null ? cause.getMessage() : "Desconocido"));
         });
-        
+
         new Thread(task).start();
     }
 
     // 🗑️ Eliminar ingrediente
+    // 🗑️ Eliminar ingrediente - CORREGIDO: Sin body, ID en URL
     public static void deleteIngrediente(int id, CrudCallback callback) {
-        JSONObject body = new JSONObject();
-        body.put("id", id);
+        // Usar parámetro en la URL: api/ingredientes?id=X
+        String url = "api/ingredientes?id=" + id;
+
+        System.out.println("DELETE ingrediente to: " + url);
 
         var task = HTTPConnection.getInstance().requestAsync(
-                "api/ingredientes",
-                Optional.of(3), // ✅ DELETE (3 = DELETE en HTTPConnection)
-                Optional.of(body.toString()),
+                url,
+                Optional.of(3), // DELETE
+                Optional.empty(), // NO BODY
                 Optional.of(0),
                 Optional.of("Error al eliminar ingrediente"),
-                Optional.of("application/json"));
+                Optional.empty()); // No content-type para DELETE sin body
 
         task.setOnSucceeded(evt -> {
             HttpResponse<String> r = task.getValue();
 
             try {
                 String responseBody = r.body().replace("\uFEFF", "").trim();
-                
+                System.out.println("DELETE ingrediente response (status " + r.statusCode() + "): " + responseBody);
+
                 if (r.statusCode() == 200) {
                     callback.onSuccess();
                 } else {
@@ -113,7 +119,7 @@ public class IngredienteService {
             Throwable cause = evt.getSource().getException();
             callback.onError("Error en solicitud: " + (cause != null ? cause.getMessage() : "Desconocido"));
         });
-        
+
         new Thread(task).start();
     }
 
@@ -142,7 +148,7 @@ public class IngredienteService {
 
             try {
                 String responseBody = r.body().replace("\uFEFF", "").trim();
-                
+
                 if (r.statusCode() == 200 || r.statusCode() == 201) {
                     callback.onSuccess();
                 } else {
@@ -159,30 +165,30 @@ public class IngredienteService {
             Throwable cause = evt.getSource().getException();
             callback.onError("Error en solicitud: " + (cause != null ? cause.getMessage() : "Desconocido"));
         });
-        
+
         new Thread(task).start();
     }
 
     // 🔍 Buscar ingrediente por nombre
     // Buscar ingrediente por nombre
-public static void buscarIngredientePorNombre(String nombre, ListCallback callback) {
-    // Primero obtener todos los ingredientes y filtrar localmente
-    listIngredientes(new ListCallback() {
-        @Override
-        public void onSuccess(List<JSONObject> ingredients) {
-            String nombreLower = nombre.toLowerCase();
-            List<JSONObject> resultados = ingredients.stream()
-                .filter(i -> i.optString("Nombre", "").toLowerCase().contains(nombreLower))
-                .collect(Collectors.toList());
-            callback.onSuccess(resultados);
-        }
+    public static void buscarIngredientePorNombre(String nombre, ListCallback callback) {
+        // Primero obtener todos los ingredientes y filtrar localmente
+        listIngredientes(new ListCallback() {
+            @Override
+            public void onSuccess(List<JSONObject> ingredients) {
+                String nombreLower = nombre.toLowerCase();
+                List<JSONObject> resultados = ingredients.stream()
+                        .filter(i -> i.optString("Nombre", "").toLowerCase().contains(nombreLower))
+                        .collect(Collectors.toList());
+                callback.onSuccess(resultados);
+            }
 
-        @Override
-        public void onError(String error) {
-            callback.onError(error);
-        }
-    });
-}
+            @Override
+            public void onError(String error) {
+                callback.onError(error);
+            }
+        });
+    }
 
     // 🔍 Obtener ingrediente por ID
     public static void obtenerIngredientePorId(int id, CrudCallbackWithData callback) {
@@ -190,10 +196,10 @@ public static void buscarIngredientePorNombre(String nombre, ListCallback callba
             @Override
             public void onSuccess(List<JSONObject> ingredientes) {
                 JSONObject ingrediente = ingredientes.stream()
-                    .filter(ing -> ing.getInt("id") == id)
-                    .findFirst()
-                    .orElse(null);
-                
+                        .filter(ing -> ing.getInt("id") == id)
+                        .findFirst()
+                        .orElse(null);
+
                 if (ingrediente != null) {
                     callback.onSuccess(ingrediente);
                 } else {
@@ -211,6 +217,7 @@ public static void buscarIngredientePorNombre(String nombre, ListCallback callba
     // Interfaz para callback con datos
     public interface CrudCallbackWithData {
         void onSuccess(JSONObject data);
+
         void onError(String error);
     }
 }

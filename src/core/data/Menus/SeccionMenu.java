@@ -15,11 +15,24 @@ public class SeccionMenu {
     private String nombre;
     private String descripcion;
     private String urlFoto;
-    private String color; // Color hex para identificación visual
+    private String color;
     private boolean activo;
-    private String fechaCreacion; // NUEVO - Para auditoría
+    private String fechaCreacion;
     private List<SeccionProducto> productos;
 
+    // Constructor básico
+    public SeccionMenu() {
+        this.id = 0;
+        this.nombre = "";
+        this.descripcion = "";
+        this.urlFoto = "";
+        this.color = "#3498db";
+        this.activo = true;
+        this.fechaCreacion = LocalDate.now().toString();
+        this.productos = new ArrayList<>();
+    }
+
+    // Constructor con parámetros básicos
     public SeccionMenu(int id, String nombre, String descripcion, String urlFoto, 
                       String color, boolean activo, String fechaCreacion) {
         this.id = id;
@@ -32,10 +45,10 @@ public class SeccionMenu {
         this.productos = new ArrayList<>();
     }
 
-    // Constructor desde JSON
+    // Constructor desde JSON (compatible con backend)
     public SeccionMenu(JSONObject json) {
-        this.id = json.getInt("ID");
-        this.nombre = json.getString("Nombre");
+        this.id = json.optInt("ID", 0);
+        this.nombre = json.optString("Nombre", "");
         this.descripcion = json.optString("Descripcion", "");
         this.urlFoto = json.optString("URLFoto", "");
         this.color = json.optString("Color", "#3498db");
@@ -50,43 +63,96 @@ public class SeccionMenu {
                 productos.add(new SeccionProducto(productosArray.getJSONObject(i)));
             }
         }
+        
+        // Compatibilidad con campo "CantidadProductos"
+        if (json.has("CantidadProductos")) {
+            int cantidad = json.getInt("CantidadProductos");
+            // Podemos inicializar productos vacíos o con marcadores
+        }
     }
 
-    // Convertir a JSON
+    // Convertir a JSON para enviar al servidor
     public JSONObject toJson() {
         JSONObject obj = new JSONObject();
-        obj.put("ID", id);
+        
+        if (id > 0) {
+            obj.put("ID", id);
+        }
+        
         obj.put("Nombre", nombre);
         obj.put("Descripcion", descripcion);
-        obj.put("URLFoto", urlFoto);
+        
+        if (urlFoto != null && !urlFoto.isEmpty()) {
+            obj.put("URLFoto", urlFoto);
+        }
+        
         obj.put("Color", color);
         obj.put("Activo", activo);
         obj.put("FechaCreacion", fechaCreacion);
         
         // Guardar productos
-        JSONArray productosArray = new JSONArray();
-        for (SeccionProducto producto : productos) {
-            productosArray.put(producto.toJson());
+        if (productos != null && !productos.isEmpty()) {
+            JSONArray productosArray = new JSONArray();
+            for (SeccionProducto producto : productos) {
+                productosArray.put(producto.toJson());
+            }
+            obj.put("Productos", productosArray);
         }
-        obj.put("Productos", productosArray);
+        
+        return obj;
+    }
+
+    // Convertir para formulario
+    public JSONObject toJsonForForm() {
+        JSONObject obj = new JSONObject();
+        obj.put("id", id);
+        obj.put("nombre", nombre);
+        obj.put("descripcion", descripcion);
+        obj.put("urlFoto", urlFoto);
+        obj.put("color", color);
+        obj.put("activo", activo);
+        
+        // Incluir IDs de productos para formulario
+        if (productos != null && !productos.isEmpty()) {
+            JSONArray productosArray = new JSONArray();
+            for (SeccionProducto producto : productos) {
+                JSONObject pObj = new JSONObject();
+                pObj.put("idProducto", producto.getIdProducto());
+                pObj.put("destacado", producto.isDestacado());
+                productosArray.put(pObj);
+            }
+            obj.put("productos", productosArray);
+        }
         
         return obj;
     }
 
     // Métodos para manejar productos
     public void agregarProducto(SeccionProducto producto) {
+        if (productos == null) {
+            productos = new ArrayList<>();
+        }
         productos.add(producto);
     }
 
     public void eliminarProducto(int idProducto) {
-        productos.removeIf(p -> p.getIdProducto() == idProducto);
+        if (productos != null) {
+            productos.removeIf(p -> p.getIdProducto() == idProducto);
+        }
     }
 
     public SeccionProducto getProducto(int idProducto) {
+        if (productos == null) return null;
+        
         return productos.stream()
                 .filter(p -> p.getIdProducto() == idProducto)
                 .findFirst()
                 .orElse(null);
+    }
+
+    // Obtener cantidad de productos
+    public int getCantidadProductos() {
+        return productos != null ? productos.size() : 0;
     }
 
     // Getters y Setters
@@ -97,7 +163,10 @@ public class SeccionMenu {
     public String getColor() { return color; }
     public boolean isActivo() { return activo; }
     public String getFechaCreacion() { return fechaCreacion; }
-    public List<SeccionProducto> getProductos() { return new ArrayList<>(productos); }
+    public List<SeccionProducto> getProductos() { 
+        if (productos == null) return new ArrayList<>();
+        return new ArrayList<>(productos); 
+    }
 
     public void setId(int id) { this.id = id; }
     public void setNombre(String nombre) { this.nombre = nombre; }
@@ -110,8 +179,14 @@ public class SeccionMenu {
         this.productos = new ArrayList<>(productos); 
     }
 
+    // Método estático
+    public static SeccionMenu fromJSON(JSONObject json) {
+        return new SeccionMenu(json);
+    }
+
     @Override
     public String toString() {
-        return nombre + (activo ? " (Activo)" : " (Inactivo)");
+        return nombre + (activo ? " (Activo)" : " (Inactivo)") + 
+               " - " + getCantidadProductos() + " producto(s)";
     }
 }

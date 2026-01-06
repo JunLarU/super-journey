@@ -230,37 +230,64 @@ public class ProductoService {
     }
 
     // 🗑️ Eliminar producto
+    // 🗑️ Eliminar producto - Versión mejorada
+    // 🗑️ Eliminar producto - CORREGIDO: Sin body, ID en URL
     public static void deleteProducto(int id, CrudCallback callback) {
-        JSONObject body = new JSONObject();
-        body.put("id", id);
+        // Usar parámetro en la URL: api/productos?id=5
+        String url = "api/productos?id=" + id;
+
+        System.out.println("DELETE request to: " + url);
 
         var task = HTTPConnection.getInstance().requestAsync(
-                "api/productos",
+                url,
                 Optional.of(3), // DELETE
-                Optional.of(body.toString()),
+                Optional.empty(), // NO BODY
                 Optional.of(0),
                 Optional.of("Error al eliminar producto"),
-                Optional.of("application/json"));
+                Optional.empty()); // No content-type para DELETE sin body
 
         task.setOnSucceeded(evt -> {
             HttpResponse<String> r = task.getValue();
 
             try {
                 String responseBody = r.body().replace("\uFEFF", "").trim();
+                System.out.println("DELETE response (status " + r.statusCode() + "): " + responseBody);
 
                 if (r.statusCode() == 200) {
-                    callback.onSuccess();
+                    // Parsear respuesta exitosa
+                    try {
+                        JSONObject responseJson = new JSONObject(responseBody);
+                        if (responseJson.has("success") && responseJson.getBoolean("success")) {
+                            callback.onSuccess();
+                        } else if (responseJson.has("error")) {
+                            callback.onError(responseJson.getString("error"));
+                        } else {
+                            callback.onSuccess();
+                        }
+                    } catch (Exception e) {
+                        // Si no es JSON válido pero status 200, asumimos éxito
+                        callback.onSuccess();
+                    }
                 } else {
-                    JSONObject errorJson = new JSONObject(responseBody);
-                    String errorMsg = errorJson.optString("error", "Error HTTP " + r.statusCode());
-                    callback.onError(errorMsg);
+                    // Intentar parsear error
+                    try {
+                        JSONObject errorJson = new JSONObject(responseBody);
+                        String errorMsg = errorJson.optString("error", "Error HTTP " + r.statusCode());
+                        callback.onError(errorMsg);
+                    } catch (Exception e) {
+                        callback.onError("Error HTTP " + r.statusCode() + ": " + responseBody);
+                    }
                 }
             } catch (Exception e) {
                 callback.onError("Error al procesar respuesta: " + e.getMessage());
             }
         });
 
-        task.setOnFailed(evt -> callback.onError("Error en solicitud: " + evt.getSource().getException().getMessage()));
+        task.setOnFailed(evt -> {
+            Throwable ex = evt.getSource().getException();
+            callback.onError("Error en solicitud: " + ex.getMessage());
+        });
+
         new Thread(task).start();
     }
 }

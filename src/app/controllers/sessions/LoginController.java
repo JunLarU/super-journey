@@ -52,6 +52,7 @@ public class LoginController {
                 javafx.application.Platform.runLater(() -> {
                     // Crear usuario local a partir del JSON
                     User loggedIn = new User();
+                    loggedIn.setId(userJson.optInt("ID"));
                     loggedIn.setClave(userJson.optString("Expediente"));
                     loggedIn.setName(userJson.optString("Nombre"));
                     loggedIn.setApellidoPaterno(userJson.optString("ApellidoPaterno"));

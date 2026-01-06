@@ -3,6 +3,7 @@ package core.data.Users;
 import org.json.JSONObject;
 
 public class User {
+    private int id; // Nuevo campo para el ID
     private String clave;
     private String username;
     private String password;
@@ -25,10 +26,31 @@ public class User {
         this.isAdmin = false;
     }
 
+    // Constructor con ID
+    public User(int id, String username, String password, String name, String apellidoPaterno, String apellidoMaterno, String email, String phone) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.name = name;
+        this.apellidoPaterno = apellidoPaterno;
+        this.apellidoMaterno = apellidoMaterno;
+        this.email = email;
+        this.phone = phone;
+        this.isAdmin = false;
+    }
+
     // Constructor vacío (requerido para carga desde JSON)
     public User() {}
 
     // Getters y setters
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public boolean isAdmin() {
         return isAdmin;
     }
@@ -41,8 +63,16 @@ public class User {
         return username;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getClave() {
@@ -91,6 +121,7 @@ public class User {
     // Conversión a JSONObject (para guardar en JSON)
     public JSONObject toJSON() {
         JSONObject obj = new JSONObject();
+        obj.put("id", id);
         obj.put("clave", clave != null ? clave : "");
         obj.put("username", username != null ? username : "");
         obj.put("password", password != null ? password : "");
@@ -106,6 +137,7 @@ public class User {
     // Crea un objeto User desde un JSONObject (para leer desde JSON)
     public static User fromJSON(JSONObject obj) {
         User u = new User();
+        u.setId(obj.optInt("id", 0));
         u.setClave(obj.optString("clave", ""));
         u.username = obj.optString("username", "");
         u.password = obj.optString("password", "");
@@ -120,7 +152,7 @@ public class User {
 
     @Override
     public String toString() {
-        return String.format("User[%s %s %s | user=%s | admin=%s]",
-                name, apellidoPaterno, apellidoMaterno, username, isAdmin);
+        return String.format("User[ID=%d, %s %s %s | user=%s | admin=%s]",
+                id, name, apellidoPaterno, apellidoMaterno, username, isAdmin);
     }
 }
