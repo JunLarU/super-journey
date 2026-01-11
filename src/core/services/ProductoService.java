@@ -25,6 +25,7 @@ public class ProductoService {
     }
 
     // 🔄 Listar productos
+    // En ProductoService.java - actualizar listProductos para parsear correctamente
     public static void listProductos(ListCallback callback) {
         var task = HTTPConnection.getInstance().requestAsync(
                 "api/productos",
@@ -42,18 +43,27 @@ public class ProductoService {
 
                 if (resp.statusCode() == 200) {
                     JSONObject json = new JSONObject(body);
-                    JSONArray arr = json.getJSONArray("productos");
 
-                    List<JSONObject> out = new ArrayList<>();
+                    // El servidor devuelve {"productos": [...]}
+                    if (json.has("productos")) {
+                        JSONArray arr = json.getJSONArray("productos");
+                        List<JSONObject> out = new ArrayList<>();
 
-                    for (int i = 0; i < arr.length(); i++) {
-                        out.add(arr.getJSONObject(i));
+                        for (int i = 0; i < arr.length(); i++) {
+                            out.add(arr.getJSONObject(i));
+                        }
+
+                        callback.onSuccess(out);
+                    } else {
+                        callback.onError("Formato de respuesta inválido: no se encontró 'productos'");
                     }
-
-                    callback.onSuccess(out);
                 } else {
-                    JSONObject errorJson = new JSONObject(body);
-                    callback.onError(errorJson.optString("error", "Error HTTP " + resp.statusCode()));
+                    try {
+                        JSONObject errorJson = new JSONObject(body);
+                        callback.onError(errorJson.optString("error", "Error HTTP " + resp.statusCode()));
+                    } catch (Exception e) {
+                        callback.onError("Error HTTP " + resp.statusCode() + ": " + body);
+                    }
                 }
 
             } catch (Exception e) {

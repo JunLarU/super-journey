@@ -1,4 +1,3 @@
-// ProductosEspecialesController.java
 package app.controllers.productos;
 
 import core.SessionManager;
@@ -12,19 +11,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-/**
- * Controlador para gestión de productos especiales
- */
 public class ProductosEspecialesController {
 
     @FXML
@@ -42,7 +36,9 @@ public class ProductosEspecialesController {
     @FXML
     private TableColumn<ProductoEspecial, String> colFechas;
     @FXML
-    private TableColumn<ProductoEspecial, String> colHorario;
+    private TableColumn<ProductoEspecial, String> colHorario; // Esta ya no se usará
+    @FXML
+    private TableColumn<ProductoEspecial, String> colFechaHora; // Nueva columna
     @FXML
     private TableColumn<ProductoEspecial, String> colPrecioEspecial;
     @FXML
@@ -54,13 +50,12 @@ public class ProductosEspecialesController {
 
     private final AllProductosEspeciales allEspeciales = AllProductosEspeciales.getInstance();
     private final AllProductos allProductos = AllProductos.getInstance();
-    private final SessionManager session = SessionManager.getInstance();
 
     @FXML
     public void initialize() {
-        // Verificar permisos de administrador
-        if (!session.isAdmin()) {
-            mostrarError("Acceso denegado", "Solo los administradores pueden acceder a esta función.");
+        // Verificar permisos
+        if (!SessionManager.getInstance().isAdmin()) {
+            mostrarError("Acceso denegado", "Solo administradores");
             return;
         }
 
@@ -76,35 +71,37 @@ public class ProductosEspecialesController {
     }
 
     private void configurarTabla() {
-        // Configurar columnas
-        colID.setCellValueFactory(data -> 
-            new javafx.beans.property.SimpleStringProperty(String.valueOf(data.getValue().getId())));
-        
+        colID.setCellValueFactory(
+                data -> new javafx.beans.property.SimpleStringProperty(String.valueOf(data.getValue().getId())));
+
         colProducto.setCellValueFactory(data -> {
             Producto producto = allProductos.getById(data.getValue().getIdProducto());
-            String nombreProducto = producto != null ? producto.getNombre() : "Producto #" + data.getValue().getIdProducto();
-            return new javafx.beans.property.SimpleStringProperty(nombreProducto);
+            String nombre = producto != null ? producto.getNombre() : "Producto #" + data.getValue().getIdProducto();
+            return new javafx.beans.property.SimpleStringProperty(nombre);
         });
-        
-        colFechas.setCellValueFactory(data -> {
+
+        // NUEVA COLUMNA: Fecha y hora combinadas
+        colFechaHora.setCellValueFactory(data -> {
             ProductoEspecial especial = data.getValue();
-            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            String fechaInicio = especial.getFechaInicio().format(dateFormatter);
-            String fechaFin = especial.getFechaFin().format(dateFormatter);
-            return new javafx.beans.property.SimpleStringProperty(fechaInicio + " - " + fechaFin);
+            DateTimeFormatter fechaFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            DateTimeFormatter horaFormatter = DateTimeFormatter.ofPattern("HH:mm");
+
+            String fechaInicio = especial.getFechaInicio().format(fechaFormatter);
+            String fechaFin = especial.getFechaFin().format(fechaFormatter);
+            String horaInicio = especial.getFechaInicio().format(horaFormatter);
+            String horaFin = especial.getFechaFin().format(horaFormatter);
+
+            // Formato: "dd/MM/yyyy HH:mm - dd/MM/yyyy HH:mm"
+            return new javafx.beans.property.SimpleStringProperty(
+                    fechaInicio + " " + horaInicio + " - " + fechaFin + " " + horaFin);
         });
-        
-        colHorario.setCellValueFactory(data -> {
-            ProductoEspecial especial = data.getValue();
-            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-            String horaInicio = especial.getFechaInicio().format(timeFormatter);
-            String horaFin = especial.getFechaFin().format(timeFormatter);
-            return new javafx.beans.property.SimpleStringProperty(horaInicio + " - " + horaFin);
-        });
-        
-        colPrecioEspecial.setCellValueFactory(data -> 
-            new javafx.beans.property.SimpleStringProperty(String.format("$%.2f", data.getValue().getPrecioEspecial())));
-        
+
+        // Eliminamos las columnas individuales de fecha y horario
+        // colFechas y colHorario ya no se configuran
+
+        colPrecioEspecial.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(
+                String.format("$%.2f", data.getValue().getPrecioEspecial())));
+
         colEstado.setCellValueFactory(data -> {
             ProductoEspecial especial = data.getValue();
             String estado;
@@ -113,61 +110,48 @@ public class ProductosEspecialesController {
             } else if (especial.estaVigente()) {
                 estado = "✅ Vigente";
             } else if (LocalDateTime.now().isBefore(especial.getFechaInicio())) {
-                estado = "Próximo";
+                estado = "⏳ Próximo";
             } else {
                 estado = "📅 Expirado";
             }
             return new javafx.beans.property.SimpleStringProperty(estado);
         });
 
-        // Columna de acciones
-        colAcciones.setReorderable(false);
-        colAcciones.setResizable(false);
-        colAcciones.setSortable(false);
-        colAcciones.setMinWidth(210);
-        colAcciones.setCellFactory(
-            (Callback<TableColumn<ProductoEspecial, Void>, TableCell<ProductoEspecial, Void>>) param -> new TableCell<>() {
-                private final Button btnEditar = new Button("Editar");
-                private final Button btnEliminar = new Button("Eliminar");
+        colAcciones.setCellFactory(param -> new TableCell<>() {
+            private final Button btnEditar = new Button("Editar");
+            private final Button btnEliminar = new Button("Eliminar");
 
-                {
-
-                btnEditar.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+            {
                 btnEditar.setMinWidth(100);
-                btnEliminar.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
                 btnEliminar.setMinWidth(100);
-                    // Estilos de botones
-                    btnEditar.setStyle("-fx-background-color: #f1c40f; -fx-text-fill: black; -fx-font-weight: bold; -fx-background-radius: 5; -fx-cursor: hand;");
-                    btnEliminar.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-cursor: hand;");
+                btnEditar.setStyle(
+                        "-fx-background-color: #f1c40f; -fx-text-fill: black; -fx-font-weight: bold; -fx-background-radius: 5;");
+                btnEliminar.setStyle(
+                        "-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;");
 
-                    // Tooltips
-                    btnEditar.setTooltip(new Tooltip("Editar producto especial"));
-                    btnEliminar.setTooltip(new Tooltip("Eliminar producto especial"));
+                btnEditar.setOnAction(e -> {
+                    ProductoEspecial especial = getTableView().getItems().get(getIndex());
+                    editarEspecial(especial);
+                });
 
-                    // Acciones
-                    btnEditar.setOnAction(e -> {
-                        ProductoEspecial especial = getTableView().getItems().get(getIndex());
-                        editarEspecial(especial);
-                    });
-                    
-                    btnEliminar.setOnAction(e -> {
-                        ProductoEspecial especial = getTableView().getItems().get(getIndex());
-                        eliminarEspecial(especial);
-                    });
+                btnEliminar.setOnAction(e -> {
+                    ProductoEspecial especial = getTableView().getItems().get(getIndex());
+                    eliminarEspecial(especial);
+                });
+            }
+
+            private final HBox pane = new HBox(5, btnEditar, btnEliminar);
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(pane);
                 }
-
-                private final HBox pane = new HBox(5, btnEditar, btnEliminar);
-
-                @Override
-                protected void updateItem(Void item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (empty) {
-                        setGraphic(null);
-                    } else {
-                        setGraphic(pane);
-                    }
-                }
-            });
+            }
+        });
     }
 
     @FXML
@@ -175,65 +159,57 @@ public class ProductosEspecialesController {
         lblEstado.setText("Cargando productos especiales...");
         tablaEspeciales.getItems().clear();
 
-        new Thread(() -> {
-            try {
-                List<ProductoEspecial> especiales = allEspeciales.getAll();
-                
+        allEspeciales.getAllAsync(new AllProductosEspeciales.ProductosEspecialesCallback() {
+            @Override
+            public void onSuccess(List<ProductoEspecial> productos) {
                 Platform.runLater(() -> {
-                    tablaEspeciales.getItems().addAll(especiales);
-                    actualizarEstadisticas(especiales);
+                    tablaEspeciales.getItems().addAll(productos);
+                    actualizarEstadisticas(productos);
                 });
-            } catch (Exception e) {
-                e.printStackTrace();
-                Platform.runLater(() -> lblEstado.setText("❌ Error al cargar productos especiales."));
             }
-        }).start();
+
+            @Override
+            public void onError(String error) {
+                Platform.runLater(() -> {
+                    lblEstado.setText("❌ Error al cargar: " + error);
+                    mostrarError("Error", error);
+                });
+            }
+        });
     }
 
     private void buscarEspeciales(String query) {
-        lblEstado.setText("Buscando \"" + query + "\"...");
-        tablaEspeciales.getItems().clear();
+        String queryLower = query.toLowerCase();
+        List<ProductoEspecial> todos = allEspeciales.getAll();
 
-        new Thread(() -> {
-            try {
-                List<ProductoEspecial> todos = allEspeciales.getAll();
-                String queryLower = query.toLowerCase();
-                
-                List<ProductoEspecial> resultados = todos.stream()
-                    .filter(especial -> {
-                        // Buscar por nombre de producto
-                        Producto producto = allProductos.getById(especial.getIdProducto());
-                        if (producto != null && producto.getNombre().toLowerCase().contains(queryLower)) {
-                            return true;
-                        }
-                        // Buscar por descripción
-                        if (especial.getDescripcion() != null && 
+        List<ProductoEspecial> filtrados = todos.stream()
+                .filter(especial -> {
+                    Producto producto = allProductos.getById(especial.getIdProducto());
+                    if (producto != null && producto.getNombre().toLowerCase().contains(queryLower)) {
+                        return true;
+                    }
+                    if (especial.getDescripcion() != null &&
                             especial.getDescripcion().toLowerCase().contains(queryLower)) {
-                            return true;
-                        }
-                        // Buscar por rango de fechas y horas
-                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-                        String fechasHoras = especial.getFechaInicio().format(formatter) + " " + especial.getFechaFin().format(formatter);
-                        return fechasHoras.toLowerCase().contains(queryLower);
-                    })
-                    .toList();
+                        return true;
+                    }
+                    // Actualizamos el formato de búsqueda para coincidir con la nueva columna
+                    DateTimeFormatter fechaFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+                    String fechaHora = especial.getFechaInicio().format(fechaFormatter) +
+                            " - " +
+                            especial.getFechaFin().format(fechaFormatter);
+                    return fechaHora.toLowerCase().contains(queryLower);
+                })
+                .toList();
 
-                Platform.runLater(() -> {
-                    tablaEspeciales.getItems().addAll(resultados);
-                    lblEstado.setText("🔍 " + resultados.size() + " resultado(s) encontrado(s).");
-                });
-            } catch (Exception e) {
-                e.printStackTrace();
-                Platform.runLater(() -> lblEstado.setText("❌ Error en búsqueda."));
-            }
-        }).start();
+        tablaEspeciales.getItems().clear();
+        tablaEspeciales.getItems().addAll(filtrados);
+        lblEstado.setText("🔍 " + filtrados.size() + " resultado(s) encontrado(s).");
     }
 
     private void actualizarEstadisticas(List<ProductoEspecial> especiales) {
         int total = especiales.size();
         int vigentes = (int) especiales.stream().filter(ProductoEspecial::estaVigente).count();
         int activos = (int) especiales.stream().filter(ProductoEspecial::isActivo).count();
-        
         lblEstado.setText(String.format("📊 Total: %d | ✅ Vigentes: %d | 🔄 Activos: %d", total, vigentes, activos));
     }
 
@@ -254,26 +230,24 @@ public class ProductosEspecialesController {
 
     private void eliminarEspecial(ProductoEspecial especial) {
         String nombreProducto = getNombreProducto(especial.getIdProducto());
-        
+
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Eliminar producto especial");
         alert.setHeaderText("¿Eliminar el producto especial de \"" + nombreProducto + "\"?");
         alert.setContentText("Esta acción no se puede deshacer.");
-        
+
         alert.showAndWait().ifPresent(btn -> {
             if (btn == ButtonType.OK) {
-                new Thread(() -> {
-                    try {
-                        allEspeciales.removeProductoEspecial(especial.getId());
-                        Platform.runLater(() -> {
-                            lblEstado.setText("Eliminar Producto especial eliminado correctamente.");
+                allEspeciales.eliminarDelServidor(
+                        especial.getId(),
+                        () -> {
+                            lblEstado.setText("✅ Producto especial eliminado");
                             cargarEspeciales();
+                        },
+                        error -> {
+                            lblEstado.setText("❌ Error al eliminar");
+                            mostrarError("Error", error);
                         });
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Platform.runLater(() -> lblEstado.setText("❌ Error al eliminar."));
-                    }
-                }).start();
             }
         });
     }
@@ -285,14 +259,16 @@ public class ProductosEspecialesController {
 
     private void abrirFormulario(ProductoEspecial especial) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/app/views/productos/RegistroProductoEspecial.fxml"));
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/app/views/productos/RegistroProductoEspecial.fxml"));
             Parent root = loader.load();
 
-            // Obtener el controlador del formulario
             RegistroProductoEspecialController controller = loader.getController();
-            
+
             if (especial != null) {
                 controller.cargarDatosExistentes(especial);
+            } else {
+                // controller.setModoNuevo(true);
             }
 
             Stage stage = new Stage();
@@ -300,10 +276,8 @@ public class ProductosEspecialesController {
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setResizable(false);
-            
-            // Recargar cuando se cierre el formulario
+
             stage.setOnHidden(e -> cargarEspeciales());
-            
             stage.showAndWait();
 
         } catch (Exception e) {
@@ -313,10 +287,12 @@ public class ProductosEspecialesController {
     }
 
     private void mostrarError(String titulo, String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
-        alert.showAndWait();
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle(titulo);
+            alert.setHeaderText(null);
+            alert.setContentText(mensaje);
+            alert.showAndWait();
+        });
     }
 }

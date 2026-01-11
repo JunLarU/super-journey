@@ -1,14 +1,13 @@
-// AllProductosEspeciales.java
 package core.data.Productos;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-import java.io.File;
-import java.io.FileWriter;
-import java.nio.file.Files;
+import core.services.ProductosEspecialesService;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -17,11 +16,17 @@ import java.util.stream.Collectors;
 public class AllProductosEspeciales {
     private static AllProductosEspeciales instance;
     private final List<ProductoEspecial> productosEspeciales = new ArrayList<>();
-    private final String FILE_PATH = "data/productos_especiales.json";
-    private int nextId = 1;
+    private final ProductosEspecialesService service;
+
+    // Callback interface
+    public interface ProductosEspecialesCallback {
+        void onSuccess(List<ProductoEspecial> productos);
+
+        void onError(String error);
+    }
 
     private AllProductosEspeciales() {
-        loadFromFile();
+        this.service = ProductosEspecialesService.getInstance();
     }
 
     public static AllProductosEspeciales getInstance() {
@@ -31,19 +36,49 @@ public class AllProductosEspeciales {
         return instance;
     }
 
+    /**
+     * Obtener todos los productos especiales (sincrónico - para compatibilidad)
+     */
+    public List<ProductoEspecial> getAll() {
+        return new ArrayList<>(productosEspeciales);
+    }
+
+    /**
+     * Obtener todos los productos especiales (asincrónico con callback)
+     */
+    public void getAllAsync(ProductosEspecialesCallback callback) {
+        Task<List<ProductoEspecial>> task = service.getAll();
+
+        task.setOnSucceeded(event -> {
+            try {
+                List<ProductoEspecial> resultado = task.getValue();
+                productosEspeciales.clear();
+                productosEspeciales.addAll(resultado);
+                callback.onSuccess(new ArrayList<>(productosEspeciales));
+            } catch (Exception e) {
+                callback.onError("Error procesando datos: " + e.getMessage());
+            }
+        });
+
+        task.setOnFailed(event -> {
+            Throwable ex = task.getException();
+            callback.onError("Error al cargar: " + (ex != null ? ex.getMessage() : "Error desconocido"));
+        });
+
+        new Thread(task).start();
+    }
+
+    /**
+     * Métodos de compatibilidad (mantienen la misma interfaz)
+     */
     public void addProductoEspecial(ProductoEspecial productoEspecial) {
-        if (productoEspecial.getId() == 0) {
-            productoEspecial.setId(nextId++);
-        }
         productosEspeciales.add(productoEspecial);
-        saveToFile();
     }
 
     public void updateProductoEspecial(ProductoEspecial nuevo) {
-        for (int idx = 0; idx < productosEspeciales.size(); idx++) {
-            if (productosEspeciales.get(idx).getId() == nuevo.getId()) {
-                productosEspeciales.set(idx, nuevo);
-                saveToFile();
+        for (int i = 0; i < productosEspeciales.size(); i++) {
+            if (productosEspeciales.get(i).getId() == nuevo.getId()) {
+                productosEspeciales.set(i, nuevo);
                 return;
             }
         }
@@ -51,7 +86,6 @@ public class AllProductosEspeciales {
 
     public void removeProductoEspecial(int id) {
         productosEspeciales.removeIf(pe -> pe.getId() == id);
-        saveToFile();
     }
 
     public ProductoEspecial getById(int id) {
@@ -90,11 +124,8 @@ public class AllProductosEspeciales {
                 .collect(Collectors.toList());
     }
 
-    public List<ProductoEspecial> getAll() {
-        return new ArrayList<>(productosEspeciales);
-    }
-
-    // Método para verificar si un producto tiene precio especial en una fecha y hora
+    // Método para verificar si un producto tiene precio especial en una fecha y
+    // hora
     public boolean tienePrecioEspecial(int idProducto, LocalDateTime fechaHora) {
         return getEspecialParaProductoYFecha(idProducto, fechaHora) != null;
     }
@@ -105,80 +136,62 @@ public class AllProductosEspeciales {
         return especial != null ? especial.getPrecioEspecial() : null;
     }
 
-    private void loadFromFile() {
-        try {
-            File file = new File(FILE_PATH);
-            if (!file.exists()) {
-                file.getParentFile().mkdirs();
-                saveToFile(); // crea archivo vacío
-                return;
-            }
-
-            String content = Files.readString(file.toPath());
-            if (content.isBlank()) return;
-
-            JSONArray array = new JSONArray(content);
-            productosEspeciales.clear();
-
-            int maxId = 0;
-            for (int i = 0; i < array.length(); i++) {
-                JSONObject obj = array.getJSONObject(i);
-                ProductoEspecial pe = new ProductoEspecial(obj);
-                productosEspeciales.add(pe);
-                if (pe.getId() > maxId) {
-                    maxId = pe.getId();
-                }
-            }
-            nextId = maxId + 1;
-
-        } catch (Exception e) {
-            //System.err.println("Error cargando productos especiales desde archivo:");
-            e.printStackTrace();
-        }
-    }
-
-    public void saveToFile() {
-        try {
-            JSONArray array = new JSONArray();
-            for (ProductoEspecial pe : productosEspeciales) {
-                array.put(pe.toJson());
-            }
-
-            File file = new File(FILE_PATH);
-            file.getParentFile().mkdirs();
-
-            FileWriter writer = new FileWriter(file);
-            writer.write(array.toString(4)); // JSON legible
-            writer.close();
-
-        } catch (Exception e) {
-            //System.err.println("Error guardando productos especiales en archivo:");
-            e.printStackTrace();
-        }
-    }
-
     // Método para obtener estadísticas
     public String getEstadisticas() {
         int total = productosEspeciales.size();
         int activos = (int) productosEspeciales.stream().filter(ProductoEspecial::isActivo).count();
         int vigentes = getEspecialesVigentes().size();
-        
-        return String.format("Total: %d especiales | Activos: %d | Vigentes: %d", 
-                           total, activos, vigentes);
+
+        return String.format("Total: %d especiales | Activos: %d | Vigentes: %d",
+                total, activos, vigentes);
     }
 
-    // Método para limpiar especiales expirados (más de 30 días)
-    public void limpiarExpirados() {
-        LocalDateTime limite = LocalDateTime.now().minusDays(30);
-        int removidos = (int) productosEspeciales.stream()
-                .filter(pe -> pe.getFechaFin().isBefore(limite))
-                .count();
-        
-        productosEspeciales.removeIf(pe -> pe.getFechaFin().isBefore(limite));
-        
-        if (removidos > 0) {
-            saveToFile();
-            //System.out.println("Se removieron " + removidos + " productos especiales expirados");
+    /**
+     * Métodos para operaciones con servidor
+     */
+    public Task<Boolean> guardarEnServidor(ProductoEspecial producto) {
+        if (producto.getId() == 0) {
+            return service.crear(producto);
+        } else {
+            return service.actualizar(producto);
         }
+    }
+
+    public void eliminarDelServidor(int id, Runnable onSuccess, Consumer<String> onError) {
+        Task<Boolean> task = service.eliminar(id);
+
+        task.setOnSucceeded(event -> {
+            if (task.getValue()) {
+                removeProductoEspecial(id);
+                Platform.runLater(onSuccess);
+            } else {
+                Platform.runLater(() -> onError.accept("No se pudo eliminar del servidor"));
+            }
+        });
+
+        task.setOnFailed(event -> {
+            Throwable ex = task.getException();
+            Platform.runLater(() -> onError.accept("Error: " +
+                    (ex != null ? ex.getMessage() : "Error desconocido")));
+        });
+
+        new Thread(task).start();
+    }
+
+    /**
+     * Método para cargar desde servidor y actualizar cache
+     */
+    public void cargarDesdeServidor() {
+        getAllAsync(new ProductosEspecialesCallback() {
+            @Override
+            public void onSuccess(List<ProductoEspecial> productos) {
+                System.out.println("Cargados " + productos.size() + " productos especiales desde servidor");
+            }
+
+            @Override
+            public void onError(String error) {
+                System.err.println("Error al cargar desde servidor: " + error);
+            }
+        });
     }
 }

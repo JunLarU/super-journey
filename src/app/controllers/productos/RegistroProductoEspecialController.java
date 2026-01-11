@@ -9,6 +9,7 @@ import core.data.Productos.Producto;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -23,10 +24,10 @@ import java.util.stream.Collectors;
 
 /**
  * Controlador para el formulario de registro/edición de productos especiales
+ * Conectado al servidor para operaciones CRUD
  */
 public class RegistroProductoEspecialController {
 
-    
     // COMPONENTES FXML
     
     @FXML private Label lblTitulo;
@@ -44,7 +45,6 @@ public class RegistroProductoEspecialController {
     @FXML private Button btnCancelar;
     @FXML private Label lblStatus;
 
-    
     // MODELOS Y DATOS
     
     private final AllProductosEspeciales allEspeciales = AllProductosEspeciales.getInstance();
@@ -53,10 +53,8 @@ public class RegistroProductoEspecialController {
 
     private boolean modoEdicion = false;
     private ProductoEspecial productoEspecialEditando = null;
-
     private final ObservableList<Producto> productosDisponibles = FXCollections.observableArrayList();
 
-    
     // INICIALIZACIÓN
     
     @FXML
@@ -64,6 +62,7 @@ public class RegistroProductoEspecialController {
         // Verificar permisos de administrador
         if (!session.isAdmin()) {
             mostrarAlerta("Acceso denegado", "Solo los administradores pueden acceder a esta función.");
+            cerrarVentana();
             return;
         }
 
@@ -108,11 +107,12 @@ public class RegistroProductoEspecialController {
         // Establecer tooltips
         txtDescripcion.setTooltip(new Tooltip("Descripción opcional de la promoción"));
         txtPrecioEspecial.setTooltip(new Tooltip("Precio especial durante el periodo seleccionado"));
+        cmbProducto.setTooltip(new Tooltip("Selecciona el producto que tendrá precio especial"));
     }
 
     private void configurarValoresPorDefecto() {
         chkActivo.setSelected(true);
-        lblStatus.setText("Editar Completa los campos para crear un producto especial");
+        lblStatus.setText("Completa los campos para crear un producto especial");
     }
 
     private void cargarProductos() {
@@ -133,13 +133,13 @@ public class RegistroProductoEspecialController {
             } catch (Exception e) {
                 Platform.runLater(() -> {
                     lblStatus.setText("❌ Error al cargar productos: " + e.getMessage());
+                    mostrarAlerta("Error", "No se pudieron cargar los productos: " + e.getMessage());
                 });
                 e.printStackTrace();
             }
         }).start();
     }
 
-    
     // MÉTODOS DE ACCIÓN
     
     @FXML
@@ -147,90 +147,118 @@ public class RegistroProductoEspecialController {
         if (!validarFormulario()) return;
 
         btnGuardar.setDisable(true);
-        lblStatus.setText("Guardando producto especial...");
+        lblStatus.setText("Guardando producto especial en el servidor...");
 
-        new Thread(() -> {
-            try {
-                Producto producto = cmbProducto.getValue();
-                String descripcion = txtDescripcion.getText().trim();
-                double precioEspecial = Double.parseDouble(txtPrecioEspecial.getText().trim());
-                boolean activo = chkActivo.isSelected();
+        try {
+            Producto producto = cmbProducto.getValue();
+            String descripcion = txtDescripcion.getText().trim();
+            double precioEspecial = Double.parseDouble(txtPrecioEspecial.getText().trim());
+            boolean activo = chkActivo.isSelected();
 
-                // Crear LocalDateTime para inicio y fin
-                LocalDateTime fechaInicio = LocalDateTime.of(
-                    dtpFechaInicio.getValue(),
-                    LocalTime.of(spnHoraInicio.getValue(), spnMinutoInicio.getValue())
-                );
-                
-                LocalDateTime fechaFin = LocalDateTime.of(
-                    dtpFechaFin.getValue(),
-                    LocalTime.of(spnHoraFin.getValue(), spnMinutoFin.getValue())
-                );
+            // Crear LocalDateTime para inicio y fin
+            LocalDateTime fechaInicio = LocalDateTime.of(
+                dtpFechaInicio.getValue(),
+                LocalTime.of(spnHoraInicio.getValue(), spnMinutoInicio.getValue())
+            );
+            
+            LocalDateTime fechaFin = LocalDateTime.of(
+                dtpFechaFin.getValue(),
+                LocalTime.of(spnHoraFin.getValue(), spnMinutoFin.getValue())
+            );
 
-                // Validar que la fecha de fin sea posterior a la de inicio
-                if (fechaFin.isBefore(fechaInicio)) {
-                    Platform.runLater(() -> {
-                        lblStatus.setText("❌ La fecha/hora de fin debe ser posterior a la de inicio");
-                        btnGuardar.setDisable(false);
-                    });
-                    return;
-                }
-
-                if (modoEdicion && productoEspecialEditando != null) {
-                    // Modo edición
-                    productoEspecialEditando.setIdProducto(producto.getId());
-                    productoEspecialEditando.setDescripcion(descripcion);
-                    productoEspecialEditando.setPrecioEspecial(precioEspecial);
-                    productoEspecialEditando.setFechaInicio(fechaInicio);
-                    productoEspecialEditando.setFechaFin(fechaFin);
-                    productoEspecialEditando.setActivo(activo);
-
-                    allEspeciales.updateProductoEspecial(productoEspecialEditando);
-
-                    Platform.runLater(() -> {
-                        lblStatus.setText("✅ Producto especial actualizado correctamente");
-                        cerrarVentana();
-                    });
-                } else {
-                    // Modo nuevo - verificar que no exista conflicto
-                    ProductoEspecial existente = allEspeciales.getEspecialParaProductoYFecha(
-                        producto.getId(), fechaInicio);
-                    
-                    if (existente != null && existente.estaActivoParaFechaHora(fechaInicio)) {
-                        Platform.runLater(() -> {
-                            lblStatus.setText("⚠️ Ya existe un producto especial para este producto en las fechas seleccionadas");
-                            btnGuardar.setDisable(false);
-                        });
-                        return;
-                    }
-
-                    // Crear nuevo producto especial
-                    ProductoEspecial nuevoEspecial = new ProductoEspecial(
-                        0, // ID se asignará automáticamente
-                        producto.getId(),
-                        fechaInicio,
-                        fechaFin,
-                        descripcion,
-                        precioEspecial,
-                        activo
-                    );
-
-                    allEspeciales.addProductoEspecial(nuevoEspecial);
-
-                    Platform.runLater(() -> {
-                        lblStatus.setText("✅ Producto especial creado correctamente");
-                        limpiarCampos();
-                        btnGuardar.setDisable(false);
-                    });
-                }
-            } catch (Exception e) {
-                Platform.runLater(() -> {
-                    lblStatus.setText("❌ Error al guardar: " + e.getMessage());
-                    btnGuardar.setDisable(false);
-                });
-                e.printStackTrace();
+            // Validar que la fecha de fin sea posterior a la de inicio
+            if (fechaFin.isBefore(fechaInicio)) {
+                lblStatus.setText("❌ La fecha/hora de fin debe ser posterior a la de inicio");
+                btnGuardar.setDisable(false);
+                mostrarAlerta("Error de validación", "La fecha/hora de fin debe ser posterior a la de inicio");
+                return;
             }
-        }).start();
+
+            if (modoEdicion && productoEspecialEditando != null) {
+                // Modo edición
+                productoEspecialEditando.setIdProducto(producto.getId());
+                productoEspecialEditando.setDescripcion(descripcion);
+                productoEspecialEditando.setPrecioEspecial(precioEspecial);
+                productoEspecialEditando.setFechaInicio(fechaInicio);
+                productoEspecialEditando.setFechaFin(fechaFin);
+                productoEspecialEditando.setActivo(activo);
+
+                // Guardar en servidor
+                guardarEnServidor(productoEspecialEditando, true);
+            } else {
+                // Modo nuevo
+                ProductoEspecial nuevoEspecial = new ProductoEspecial(
+                    0, // ID se asignará desde el servidor
+                    producto.getId(),
+                    fechaInicio,
+                    fechaFin,
+                    descripcion,
+                    precioEspecial,
+                    activo
+                );
+
+                // Guardar en servidor
+                guardarEnServidor(nuevoEspecial, false);
+            }
+            
+        } catch (Exception e) {
+            Platform.runLater(() -> {
+                lblStatus.setText("❌ Error al guardar: " + e.getMessage());
+                btnGuardar.setDisable(false);
+                mostrarAlerta("Error", "Error al procesar los datos: " + e.getMessage());
+            });
+            e.printStackTrace();
+        }
+    }
+
+    private void guardarEnServidor(ProductoEspecial productoEspecial, boolean esEdicion) {
+        Task<Boolean> task = allEspeciales.guardarEnServidor(productoEspecial);
+        
+        task.setOnSucceeded(event -> {
+            Platform.runLater(() -> {
+                try {
+                    if (task.getValue()) {
+                        // Actualizar cache local
+                        if (esEdicion) {
+                            allEspeciales.updateProductoEspecial(productoEspecial);
+                        } else {
+                            allEspeciales.addProductoEspecial(productoEspecial);
+                        }
+                        
+                        lblStatus.setText("✅ Producto especial " + (esEdicion ? "actualizado" : "creado") + " correctamente");
+                        
+                        if (!esEdicion) {
+                            // Limpiar campos para nuevo registro
+                            limpiarCampos();
+                        }
+                        
+                        // Cerrar ventana después de éxito
+                        Stage stage = (Stage) btnCancelar.getScene().getWindow();
+                        stage.close();
+                        
+                    } else {
+                        lblStatus.setText("❌ Error: No se pudo guardar en el servidor");
+                        btnGuardar.setDisable(false);
+                        mostrarAlerta("Error del servidor", "No se pudo guardar el producto especial. Intente nuevamente.");
+                    }
+                } catch (Exception e) {
+                    lblStatus.setText("❌ Error al procesar respuesta: " + e.getMessage());
+                    btnGuardar.setDisable(false);
+                }
+            });
+        });
+        
+        task.setOnFailed(event -> {
+            Platform.runLater(() -> {
+                Throwable ex = task.getException();
+                String errorMsg = ex != null ? ex.getMessage() : "Error desconocido";
+                lblStatus.setText("❌ Error de conexión: " + errorMsg);
+                btnGuardar.setDisable(false);
+                mostrarAlerta("Error de conexión", "No se pudo conectar al servidor: " + errorMsg);
+            });
+        });
+        
+        new Thread(task).start();
     }
 
     @FXML
@@ -238,7 +266,6 @@ public class RegistroProductoEspecialController {
         cerrarVentana();
     }
 
-    
     // VALIDACIÓN
     
     private boolean validarFormulario() {
@@ -250,21 +277,33 @@ public class RegistroProductoEspecialController {
         }
 
         // Validar precio especial
-        if (txtPrecioEspecial.getText().trim().isEmpty()) {
+        String precioText = txtPrecioEspecial.getText().trim();
+        if (precioText.isEmpty()) {
             mostrarAlerta("⚠️ Campo requerido", "Ingresa el precio especial");
             txtPrecioEspecial.requestFocus();
             return false;
         }
 
         try {
-            double precio = Double.parseDouble(txtPrecioEspecial.getText().trim());
+            double precio = Double.parseDouble(precioText);
             if (precio <= 0) {
                 mostrarAlerta("⚠️ Precio inválido", "El precio debe ser mayor a cero");
                 txtPrecioEspecial.requestFocus();
                 return false;
             }
+            
+            // Validar que el precio especial sea menor al precio normal
+            Producto producto = cmbProducto.getValue();
+            if (precio >= producto.getPrecioBase()) {
+                mostrarAlerta("⚠️ Precio inválido", 
+                    "El precio especial ($" + String.format("%.2f", precio) + 
+                    ") debe ser menor al precio normal ($" + 
+                    String.format("%.2f", producto.getPrecioBase()) + ")");
+                txtPrecioEspecial.requestFocus();
+                return false;
+            }
         } catch (NumberFormatException e) {
-            mostrarAlerta("⚠️ Formato inválido", "El precio debe ser un número válido");
+            mostrarAlerta("⚠️ Formato inválido", "El precio debe ser un número válido (ej: 25.50)");
             txtPrecioEspecial.requestFocus();
             return false;
         }
@@ -285,7 +324,6 @@ public class RegistroProductoEspecialController {
         return true;
     }
 
-    
     // CARGAR DATOS EXISTENTES
     
     public void cargarDatosExistentes(ProductoEspecial productoEspecial) {
@@ -295,17 +333,17 @@ public class RegistroProductoEspecialController {
         productoEspecialEditando = productoEspecial;
 
         // Configurar título
-        lblTitulo.setText("Editar Producto Especial");
+        lblTitulo.setText("✏️ Editar Producto Especial");
 
         // Buscar y seleccionar el producto
         Producto producto = allProductos.getById(productoEspecial.getIdProducto());
         if (producto != null) {
-            cmbProducto.setValue(producto);
+            Platform.runLater(() -> cmbProducto.setValue(producto));
         }
 
         // Cargar datos existentes
         txtDescripcion.setText(productoEspecial.getDescripcion());
-        txtPrecioEspecial.setText(String.valueOf(productoEspecial.getPrecioEspecial()));
+        txtPrecioEspecial.setText(String.format("%.2f", productoEspecial.getPrecioEspecial()));
         chkActivo.setSelected(productoEspecial.isActivo());
 
         // Cargar fechas y horas
@@ -319,10 +357,9 @@ public class RegistroProductoEspecialController {
 
         // Actualizar UI
         btnGuardar.setText("💾 Actualizar");
-        lblStatus.setText("📝 Editando producto especial #" + productoEspecial.getId());
+        lblStatus.setText("✏️ Editando producto especial #" + productoEspecial.getId());
     }
 
-    
     // MODO VISUALIZACIÓN
     
     public void visualizarProductoEspecial(ProductoEspecial productoEspecial) {
@@ -343,11 +380,10 @@ public class RegistroProductoEspecialController {
         btnGuardar.setVisible(false);
         btnGuardar.setManaged(false);
 
-        lblTitulo.setText("visualizar Producto Especial");
-        lblStatus.setText("visualizando producto especial #" + productoEspecial.getId());
+        lblTitulo.setText("👁️ Visualizar Producto Especial");
+        lblStatus.setText("👁️ Visualizando producto especial #" + productoEspecial.getId());
     }
 
-    
     // UTILIDADES
     
     private void limpiarCampos() {
@@ -365,6 +401,7 @@ public class RegistroProductoEspecialController {
         modoEdicion = false;
         productoEspecialEditando = null;
         btnGuardar.setText("💾 Guardar");
+        btnGuardar.setDisable(false);
     }
 
     private void cerrarVentana() {
@@ -373,12 +410,10 @@ public class RegistroProductoEspecialController {
     }
 
     private void mostrarAlerta(String titulo, String mensaje) {
-        Platform.runLater(() -> {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle(titulo);
-            alert.setHeaderText(null);
-            alert.setContentText(mensaje);
-            alert.showAndWait();
-        });
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
     }
 }

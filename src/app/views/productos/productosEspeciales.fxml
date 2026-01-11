@@ -3,9 +3,17 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Button?>
 
-<BorderPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="app.controllers.productos.ProductosEspecialesController"
             prefWidth="1200" prefHeight="600"
             style="-fx-background-color: #F9FAFB;">
@@ -16,11 +24,13 @@
             <Label text="Productos Especiales"
                    style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
             <Region HBox.hgrow="ALWAYS"/>
-            <TextField fx:id="txtBuscar" promptText="Buscar por producto, descripción, fecha u hora..."
+            <TextField fx:id="txtBuscar" promptText="Buscar por producto, descripción o fecha..."
                        style="-fx-pref-width: 300px; -fx-background-radius: 6;"/>
-            <Button fx:id="btnRecargar" text="🔄" onAction="#onRecargarClicked"
+            <Button fx:id="btnRecargar" text="🔄" 
+                    onAction="#onRecargarClicked"
                     style="-fx-background-color: #27AE60; -fx-text-fill: white; -fx-background-radius: 6;"/>
-            <Button fx:id="btnNuevo" text="➕ Nuevo Especial" onAction="#onNuevoClicked"
+            <Button fx:id="btnNuevo" text="➕ Nuevo Especial" 
+                    onAction="#onNuevoClicked"
                     style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-background-radius: 6; -fx-font-weight: bold;"/>
         </HBox>
     </top>
@@ -29,17 +39,20 @@
     <center>
         <VBox spacing="10" style="-fx-padding: 15;">
             <TableView fx:id="tablaEspeciales" prefHeight="500"
-                       style="-fx-background-radius: 6;">
-                <columns>
-                    <TableColumn fx:id="colID" text="ID" prefWidth="60"/>
-                    <TableColumn fx:id="colProducto" text="Producto" prefWidth="200"/>
-                    <TableColumn fx:id="colFechas" text="Fechas" prefWidth="150"/>
-                    <TableColumn fx:id="colHorario" text="Horario" prefWidth="120"/>
-                    <TableColumn fx:id="colPrecioEspecial" text="Precio Especial" prefWidth="120"/>
-                    <TableColumn fx:id="colEstado" text="Estado" prefWidth="120"/>
-                    <TableColumn fx:id="colAcciones" text="Acciones" prefWidth="120"/>
-                </columns>
-            </TableView>
+           style="-fx-background-radius: 6;">
+    <columns>
+        <TableColumn fx:id="colID" text="ID" prefWidth="60"/>
+        <TableColumn fx:id="colProducto" text="Producto" prefWidth="200"/>
+        <!-- NUEVA COLUMNA COMBINADA -->
+        <TableColumn fx:id="colFechaHora" text="Fecha y Horario" prefWidth="350"/>
+        <!-- ELIMINAMOS ESTAS DOS COLUMNAS -->
+        <!-- <TableColumn fx:id="colFechas" text="Fechas" prefWidth="180"/> -->
+        <!-- <TableColumn fx:id="colHorario" text="Horario" prefWidth="150"/> -->
+        <TableColumn fx:id="colPrecioEspecial" text="Precio Especial" prefWidth="120"/>
+        <TableColumn fx:id="colEstado" text="Estado" prefWidth="150"/>
+        <TableColumn fx:id="colAcciones" text="Acciones" prefWidth="210"/>
+    </columns>
+</TableView>
 
             <Label fx:id="lblEstado" text="Cargando productos especiales..."
                    style="-fx-font-size: 14px; -fx-text-fill: #555;"/>
