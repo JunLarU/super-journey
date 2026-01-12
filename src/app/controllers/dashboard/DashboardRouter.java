@@ -24,17 +24,22 @@ public class DashboardRouter {
 
             FXMLLoader loader = new FXMLLoader(DashboardRouter.class.getResource(fxmlPath));
             Parent root = loader.load();
+            
             // Obtener la pantalla primaria
             Screen pantalla = Screen.getPrimary();
-
-            // Obtener los bounds FÍSICOS (resolución nativa)
             Rectangle2D bounds = pantalla.getVisualBounds();
 
-            int ancho = ((int) bounds.getWidth()>1100)?1100:(int) bounds.getWidth();
-            int alto = ((int) bounds.getHeight()>700)?700:(int) bounds.getHeight();
-            stage.setScene(new Scene(root, ancho, alto));
+            // Tamaño estándar para el dashboard
+            int ancho = Math.min(1100, (int) bounds.getWidth());
+            int alto = Math.min(700, (int) bounds.getHeight());
+            
+            Scene scene = new Scene(root, ancho, alto);
+            stage.setScene(scene);
+            
+            // IMPORTANTE: Dashboard inicia NO resizable
+            stage.setResizable(false);
             stage.centerOnScreen();
-            stage.setTitle("CAFI");
+            stage.setTitle("CAFI - Dashboard");
             stage.show();
 
         } catch (Exception e) {

@@ -1,36 +1,78 @@
-[{
-    "descripcion": "ASA",
-    "ingredientes": [{
-        "sustitutos": [
+[
+    {
+        "descripcion": "Wazaaa",
+        "ingredientes": [
             {
-                "costoExtra": 12,
-                "nombre": "Queso Azul",
-                "idIngrediente": 14,
-                "disponible": 1
+                "eliminable": 0,
+                "cantidad": 1,
+                "orden": 1,
+                "sustituible": 0,
+                "nombre": "Queso Amarillo",
+                "idIngrediente": 11
             },
             {
-                "costoExtra": 0,
-                "nombre": "Queso Vegano",
-                "idIngrediente": 17,
-                "disponible": 1
+                "eliminable": 0,
+                "cantidad": 1,
+                "orden": 2,
+                "sustituible": 0,
+                "nombre": "Carne De Res",
+                "idIngrediente": 3
+            },
+            {
+                "eliminable": 0,
+                "cantidad": 1,
+                "orden": 3,
+                "sustituible": 0,
+                "nombre": "Pane",
+                "idIngrediente": 1
             }
         ],
-        "eliminable": 1,
-        "cantidad": 1,
-        "orden": 1,
-        "sustituible": 1,
-        "nombre": "Queso Amarillo",
-        "idIngrediente": 11
-    }],
-    "categoria": "Alitas y Boneless",
-    "calorias": 56.2,
-    "urlFoto": null,
-    "nombre": "QWa",
-    "gramaje": 23.2,
-    "precioBase": 56.2,
-    "tamanos": [],
-    "ID": 6,
-    "id": 6,
-    "idCategoria": 17,
-    "disponible": 1
-}]
+        "categoria": "Hamburguesas",
+        "calorias": 26,
+        "urlFoto": null,
+        "nombre": "Hamburguesa",
+        "gramaje": 320,
+        "precioBase": 56,
+        "tamanos": [],
+        "ID": 8,
+        "id": 8,
+        "idCategoria": 12,
+        "disponible": 1
+    },
+    {
+        "descripcion": "ASA",
+        "ingredientes": [{
+            "sustitutos": [
+                {
+                    "costoExtra": 12,
+                    "nombre": "Queso Azul",
+                    "idIngrediente": 14,
+                    "disponible": 1
+                },
+                {
+                    "costoExtra": 0,
+                    "nombre": "Queso Vegano",
+                    "idIngrediente": 17,
+                    "disponible": 1
+                }
+            ],
+            "eliminable": 1,
+            "cantidad": 1,
+            "orden": 1,
+            "sustituible": 1,
+            "nombre": "Queso Amarillo",
+            "idIngrediente": 11
+        }],
+        "categoria": "Alitas y Boneless",
+        "calorias": 56.2,
+        "urlFoto": null,
+        "nombre": "QWa",
+        "gramaje": 23.2,
+        "precioBase": 56.2,
+        "tamanos": [],
+        "ID": 6,
+        "id": 6,
+        "idCategoria": 17,
+        "disponible": 1
+    }
+]

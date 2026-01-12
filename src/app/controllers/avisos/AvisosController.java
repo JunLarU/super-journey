@@ -1,4 +1,5 @@
 package app.controllers.avisos;
+
 import core.SessionManager;
 import core.data.Avisos.AllAvisos;
 import core.data.Avisos.Aviso;
@@ -23,13 +24,20 @@ import java.util.List;
  */
 public class AvisosController {
 
-    @FXML private TextField txtBuscar;
-    @FXML private Button btnRecargar, btnNuevo;
-    @FXML private TableView<Aviso> tablaAvisos;
-    @FXML private TableColumn<Aviso, String> colID, colTitulo, colEstablecimiento, colTipo, colPrioridad;
-    @FXML private TableColumn<Aviso, String> colFechas, colEstado;
-    @FXML private TableColumn<Aviso, Void> colAcciones;
-    @FXML private Label lblEstado;
+    @FXML
+    private TextField txtBuscar;
+    @FXML
+    private Button btnRecargar, btnNuevo;
+    @FXML
+    private TableView<Aviso> tablaAvisos;
+    @FXML
+    private TableColumn<Aviso, String> colID, colTitulo, colEstablecimiento, colTipo, colPrioridad;
+    @FXML
+    private TableColumn<Aviso, String> colFechas, colEstado;
+    @FXML
+    private TableColumn<Aviso, Void> colAcciones;
+    @FXML
+    private Label lblEstado;
 
     private final AllAvisos allAvisos = AllAvisos.getInstance();
     private final SessionManager session = SessionManager.getInstance();
@@ -44,7 +52,7 @@ public class AvisosController {
 
         configurarTabla();
         cargarAvisos();
-        
+
         txtBuscar.textProperty().addListener((obs, o, n) -> {
             if (n.isBlank())
                 cargarAvisos();
@@ -55,37 +63,37 @@ public class AvisosController {
 
     private void configurarTabla() {
         // Configurar columnas
-        colID.setCellValueFactory(data -> 
-            new javafx.beans.property.SimpleStringProperty(String.valueOf(data.getValue().getId())));
-        
+        colID.setCellValueFactory(
+                data -> new javafx.beans.property.SimpleStringProperty(String.valueOf(data.getValue().getId())));
+
         colTitulo.setCellValueFactory(new PropertyValueFactory<>("titulo"));
-        
-        colEstablecimiento.setCellValueFactory(data -> 
-            new javafx.beans.property.SimpleStringProperty(data.getValue().getEstablecimiento().name()));
-        
-        colTipo.setCellValueFactory(data -> 
-            new javafx.beans.property.SimpleStringProperty(data.getValue().getTipoAviso().name()));
-        
+
+        colEstablecimiento.setCellValueFactory(
+                data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getEstablecimiento().name()));
+
+        colTipo.setCellValueFactory(
+                data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getTipoAviso().name()));
+
         colPrioridad.setCellValueFactory(data -> {
             Aviso.Prioridad prioridad = data.getValue().getPrioridad();
             String texto = prioridad == Aviso.Prioridad.Importante ? "⭐ Importante" : "Normal";
             return new javafx.beans.property.SimpleStringProperty(texto);
         });
-        
+
         colFechas.setCellValueFactory(data -> {
             Aviso aviso = data.getValue();
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-            
+
             String fechaInicio = aviso.getFechaInicio().format(dateFormatter);
             String fechaFin = aviso.getFechaFin().format(dateFormatter);
             String horaInicio = aviso.getFechaInicio().format(timeFormatter);
             String horaFin = aviso.getFechaFin().format(timeFormatter);
-            
+
             return new javafx.beans.property.SimpleStringProperty(
-                fechaInicio + " - " + fechaFin + "\n" + horaInicio + " - " + horaFin);
+                    fechaInicio + " - " + fechaFin + "\n" + horaInicio + " - " + horaFin);
         });
-        
+
         colEstado.setCellValueFactory(data -> {
             Aviso aviso = data.getValue();
             String estado;
@@ -107,53 +115,56 @@ public class AvisosController {
         colAcciones.setSortable(false);
         colAcciones.setMinWidth(310);
         colAcciones.setCellFactory(
-            (Callback<TableColumn<Aviso, Void>, TableCell<Aviso, Void>>) param -> new TableCell<>() {
-                private final Button btnVer = new Button("Ver");
-                private final Button btnEditar = new Button("Editar");
-                private final Button btnEliminar = new Button("Eliminar");
+                (Callback<TableColumn<Aviso, Void>, TableCell<Aviso, Void>>) param -> new TableCell<>() {
+                    private final Button btnVer = new Button("Ver");
+                    private final Button btnEditar = new Button("Editar");
+                    private final Button btnEliminar = new Button("Eliminar");
 
-                {
-                    btnVer.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
-                    btnVer.setMinWidth(100);
-                    btnEditar.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
-                    btnEditar.setMinWidth(100);
-                    btnEliminar.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
-                    btnEliminar.setMinWidth(100);
-                    // Estilos de botones
-                    btnVer.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-cursor: hand; -fx-background-radius: 5;");
-                    btnEditar.setStyle("-fx-background-color: #f1c40f; -fx-cursor: hand; -fx-background-radius: 5;");
-                    btnEliminar.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-cursor: hand; -fx-background-radius: 5;");
+                    {
+                        btnVer.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+                        btnVer.setMinWidth(100);
+                        btnEditar.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+                        btnEditar.setMinWidth(100);
+                        btnEliminar.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+                        btnEliminar.setMinWidth(100);
+                        // Estilos de botones
+                        btnVer.setStyle(
+                                "-fx-background-color: #3498db; -fx-text-fill: white; -fx-cursor: hand; -fx-background-radius: 5;");
+                        btnEditar
+                                .setStyle("-fx-background-color: #f1c40f; -fx-cursor: hand; -fx-background-radius: 5;");
+                        btnEliminar.setStyle(
+                                "-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-cursor: hand; -fx-background-radius: 5;");
 
-                    // Tooltips
-                    btnVer.setTooltip(new Tooltip("Ver detalles"));
-                    btnEditar.setTooltip(new Tooltip("Editar aviso"));
-                    btnEliminar.setTooltip(new Tooltip("Eliminar aviso"));
+                        // Tooltips
+                        btnVer.setTooltip(new Tooltip("Ver detalles"));
+                        btnEditar.setTooltip(new Tooltip("Editar aviso"));
+                        btnEliminar.setTooltip(new Tooltip("Eliminar aviso"));
 
-                    // Acciones
-                    btnVer.setOnAction(e -> {
-                        Aviso aviso = getTableView().getItems().get(getIndex());
-                        abrirFormularioSoloLectura(aviso);
-                    });
-                    
-                    btnEditar.setOnAction(e -> {
-                        Aviso aviso = getTableView().getItems().get(getIndex());
-                        abrirFormulario(aviso);
-                    });
-                    
-                    btnEliminar.setOnAction(e -> {
-                        Aviso aviso = getTableView().getItems().get(getIndex());
-                        eliminarAviso(aviso);
-                    });
-                }
+                        // Acciones
+                        btnVer.setOnAction(e -> {
+                            Aviso aviso = getTableView().getItems().get(getIndex());
+                            abrirFormularioSoloLectura(aviso);
+                        });
 
-                private final HBox pane = new HBox(5, btnVer, btnEditar, btnEliminar);
+                        btnEditar.setOnAction(e -> {
+                            Aviso aviso = getTableView().getItems().get(getIndex());
+                            abrirFormulario(aviso);
+                        });
 
-                @Override
-                protected void updateItem(Void item, boolean empty) {
-                    super.updateItem(item, empty);
-                    setGraphic(empty ? null : pane);
-                }
-            });
+                        btnEliminar.setOnAction(e -> {
+                            Aviso aviso = getTableView().getItems().get(getIndex());
+                            eliminarAviso(aviso);
+                        });
+                    }
+
+                    private final HBox pane = new HBox(5, btnVer, btnEditar, btnEliminar);
+
+                    @Override
+                    protected void updateItem(Void item, boolean empty) {
+                        super.updateItem(item, empty);
+                        setGraphic(empty ? null : pane);
+                    }
+                });
     }
 
     @FXML
@@ -161,19 +172,23 @@ public class AvisosController {
         lblEstado.setText("Cargando avisos...");
         tablaAvisos.getItems().clear();
 
-        new Thread(() -> {
-            try {
-                List<Aviso> avisos = allAvisos.getAll();
-                
+        allAvisos.getAllAsync(new AllAvisos.AvisosCallback() {
+            @Override
+            public void onSuccess(List<Aviso> avisosLista) {
                 Platform.runLater(() -> {
-                    tablaAvisos.getItems().addAll(avisos);
-                    actualizarEstadisticas(avisos);
+                    tablaAvisos.getItems().addAll(avisosLista);
+                    actualizarEstadisticas(avisosLista);
                 });
-            } catch (Exception e) {
-                e.printStackTrace();
-                Platform.runLater(() -> lblEstado.setText("❌ Error al cargar avisos."));
             }
-        }).start();
+
+            @Override
+            public void onError(String error) {
+                Platform.runLater(() -> {
+                    lblEstado.setText("❌ Error al cargar: " + error);
+                    mostrarError("Error", error);
+                });
+            }
+        });
     }
 
     /**
@@ -187,15 +202,13 @@ public class AvisosController {
             try {
                 List<Aviso> todos = allAvisos.getAll();
                 String queryLower = query.toLowerCase();
-                
+
                 List<Aviso> resultados = todos.stream()
-                    .filter(aviso -> 
-                        aviso.getTitulo().toLowerCase().contains(queryLower) ||
-                        aviso.getContenido().toLowerCase().contains(queryLower) ||
-                        aviso.getEstablecimiento().name().toLowerCase().contains(queryLower) ||
-                        aviso.getTipoAviso().name().toLowerCase().contains(queryLower)
-                    )
-                    .toList();
+                        .filter(aviso -> aviso.getTitulo().toLowerCase().contains(queryLower) ||
+                                aviso.getContenido().toLowerCase().contains(queryLower) ||
+                                aviso.getEstablecimiento().name().toLowerCase().contains(queryLower) ||
+                                aviso.getTipoAviso().name().toLowerCase().contains(queryLower))
+                        .toList();
 
                 Platform.runLater(() -> {
                     tablaAvisos.getItems().addAll(resultados);
@@ -213,11 +226,11 @@ public class AvisosController {
         int vigentes = (int) avisos.stream().filter(Aviso::estaVigente).count();
         int activos = (int) avisos.stream().filter(Aviso::isActivo).count();
         int importantes = (int) avisos.stream()
-            .filter(a -> a.getPrioridad() == Aviso.Prioridad.Importante && a.isActivo())
-            .count();
-        
-        lblEstado.setText(String.format("📊 Total: %d | ✅ Vigentes: %d | 🔄 Activos: %d | ⭐ Importantes: %d", 
-                                      total, vigentes, activos, importantes));
+                .filter(a -> a.getPrioridad() == Aviso.Prioridad.Importante && a.isActivo())
+                .count();
+
+        lblEstado.setText(String.format("📊 Total: %d | ✅ Vigentes: %d | 🔄 Activos: %d | ⭐ Importantes: %d",
+                total, vigentes, activos, importantes));
     }
 
     @FXML
@@ -238,7 +251,7 @@ public class AvisosController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/app/views/avisos/RegistroAviso.fxml"));
             Parent root = loader.load();
-            
+
             RegistroAvisoController controller = loader.getController();
             controller.visualizarAviso(aviso);
 
@@ -248,7 +261,7 @@ public class AvisosController {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setResizable(false);
             stage.showAndWait();
-            
+
         } catch (Exception e) {
             e.printStackTrace();
             lblEstado.setText("❌ Error al abrir vista: " + e.getMessage());
@@ -266,22 +279,19 @@ public class AvisosController {
         confirm.setTitle("Eliminar aviso");
         confirm.setHeaderText("¿Eliminar \"" + titulo + "\"?");
         confirm.setContentText("Esta acción no se puede deshacer.");
-        
+
         confirm.showAndWait().ifPresent(btn -> {
             if (btn == ButtonType.OK) {
-                new Thread(() -> {
-                    try {
-                        allAvisos.removeAviso(id);
-                        
-                        Platform.runLater(() -> {
-                            lblEstado.setText("Eliminar Aviso eliminado correctamente.");
+                allAvisos.eliminarDelServidor(
+                        id,
+                        () -> {
+                            lblEstado.setText("✅ Aviso eliminado");
                             cargarAvisos();
+                        },
+                        error -> {
+                            lblEstado.setText("❌ Error al eliminar: " + error);
+                            mostrarError("Error", error);
                         });
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Platform.runLater(() -> lblEstado.setText("❌ Error al eliminar."));
-                    }
-                }).start();
             }
         });
     }
@@ -293,9 +303,9 @@ public class AvisosController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/app/views/avisos/RegistroAviso.fxml"));
             Parent root = loader.load();
-            
+
             RegistroAvisoController controller = loader.getController();
-            
+
             if (aviso != null) {
                 controller.cargarDatosExistentes(aviso);
             }
@@ -305,10 +315,10 @@ public class AvisosController {
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setResizable(false);
-            
+
             // Recargar cuando se cierre el formulario
             stage.setOnHidden(e -> cargarAvisos());
-            
+
             stage.showAndWait();
 
         } catch (Exception e) {

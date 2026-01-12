@@ -18,6 +18,8 @@ public class AvisosService {
     
     private static AvisosService instance;
     private final HTTPConnection httpConnection;
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     
     private AvisosService() {
         this.httpConnection = HTTPConnection.getInstance();
@@ -55,9 +57,6 @@ public class AvisosService {
                         JSONArray data = json.getJSONArray("avisos");
                         List<Aviso> avisos = new ArrayList<>();
                         
-                        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                        
                         for (int i = 0; i < data.length(); i++) {
                             try {
                                 JSONObject item = data.getJSONObject(i);
@@ -70,12 +69,24 @@ public class AvisosService {
                                 aviso.setTipoAviso(Aviso.TipoAviso.valueOf(item.getString("TipoAviso")));
                                 aviso.setPrioridad(Aviso.Prioridad.valueOf(item.getString("Prioridad")));
                                 
-                                // Parsear fechas
+                                // Parsear fechas (manejar tanto fecha como fecha/hora)
                                 String fechaInicioStr = item.getString("FechaInicio");
                                 String fechaFinStr = item.getString("FechaFin");
                                 
-                                aviso.setFechaInicio(LocalDate.parse(fechaInicioStr, dateFormatter).atStartOfDay());
-                                aviso.setFechaFin(LocalDate.parse(fechaFinStr, dateFormatter).atTime(23, 59, 59));
+                                // Intentar parsear como fecha/hora primero, luego como solo fecha
+                                try {
+                                    aviso.setFechaInicio(LocalDateTime.parse(fechaInicioStr, dateTimeFormatter));
+                                } catch (Exception e) {
+                                    // Si falla, intentar como solo fecha
+                                    aviso.setFechaInicio(LocalDate.parse(fechaInicioStr, dateFormatter).atStartOfDay());
+                                }
+                                
+                                try {
+                                    aviso.setFechaFin(LocalDateTime.parse(fechaFinStr, dateTimeFormatter));
+                                } catch (Exception e) {
+                                    // Si falla, intentar como solo fecha
+                                    aviso.setFechaFin(LocalDate.parse(fechaFinStr, dateFormatter).atTime(23, 59, 59));
+                                }
                                 
                                 aviso.setActivo(item.getInt("Activo") == 1);
                                 
@@ -90,6 +101,9 @@ public class AvisosService {
                                 } else {
                                     aviso.setFechaPublicacion(LocalDateTime.now());
                                 }
+                                
+                                // ID Usuario Creador
+                                aviso.setIdUsuarioCreador(item.optInt("IDUsuarioCreador", 0));
                                 
                                 avisos.add(aviso);
                                 
@@ -132,7 +146,27 @@ public class AvisosService {
             @Override
             protected Boolean call() throws Exception {
                 try {
-                    JSONObject json = aviso.toJson();
+                    // Crear JSON manualmente para asegurar formato correcto
+                    JSONObject json = new JSONObject();
+                    
+                    json.put("titulo", aviso.getTitulo());
+                    json.put("contenido", aviso.getContenido());
+                    json.put("establecimiento", aviso.getEstablecimiento().name());
+                    json.put("tipoAviso", aviso.getTipoAviso().name());
+                    json.put("prioridad", aviso.getPrioridad().name());
+                    
+                    // Formatear fechas como DATETIME completo
+                    json.put("fechaInicio", aviso.getFechaInicio().format(dateTimeFormatter));
+                    json.put("fechaFin", aviso.getFechaFin().format(dateTimeFormatter));
+                    
+                    // Agregar también horas separadas por si el backend las necesita
+                    json.put("horaInicio", aviso.getFechaInicio().getHour());
+                    json.put("minutoInicio", aviso.getFechaInicio().getMinute());
+                    json.put("horaFin", aviso.getFechaFin().getHour());
+                    json.put("minutoFin", aviso.getFechaFin().getMinute());
+                    
+                    json.put("idUsuarioCreador", aviso.getIdUsuarioCreador());
+                    json.put("activo", aviso.isActivo());
                     
                     System.out.println("Enviando POST aviso con datos: " + json.toString());
                     
@@ -162,7 +196,7 @@ public class AvisosService {
                             String errorMsg = errorJson.optString("error", "Error desconocido");
                             throw new Exception("Error del servidor: " + errorMsg);
                         } catch (Exception e) {
-                            throw new Exception("Error HTTP " + response.statusCode());
+                            throw new Exception("Error HTTP " + response.statusCode() + ": " + response.body());
                         }
                     }
                     
@@ -180,11 +214,32 @@ public class AvisosService {
     }
     
     public Task<Boolean> actualizar(Aviso aviso) {
-        return new Task<>() {
+        Task<Boolean> task = new Task<>() {
             @Override
             protected Boolean call() throws Exception {
                 try {
-                    JSONObject json = aviso.toJson();
+                    // Crear JSON manualmente
+                    JSONObject json = new JSONObject();
+                    
+                    json.put("id", aviso.getId());
+                    json.put("titulo", aviso.getTitulo());
+                    json.put("contenido", aviso.getContenido());
+                    json.put("establecimiento", aviso.getEstablecimiento().name());
+                    json.put("tipoAviso", aviso.getTipoAviso().name());
+                    json.put("prioridad", aviso.getPrioridad().name());
+                    
+                    // Formatear fechas como DATETIME completo
+                    json.put("fechaInicio", aviso.getFechaInicio().format(dateTimeFormatter));
+                    json.put("fechaFin", aviso.getFechaFin().format(dateTimeFormatter));
+                    
+                    // Agregar horas separadas por si el backend las necesita
+                    json.put("horaInicio", aviso.getFechaInicio().getHour());
+                    json.put("minutoInicio", aviso.getFechaInicio().getMinute());
+                    json.put("horaFin", aviso.getFechaFin().getHour());
+                    json.put("minutoFin", aviso.getFechaFin().getMinute());
+                    
+                    json.put("idUsuarioCreador", aviso.getIdUsuarioCreador());
+                    json.put("activo", aviso.isActivo());
                     
                     System.out.println("Enviando PUT aviso con datos: " + json.toString());
                     
@@ -204,6 +259,12 @@ public class AvisosService {
                 }
             }
         };
+        
+        task.setOnFailed(event -> {
+            System.err.println("Error en actualizar aviso: " + task.getException().getMessage());
+        });
+        
+        return task;
     }
     
     public Task<Boolean> eliminar(int id) {

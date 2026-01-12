@@ -29,6 +29,9 @@
             <!-- Nueva sección para administradores -->
             <Button fx:id="btnAdministradores" text="Administradores" onAction="#onAdministradoresClicked"
                     style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;"/>
+                    <!-- Agregar este botón después del botón de Administradores -->
+        <Button fx:id="btnEstadisticas" text="📊 Estadísticas" onAction="#onEstadisticasClicked"
+                style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;"/>
 
             <Pane VBox.vgrow="ALWAYS"/>
             <Button fx:id="btnCerrarSesion" text="🚪 Cerrar sesión"

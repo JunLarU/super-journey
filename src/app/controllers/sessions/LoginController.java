@@ -94,7 +94,9 @@ public class LoginController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/app/views/sessions/Signup.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) btnGoSignup.getScene().getWindow();
+            stage.setResizable(true); // IMPORTANTE: NO redimensionable
             stage.setScene(new Scene(root, 600, 500));
+            stage.setResizable(false); // IMPORTANTE: NO redimensionable
             stage.setTitle("CAFI - Registro de Usuario");
             stage.centerOnScreen();
 

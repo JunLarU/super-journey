@@ -135,7 +135,9 @@ public class SignupController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/app/views/sessions/Login.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) txtExpediente.getScene().getWindow();
+            stage.setResizable(true); // IMPORTANTE: NO redimensionable
             stage.setScene(new Scene(root, 600, 500));
+            stage.setResizable(false); // IMPORTANTE: NO redimensionable
             stage.setTitle("CAFI - Inicio de Sesión");
             stage.centerOnScreen();
         } catch (Exception e) {
