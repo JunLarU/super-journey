@@ -1,5 +1,27 @@
 [
     {
+        "descripcion": "wAZAAA",
+        "ingredientes": [{
+            "eliminable": 0,
+            "cantidad": 1,
+            "orden": 1,
+            "sustituible": 0,
+            "nombre": "Pane",
+            "idIngrediente": 1
+        }],
+        "categoria": "Hamburguesas",
+        "calorias": 300,
+        "urlFoto": null,
+        "nombre": "bURGURIADD",
+        "gramaje": 300,
+        "precioBase": 300,
+        "tamanos": [],
+        "ID": 13,
+        "id": 13,
+        "idCategoria": 12,
+        "disponible": 1
+    },
+    {
         "descripcion": "Wazaaa",
         "ingredientes": [
             {
@@ -73,6 +95,56 @@
         "ID": 6,
         "id": 6,
         "idCategoria": 17,
+        "disponible": 1
+    },
+    {
+        "descripcion": "Wazaaaa",
+        "ingredientes": [{
+            "sustitutos": [{
+                "costoExtra": 20,
+                "nombre": "Queso Suizo",
+                "idIngrediente": 13,
+                "disponible": 1
+            }],
+            "eliminable": 1,
+            "cantidad": 1,
+            "orden": 1,
+            "sustituible": 1,
+            "nombre": "Queso Amarillo",
+            "idIngrediente": 11
+        }],
+        "categoria": "Comida",
+        "calorias": 35,
+        "urlFoto": null,
+        "nombre": "Waza Burgir",
+        "gramaje": 10000,
+        "precioBase": 87,
+        "tamanos": [],
+        "ID": 9,
+        "id": 9,
+        "idCategoria": 2,
+        "disponible": 1
+    },
+    {
+        "descripcion": "xd",
+        "ingredientes": [{
+            "eliminable": 0,
+            "cantidad": 1,
+            "orden": 1,
+            "sustituible": 0,
+            "nombre": "Queso Manchego",
+            "idIngrediente": 12
+        }],
+        "categoria": "Hamburguesas",
+        "calorias": 65,
+        "urlFoto": null,
+        "nombre": "Wazaa",
+        "gramaje": 201,
+        "precioBase": 85,
+        "tamanos": [],
+        "ID": 10,
+        "id": 10,
+        "idCategoria": 12,
         "disponible": 1
     }
 ]
