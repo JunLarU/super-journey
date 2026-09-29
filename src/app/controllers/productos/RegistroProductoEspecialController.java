@@ -513,14 +513,14 @@ public class RegistroProductoEspecialController {
 
             // Validar que el precio especial sea menor al precio normal
             Producto producto = cmbProducto.getValue();
-            if (precio >= producto.getPrecioBase()) {
-                mostrarAlerta("⚠️ Precio inválido",
-                        "El precio especial ($" + String.format("%.2f", precio) +
-                                ") debe ser menor al precio normal ($" +
-                                String.format("%.2f", producto.getPrecioBase()) + ")");
-                txtPrecioEspecial.requestFocus();
-                return false;
-            }
+            // if (precio >= producto.getPrecioBase()) {
+            //     mostrarAlerta("⚠️ Precio inválido",
+            //             "El precio especial ($" + String.format("%.2f", precio) +
+            //                     ") debe ser menor al precio normal ($" +
+            //                     String.format("%.2f", producto.getPrecioBase()) + ")");
+            //     txtPrecioEspecial.requestFocus();
+            //     return false;
+            // }
         } catch (NumberFormatException e) {
             mostrarAlerta("⚠️ Formato inválido", "El precio debe ser un número válido (ej: 25.50)");
             txtPrecioEspecial.requestFocus();

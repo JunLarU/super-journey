@@ -1,150 +1,671 @@
 [
     {
-        "descripcion": "wAZAAA",
-        "ingredientes": [{
-            "eliminable": 0,
-            "cantidad": 1,
-            "orden": 1,
-            "sustituible": 0,
-            "nombre": "Pane",
-            "idIngrediente": 1
-        }],
-        "categoria": "Hamburguesas",
-        "calorias": 300,
-        "urlFoto": null,
-        "nombre": "bURGURIADD",
-        "gramaje": 300,
-        "precioBase": 300,
-        "tamanos": [],
-        "ID": 13,
-        "id": 13,
-        "idCategoria": 12,
-        "disponible": 1
-    },
-    {
-        "descripcion": "Wazaaa",
+        "descripcion": "Arroz, frijoles negros, pollo, maíz, jitomate, aguacate y salsa.",
         "ingredientes": [
             {
                 "eliminable": 0,
                 "cantidad": 1,
                 "orden": 1,
                 "sustituible": 0,
-                "nombre": "Queso Amarillo",
-                "idIngrediente": 11
+                "nombre": "Arroz Blanco",
+                "idIngrediente": 49
             },
             {
-                "eliminable": 0,
+                "eliminable": 1,
                 "cantidad": 1,
                 "orden": 2,
                 "sustituible": 0,
-                "nombre": "Carne De Res",
-                "idIngrediente": 3
+                "nombre": "Frijoles Negros",
+                "idIngrediente": 45
             },
             {
                 "eliminable": 0,
                 "cantidad": 1,
                 "orden": 3,
+                "sustituible": 1,
+                "nombre": "Pollo a la Plancha",
+                "idIngrediente": 9
+            },
+            {
+                "eliminable": 1,
+                "cantidad": 1,
+                "orden": 4,
                 "sustituible": 0,
-                "nombre": "Pane",
-                "idIngrediente": 1
+                "nombre": "Maíz",
+                "idIngrediente": 43
+            },
+            {
+                "eliminable": 1,
+                "cantidad": 1,
+                "orden": 5,
+                "sustituible": 0,
+                "nombre": "Aguacate",
+                "idIngrediente": 22
+            }
+        ],
+        "categoria": "Bowls",
+        "calorias": 652,
+        "urlFoto": null,
+        "nombre": "Bowl Mexicano",
+        "gramaje": 450,
+        "precioBase": 92,
+        "tamanos": [],
+        "ID": 26,
+        "id": 26,
+        "idCategoria": 45,
+        "disponible": 1
+    },
+    {
+        "descripcion": "Brownie suave de chocolate.",
+        "ingredientes": [],
+        "categoria": "Repostería",
+        "calorias": 390,
+        "urlFoto": null,
+        "nombre": "Brownie de Chocolate",
+        "gramaje": 111,
+        "precioBase": 42,
+        "tamanos": [],
+        "ID": 33,
+        "id": 33,
+        "idCategoria": 21,
+        "disponible": 1
+    },
+    {
+        "descripcion": "Tortilla de harina con pollo, arroz, frijoles, queso y vegetales.",
+        "ingredientes": [
+            {
+                "eliminable": 0,
+                "cantidad": 1,
+                "orden": 1,
+                "sustituible": 0,
+                "nombre": "Tortilla de Harina",
+                "idIngrediente": 48
+            },
+            {
+                "eliminable": 0,
+                "cantidad": 1,
+                "orden": 2,
+                "sustituible": 1,
+                "nombre": "Pollo a la Plancha",
+                "idIngrediente": 9
+            },
+            {
+                "eliminable": 1,
+                "cantidad": 1,
+                "orden": 3,
+                "sustituible": 0,
+                "nombre": "Arroz Blanco",
+                "idIngrediente": 49
+            },
+            {
+                "eliminable": 1,
+                "cantidad": 1,
+                "orden": 4,
+                "sustituible": 0,
+                "nombre": "Frijoles Negros",
+                "idIngrediente": 45
+            },
+            {
+                "eliminable": 1,
+                "cantidad": 1,
+                "orden": 5,
+                "sustituible": 1,
+                "nombre": "Queso Manchego",
+                "idIngrediente": 12
+            }
+        ],
+        "categoria": "Burritos",
+        "calorias": 690,
+        "urlFoto": null,
+        "nombre": "Burrito de Pollo",
+        "gramaje": 410,
+        "precioBase": 82,
+        "tamanos": [],
+        "ID": 23,
+        "id": 23,
+        "idCategoria": 41,
+        "disponible": 1
+    },
+    {
+        "descripcion": "Tortilla de harina con bistec, arroz, frijoles, queso y salsa.",
+        "ingredientes": [],
+        "categoria": "Burritos",
+        "calorias": 760,
+        "urlFoto": null,
+        "nombre": "Burrito de Res",
+        "gramaje": 430,
+        "precioBase": 89,
+        "tamanos": [],
+        "ID": 24,
+        "id": 24,
+        "idCategoria": 41,
+        "disponible": 1
+    },
+    {
+        "descripcion": "Café espresso con agua caliente.",
+        "ingredientes": [],
+        "categoria": "Café",
+        "calorias": 10,
+        "urlFoto": "uploads/productos/97966160ba9d2d38a2e3b67a3c58a6cf.jpg",
+        "nombre": "Café Americano",
+        "gramaje": 0,
+        "precioBase": 35,
+        "tamanos": [],
+        "ID": 27,
+        "id": 27,
+        "idCategoria": 22,
+        "disponible": 1
+    },
+    {
+        "descripcion": "Espresso con leche vaporizada y espuma de leche.",
+        "ingredientes": [
+            {
+                "eliminable": 0,
+                "cantidad": 1,
+                "orden": 1,
+                "sustituible": 0,
+                "nombre": "Café Espresso",
+                "idIngrediente": 60
+            },
+            {
+                "sustitutos": [
+                    {
+                        "costoExtra": 10,
+                        "nombre": "Leche de Almendra",
+                        "idIngrediente": 63,
+                        "disponible": 1
+                    },
+                    {
+                        "costoExtra": 10,
+                        "nombre": "Leche de Avena",
+                        "idIngrediente": 64,
+                        "disponible": 1
+                    },
+                    {
+                        "costoExtra": 5,
+                        "nombre": "Leche Deslactosada",
+                        "idIngrediente": 62,
+                        "disponible": 1
+                    }
+                ],
+                "eliminable": 0,
+                "cantidad": 1,
+                "orden": 2,
+                "sustituible": 1,
+                "nombre": "Leche Entera",
+                "idIngrediente": 61
+            }
+        ],
+        "categoria": "Café",
+        "calorias": 140,
+        "urlFoto": "uploads/productos/2a5a465ce3d7c24de4ca3ea4105d37bb.jpg",
+        "nombre": "Cappuccino",
+        "gramaje": 0,
+        "precioBase": 49,
+        "tamanos": [
+            {
+                "descripcion": "Cappuccino chico",
+                "gramaje": null,
+                "precio": 42,
+                "piezas": null,
+                "id": 1,
+                "orden": 1,
+                "nombre": "Chico",
+                "capacidad": 250,
+                "disponible": 1
+            },
+            {
+                "descripcion": "Cappuccino mediano",
+                "gramaje": null,
+                "precio": 49,
+                "piezas": null,
+                "id": 2,
+                "orden": 2,
+                "nombre": "Mediano",
+                "capacidad": 350,
+                "disponible": 1
+            },
+            {
+                "descripcion": "Cappuccino grande",
+                "gramaje": null,
+                "precio": 58,
+                "piezas": null,
+                "id": 3,
+                "orden": 3,
+                "nombre": "Grande",
+                "capacidad": 450,
+                "disponible": 1
+            }
+        ],
+        "ID": 28,
+        "id": 28,
+        "idCategoria": 22,
+        "disponible": 1
+    },
+    {
+        "descripcion": "Totopos bañados en salsa verde acompañados con huevo estrellado.",
+        "ingredientes": [],
+        "categoria": "Chilaquiles",
+        "calorias": 610,
+        "urlFoto": "uploads/productos/585f66466e8e840e8f179b055bfbc2ec.jpg",
+        "nombre": "Chilaquiles Verdes con Huevo",
+        "gramaje": 400,
+        "precioBase": 75,
+        "tamanos": [],
+        "ID": 18,
+        "id": 18,
+        "idCategoria": 55,
+        "disponible": 1
+    },
+    {
+        "descripcion": "Lechuga, pollo a la plancha, jitomate, aguacate y aderezo.",
+        "ingredientes": [],
+        "categoria": "Ensaladas",
+        "calorias": 410,
+        "urlFoto": null,
+        "nombre": "Ensalada de Pollo",
+        "gramaje": 350,
+        "precioBase": 85,
+        "tamanos": [],
+        "ID": 25,
+        "id": 25,
+        "idCategoria": 14,
+        "disponible": 1
+    },
+    {
+        "descripcion": "Bebida fría de café con leche, hielo y jarabe de caramelo.",
+        "ingredientes": [],
+        "categoria": "Frappés",
+        "calorias": 330,
+        "urlFoto": null,
+        "nombre": "Frappé de Caramelo",
+        "gramaje": 0,
+        "precioBase": 65,
+        "tamanos": [
+            {
+                "descripcion": "Frappé mediano",
+                "gramaje": null,
+                "precio": 65,
+                "piezas": null,
+                "id": 7,
+                "orden": 1,
+                "nombre": "Mediano",
+                "capacidad": 400,
+                "disponible": 1
+            },
+            {
+                "descripcion": "Frappé grande",
+                "gramaje": null,
+                "precio": 75,
+                "piezas": null,
+                "id": 8,
+                "orden": 2,
+                "nombre": "Grande",
+                "capacidad": 500,
+                "disponible": 1
+            }
+        ],
+        "ID": 30,
+        "id": 30,
+        "idCategoria": 50,
+        "disponible": 1
+    },
+    {
+        "descripcion": "Carne de res, queso manchego, tocino, cebolla caramelizada y salsa BBQ.",
+        "ingredientes": [
+            {
+                "eliminable": 0,
+                "cantidad": 1,
+                "orden": 1,
+                "sustituible": 1,
+                "nombre": "Pan de Hamburguesa",
+                "idIngrediente": 4
+            },
+            {
+                "eliminable": 0,
+                "cantidad": 1,
+                "orden": 2,
+                "sustituible": 1,
+                "nombre": "Carne de Res 200g",
+                "idIngrediente": 8
+            },
+            {
+                "eliminable": 1,
+                "cantidad": 1,
+                "orden": 3,
+                "sustituible": 1,
+                "nombre": "Queso Manchego",
+                "idIngrediente": 12
+            },
+            {
+                "eliminable": 1,
+                "cantidad": 1,
+                "orden": 4,
+                "sustituible": 0,
+                "nombre": "Tocino",
+                "idIngrediente": 38
+            },
+            {
+                "eliminable": 1,
+                "cantidad": 1,
+                "orden": 5,
+                "sustituible": 0,
+                "nombre": "Cebolla Caramelizada",
+                "idIngrediente": 24
+            },
+            {
+                "eliminable": 1,
+                "cantidad": 1,
+                "orden": 6,
+                "sustituible": 0,
+                "nombre": "Salsa BBQ",
+                "idIngrediente": 29
             }
         ],
         "categoria": "Hamburguesas",
-        "calorias": 26,
+        "calorias": 850,
         "urlFoto": null,
-        "nombre": "Hamburguesa",
-        "gramaje": 320,
-        "precioBase": 56,
+        "nombre": "Hamburguesa BBQ",
+        "gramaje": 380,
+        "precioBase": 99,
         "tamanos": [],
-        "ID": 8,
-        "id": 8,
+        "ID": 15,
+        "id": 15,
         "idCategoria": 12,
         "disponible": 1
     },
     {
-        "descripcion": "ASA",
-        "ingredientes": [{
-            "sustitutos": [
-                {
-                    "costoExtra": 12,
-                    "nombre": "Queso Azul",
-                    "idIngrediente": 14,
-                    "disponible": 1
-                },
-                {
-                    "costoExtra": 0,
-                    "nombre": "Queso Vegano",
-                    "idIngrediente": 17,
-                    "disponible": 1
-                }
-            ],
-            "eliminable": 1,
-            "cantidad": 1,
-            "orden": 1,
-            "sustituible": 1,
-            "nombre": "Queso Amarillo",
-            "idIngrediente": 11
-        }],
-        "categoria": "Alitas y Boneless",
-        "calorias": 56.2,
-        "urlFoto": null,
-        "nombre": "QWa",
-        "gramaje": 23.2,
-        "precioBase": 56.2,
-        "tamanos": [],
-        "ID": 6,
-        "id": 6,
-        "idCategoria": 17,
-        "disponible": 1
-    },
-    {
-        "descripcion": "Wazaaaa",
-        "ingredientes": [{
-            "sustitutos": [{
-                "costoExtra": 20,
-                "nombre": "Queso Suizo",
-                "idIngrediente": 13,
-                "disponible": 1
-            }],
-            "eliminable": 1,
-            "cantidad": 1,
-            "orden": 1,
-            "sustituible": 1,
-            "nombre": "Queso Amarillo",
-            "idIngrediente": 11
-        }],
-        "categoria": "Comida",
-        "calorias": 35,
-        "urlFoto": null,
-        "nombre": "Waza Burgir",
-        "gramaje": 10000,
-        "precioBase": 87,
-        "tamanos": [],
-        "ID": 9,
-        "id": 9,
-        "idCategoria": 2,
-        "disponible": 1
-    },
-    {
-        "descripcion": "xd",
-        "ingredientes": [{
-            "eliminable": 0,
-            "cantidad": 1,
-            "orden": 1,
-            "sustituible": 0,
-            "nombre": "Queso Manchego",
-            "idIngrediente": 12
-        }],
+        "descripcion": "Carne de res, queso amarillo, lechuga, jitomate, cebolla y aderezos.",
+        "ingredientes": [
+            {
+                "sustitutos": [
+                    {
+                        "costoExtra": 5,
+                        "nombre": "Pan Integral",
+                        "idIngrediente": 5,
+                        "disponible": 1
+                    },
+                    {
+                        "costoExtra": 12,
+                        "nombre": "Pan Sin Gluten",
+                        "idIngrediente": 6,
+                        "disponible": 1
+                    }
+                ],
+                "eliminable": 0,
+                "cantidad": 1,
+                "orden": 1,
+                "sustituible": 1,
+                "nombre": "Pan de Hamburguesa",
+                "idIngrediente": 4
+            },
+            {
+                "eliminable": 0,
+                "cantidad": 1,
+                "orden": 2,
+                "sustituible": 1,
+                "nombre": "Carne de Res 150g",
+                "idIngrediente": 7
+            },
+            {
+                "sustitutos": [
+                    {
+                        "costoExtra": 8,
+                        "nombre": "Queso Manchego",
+                        "idIngrediente": 12,
+                        "disponible": 1
+                    },
+                    {
+                        "costoExtra": 12,
+                        "nombre": "Queso Suizo",
+                        "idIngrediente": 13,
+                        "disponible": 1
+                    }
+                ],
+                "eliminable": 1,
+                "cantidad": 1,
+                "orden": 3,
+                "sustituible": 1,
+                "nombre": "Queso Amarillo",
+                "idIngrediente": 11
+            },
+            {
+                "eliminable": 1,
+                "cantidad": 1,
+                "orden": 4,
+                "sustituible": 0,
+                "nombre": "Lechuga",
+                "idIngrediente": 18
+            },
+            {
+                "eliminable": 1,
+                "cantidad": 1,
+                "orden": 5,
+                "sustituible": 0,
+                "nombre": "Jitomate",
+                "idIngrediente": 19
+            },
+            {
+                "eliminable": 1,
+                "cantidad": 1,
+                "orden": 6,
+                "sustituible": 0,
+                "nombre": "Cebolla",
+                "idIngrediente": 20
+            },
+            {
+                "eliminable": 1,
+                "cantidad": 1,
+                "orden": 7,
+                "sustituible": 1,
+                "nombre": "Mayonesa",
+                "idIngrediente": 26
+            }
+        ],
         "categoria": "Hamburguesas",
-        "calorias": 65,
+        "calorias": 720,
         "urlFoto": null,
-        "nombre": "Wazaa",
-        "gramaje": 201,
-        "precioBase": 85,
+        "nombre": "Hamburguesa Clásica",
+        "gramaje": 320,
+        "precioBase": 79,
         "tamanos": [],
-        "ID": 10,
-        "id": 10,
+        "ID": 14,
+        "id": 14,
         "idCategoria": 12,
+        "disponible": 1
+    },
+    {
+        "descripcion": "Carne de res, queso manchego, aguacate, jalapeños, jitomate y chipotle.",
+        "ingredientes": [],
+        "categoria": "Hamburguesas",
+        "calorias": 790,
+        "urlFoto": null,
+        "nombre": "Hamburguesa Mexicana",
+        "gramaje": 360,
+        "precioBase": 95,
+        "tamanos": [],
+        "ID": 16,
+        "id": 16,
+        "idCategoria": 12,
+        "disponible": 1
+    },
+    {
+        "descripcion": "Hamburguesa vegetal con queso panela, lechuga, jitomate y aguacate.",
+        "ingredientes": [],
+        "categoria": "Opciones Vegetarianas",
+        "calorias": 570,
+        "urlFoto": null,
+        "nombre": "Hamburguesa Vegetariana",
+        "gramaje": 330,
+        "precioBase": 89,
+        "tamanos": [],
+        "ID": 17,
+        "id": 17,
+        "idCategoria": 46,
+        "disponible": 1
+    },
+    {
+        "descripcion": "Huevos al gusto acompañados de tocino y frijoles.",
+        "ingredientes": [],
+        "categoria": "Desayunos con Huevo",
+        "calorias": 590,
+        "urlFoto": null,
+        "nombre": "Huevos con Tocino",
+        "gramaje": 310,
+        "precioBase": 69,
+        "tamanos": [],
+        "ID": 20,
+        "id": 20,
+        "idCategoria": 53,
+        "disponible": 1
+    },
+    {
+        "descripcion": "Espresso, leche vaporizada y jarabe de vainilla.",
+        "ingredientes": [
+            {
+                "eliminable": 0,
+                "cantidad": 1,
+                "orden": 1,
+                "sustituible": 0,
+                "nombre": "Café Espresso",
+                "idIngrediente": 60
+            },
+            {
+                "eliminable": 0,
+                "cantidad": 1,
+                "orden": 2,
+                "sustituible": 1,
+                "nombre": "Leche Entera",
+                "idIngrediente": 61
+            },
+            {
+                "eliminable": 1,
+                "cantidad": 1,
+                "orden": 3,
+                "sustituible": 0,
+                "nombre": "Jarabe de Vainilla",
+                "idIngrediente": 65
+            }
+        ],
+        "categoria": "Café",
+        "calorias": 210,
+        "urlFoto": null,
+        "nombre": "Latte Vainilla",
+        "gramaje": 0,
+        "precioBase": 58,
+        "tamanos": [
+            {
+                "descripcion": "Latte de vainilla chico",
+                "gramaje": null,
+                "precio": 49,
+                "piezas": null,
+                "id": 4,
+                "orden": 1,
+                "nombre": "Chico",
+                "capacidad": 250,
+                "disponible": 1
+            },
+            {
+                "descripcion": "Latte de vainilla mediano",
+                "gramaje": null,
+                "precio": 58,
+                "piezas": null,
+                "id": 5,
+                "orden": 2,
+                "nombre": "Mediano",
+                "capacidad": 350,
+                "disponible": 1
+            },
+            {
+                "descripcion": "Latte de vainilla grande",
+                "gramaje": null,
+                "precio": 66,
+                "piezas": null,
+                "id": 6,
+                "orden": 3,
+                "nombre": "Grande",
+                "capacidad": 450,
+                "disponible": 1
+            }
+        ],
+        "ID": 29,
+        "id": 29,
+        "idCategoria": 22,
+        "disponible": 1
+    },
+    {
+        "descripcion": "Bolillo con frijoles refritos y queso gratinado acompañado de pico de gallo.",
+        "ingredientes": [],
+        "categoria": "Molletes",
+        "calorias": 520,
+        "urlFoto": "uploads/productos/de57de5c1af2ce74221750a8a1957a29.jpg",
+        "nombre": "Molletes Tradicionales",
+        "gramaje": 300,
+        "precioBase": 59,
+        "tamanos": [],
+        "ID": 19,
+        "id": 19,
+        "idCategoria": 54,
+        "disponible": 1
+    },
+    {
+        "descripcion": "Cuatro tacos al pastor con cebolla, cilantro y salsa.",
+        "ingredientes": [],
+        "categoria": "Tacos",
+        "calorias": 580,
+        "urlFoto": null,
+        "nombre": "Orden de Tacos al Pastor",
+        "gramaje": 280,
+        "precioBase": 68,
+        "tamanos": [],
+        "ID": 21,
+        "id": 21,
+        "idCategoria": 39,
+        "disponible": 1
+    },
+    {
+        "descripcion": "Cuatro tacos de bistec acompañados con cebolla y salsa.",
+        "ingredientes": [],
+        "categoria": "Tacos",
+        "calorias": 620,
+        "urlFoto": null,
+        "nombre": "Orden de Tacos de Bistec",
+        "gramaje": 300,
+        "precioBase": 75,
+        "tamanos": [],
+        "ID": 22,
+        "id": 22,
+        "idCategoria": 39,
+        "disponible": 1
+    },
+    {
+        "descripcion": "Papas fritas crujientes con sal.",
+        "ingredientes": [],
+        "categoria": "Papas y Complementos",
+        "calorias": 540,
+        "urlFoto": null,
+        "nombre": "Papas a la Francesa",
+        "gramaje": 220,
+        "precioBase": 45,
+        "tamanos": [],
+        "ID": 32,
+        "id": 32,
+        "idCategoria": 44,
+        "disponible": 1
+    },
+    {
+        "descripcion": "Smoothie elaborado con fresa, plátano y leche.",
+        "ingredientes": [],
+        "categoria": "Smoothies",
+        "calorias": 260,
+        "urlFoto": null,
+        "nombre": "Smoothie de Fresa y Plátano",
+        "gramaje": 0,
+        "precioBase": 62,
+        "tamanos": [],
+        "ID": 31,
+        "id": 31,
+        "idCategoria": 27,
         "disponible": 1
     }
 ]

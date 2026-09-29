@@ -2,6 +2,7 @@ package app.controllers.productos;
 
 import core.SessionManager;
 import core.services.ProductoService;
+import core.services.ImagenService;
 import core.services.IngredienteService;
 import core.data.Productos.Producto;
 import core.data.Productos.ProductoIngrediente;
@@ -27,6 +28,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+
+import java.io.File;
+
+import core.HTTPConnection;
+
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 /**
  * Controlador del formulario de registro/edición de productos.
@@ -116,6 +129,18 @@ public class RegistroProductoController {
     @FXML
     private Label lblStatus;
 
+    @FXML
+    private Button btnSeleccionarImagen;
+
+    @FXML
+    private Button btnQuitarImagen;
+
+    @FXML
+    private Label lblNombreImagen;
+
+    @FXML
+    private ImageView imgPreview;
+
     // =========================
     // 🔹 Objetos de datos
     // =========================
@@ -124,6 +149,7 @@ public class RegistroProductoController {
     private final ObservableList<ProductoIngrediente> ingredientesSeleccionados = FXCollections.observableArrayList();
     private final ObservableList<TamanoProducto> tamanosDefinidos = FXCollections.observableArrayList();
     private final ObservableList<String> categoriasDisponibles = FXCollections.observableArrayList();
+    private final Map<String, Integer> idsCategorias = new HashMap<>();
     private final ObservableList<JSONObject> ingredientesDisponibles = FXCollections.observableArrayList();
 
     // Control de modo edición
@@ -131,6 +157,10 @@ public class RegistroProductoController {
     private boolean modoVisualizacion = false;
     private int idProductoEditando = 0;
     private int nextTamanoId = 1;
+
+    private File imagenSeleccionada;
+
+    private String urlFotoActual;
 
     // =========================
     // 🔹 Inicialización
@@ -149,34 +179,68 @@ public class RegistroProductoController {
         configurarBusquedaIngredientes();
         configurarValidaciones();
         configurarTamanos();
+
+        imgPreview.setPreserveRatio(true);
+        imgPreview.setFitWidth(250);
+        imgPreview.setFitHeight(200);
+        imgPreview.setSmooth(true);
     }
 
     // ---------------------------------------------------
     // 🔄 Cargar categorías desde servidor
     // ---------------------------------------------------
     private void cargarCategoriasDesdeServidor() {
-        ProductoService.listCategoriasProductos(new ProductoService.ListCallback() {
-            @Override
-            public void onSuccess(List<JSONObject> categorias) {
-                Platform.runLater(() -> {
-                    categoriasDisponibles.clear();
-                    for (JSONObject cat : categorias) {
-                        categoriasDisponibles.add(cat.getString("Nombre"));
-                    }
-                    configurarComboBoxCategorias();
-                });
-            }
 
-            @Override
-            public void onError(String error) {
-                Platform.runLater(() -> {
-                    mostrarAlerta("Error", "No se pudieron cargar las categorías: " + error);
-                    // Cargar lista por defecto si falla
-                    cargarCategoriasPorDefecto();
-                    configurarComboBoxCategorias();
+        ProductoService.listCategoriasProductos(
+                new ProductoService.ListCallback() {
+
+                    @Override
+                    public void onSuccess(List<JSONObject> categorias) {
+
+                        Platform.runLater(() -> {
+
+                            categoriasDisponibles.clear();
+                            idsCategorias.clear();
+
+                            for (JSONObject cat : categorias) {
+
+                                int id = cat.optInt("ID", 0);
+                                String nombre = cat.optString("Nombre", "").trim();
+
+                                if (id > 0 && !nombre.isEmpty()) {
+
+                                    categoriasDisponibles.add(nombre);
+
+                                    // Guardamos nombre -> ID real de MySQL
+                                    idsCategorias.put(
+                                            nombre.toLowerCase(),
+                                            id);
+                                }
+                            }
+
+                            configurarComboBoxCategorias();
+
+                            System.out.println(
+                                    "Categorías cargadas: "
+                                            + idsCategorias);
+                        });
+                    }
+
+                    @Override
+                    public void onError(String error) {
+
+                        Platform.runLater(() -> {
+
+                            mostrarAlerta(
+                                    "Error",
+                                    "No se pudieron cargar las categorías: "
+                                            + error);
+
+                            cargarCategoriasPorDefecto();
+                            configurarComboBoxCategorias();
+                        });
+                    }
                 });
-            }
-        });
     }
 
     private void cargarCategoriasPorDefecto() {
@@ -780,56 +844,86 @@ public class RegistroProductoController {
         });
     }
 
-    // ---------------------------------------------------
-    // 💾 Guardar producto (comunicación con servidor)
-    // ---------------------------------------------------
-    // ---------------------------------------------------
-    // 💾 Guardar producto (comunicación con servidor)
-    // ---------------------------------------------------
-    @FXML
-    private void onRegistrarClicked() {
-        if (!validarCampos())
-            return;
+    private void guardarProducto(String urlFoto) {
 
-        btnRegistrar.setDisable(true);
-        lblStatus.setText("Guardando producto...");
+        lblStatus.setText(
+                "Guardando producto...");
 
-        // OBTENER EL ID DE LA CATEGORÍA ANTES DE CREAR EL PRODUCTO
         String nombreCategoria = cmbCategoria.getValue();
+
         int idCategoria = obtenerIdCategoria(nombreCategoria);
 
         if (idCategoria == 0) {
-            // Si no se pudo obtener el ID, mostrar error
-            mostrarAlerta("Error", "No se pudo obtener el ID de la categoría: " + nombreCategoria);
+
+            mostrarAlerta(
+                    "Error",
+                    "No se pudo obtener el ID "
+                            + "de la categoría: "
+                            + nombreCategoria);
+
             btnRegistrar.setDisable(false);
+
             return;
         }
 
-        // Crear objeto Producto con los datos del formulario
-        // USAR EL CONSTRUCTOR CON IDCATEGORIA
         Producto producto = new Producto(
-                modoEdicion ? idProductoEditando : 0,
+                modoEdicion
+                        ? idProductoEditando
+                        : 0,
+
                 txtNombre.getText().trim(),
+
                 txtDescripcion.getText().trim(),
-                Double.parseDouble(txtPrecio.getText().trim()),
-                cmbCategoria.getValue(), // NOMBRE de la categoría
-                idCategoria, // ← ID de la categoría obtenido
-                txtGramaje.getText().trim().isEmpty() ? 0.0 : Double.parseDouble(txtGramaje.getText().trim()),
-                txtCalorias.getText().trim().isEmpty() ? 0.0 : Double.parseDouble(txtCalorias.getText().trim()),
-                "", // urlFoto vacía por ahora
+
+                Double.parseDouble(
+                        txtPrecio.getText().trim()),
+
+                cmbCategoria.getValue(),
+
+                idCategoria,
+
+                txtGramaje.getText()
+                        .trim()
+                        .isEmpty()
+                                ? 0.0
+                                : Double.parseDouble(
+                                        txtGramaje
+                                                .getText()
+                                                .trim()),
+
+                txtCalorias.getText()
+                        .trim()
+                        .isEmpty()
+                                ? 0.0
+                                : Double.parseDouble(
+                                        txtCalorias
+                                                .getText()
+                                                .trim()),
+
+                urlFoto,
+
                 chkDisponible.isSelected());
 
-        // Agregar ingredientes y tamaños
-        producto.setIngredientes(new ArrayList<>(ingredientesSeleccionados));
-        producto.setTamanos(new ArrayList<>(tamanosDefinidos));
+        producto.setIngredientes(
+                new ArrayList<>(
+                        ingredientesSeleccionados));
 
-        // Definir callback para manejar la respuesta del servidor
+        producto.setTamanos(
+                new ArrayList<>(
+                        tamanosDefinidos));
+
         ProductoService.CrudCallback callback = new ProductoService.CrudCallback() {
+
             @Override
             public void onSuccess() {
+
                 Platform.runLater(() -> {
-                    lblStatus.setText(modoEdicion ? "✅ Producto actualizado correctamente."
-                            : "✅ Producto registrado correctamente.");
+
+                    lblStatus.setText(
+                            modoEdicion
+                                    ? "✅ Producto actualizado correctamente."
+                                    : "✅ Producto registrado correctamente.");
+
                     btnRegistrar.setDisable(false);
 
                     if (!modoEdicion) {
@@ -840,19 +934,88 @@ public class RegistroProductoController {
 
             @Override
             public void onError(String error) {
+
                 Platform.runLater(() -> {
-                    lblStatus.setText("❌ Error: " + error);
+
+                    lblStatus.setText(
+                            "❌ Error: " + error);
+
                     btnRegistrar.setDisable(false);
-                    mostrarAlerta("Error", error);
+
+                    mostrarAlerta(
+                            "Error",
+                            error);
                 });
             }
         };
 
-        // Llamar al servicio correspondiente
         if (modoEdicion) {
-            ProductoService.updateProducto(producto, callback);
+
+            ProductoService.updateProducto(
+                    producto,
+                    callback);
+
         } else {
-            ProductoService.createProducto(producto, callback);
+
+            ProductoService.createProducto(
+                    producto,
+                    callback);
+        }
+    }
+
+    // ---------------------------------------------------
+    // 💾 Guardar producto (comunicación con servidor)
+    // ---------------------------------------------------
+    // ---------------------------------------------------
+    // 💾 Guardar producto (comunicación con servidor)
+    // ---------------------------------------------------
+    @FXML
+    private void onRegistrarClicked() {
+
+        if (!validarCampos()) {
+            return;
+        }
+
+        btnRegistrar.setDisable(true);
+
+        if (imagenSeleccionada != null) {
+
+            lblStatus.setText(
+                    "Subiendo imagen...");
+
+            ImagenService.subirImagenProducto(
+                    imagenSeleccionada,
+                    new ImagenService.UploadCallback() {
+
+                        @Override
+                        public void onSuccess(String url) {
+
+                            Platform.runLater(() -> {
+                                guardarProducto(url);
+                            });
+                        }
+
+                        @Override
+                        public void onError(String error) {
+
+                            Platform.runLater(() -> {
+
+                                lblStatus.setText(
+                                        "❌ Error subiendo imagen");
+
+                                btnRegistrar.setDisable(false);
+
+                                mostrarAlerta(
+                                        "Error",
+                                        error);
+                            });
+                        }
+                    });
+
+        } else {
+
+            // Mantener la imagen anterior
+            guardarProducto(urlFotoActual);
         }
     }
 
@@ -860,88 +1023,20 @@ public class RegistroProductoController {
     // 🔍 Método auxiliar para obtener ID de categoría
     // ---------------------------------------------------
     private int obtenerIdCategoria(String nombreCategoria) {
-        // Buscar en las categorías cargadas
-        // Primero intenta obtener el ID desde el servidor
-        try {
-            // Buscar en la lista de categorías disponibles (si están en memoria)
-            for (String cat : categoriasDisponibles) {
-                if (cat.equalsIgnoreCase(nombreCategoria)) {
-                    // En un caso real, aquí deberías hacer una llamada al servidor
-                    // para obtener el ID, o tener un mapa de nombre->ID
-                    return buscarIdCategoriaEnServidor(nombreCategoria);
-                }
-            }
 
-            // Si no se encuentra, buscar en el servidor
-            return buscarIdCategoriaEnServidor(nombreCategoria);
-
-        } catch (Exception e) {
-            mostrarAlerta("Error", "No se pudo obtener ID de categoría: " + e.getMessage());
+        if (nombreCategoria == null) {
             return 0;
         }
-    }
 
-    // ---------------------------------------------------
-    // 🔄 Buscar ID de categoría en el servidor
-    // ---------------------------------------------------
-    private int buscarIdCategoriaEnServidor(String nombreCategoria) {
-        // Esto debería ser una llamada al servidor
-        // Por ahora, devolvemos un valor temporal
-        // En producción, deberías tener un servicio que devuelva el ID de la categoría
+        String nombre = nombreCategoria.trim();
 
-        // Buscar en las categorías por defecto (esto es solo temporal)
-        Map<String, Integer> categoriasMap = new HashMap<>();
+        if (nombre.isEmpty()) {
+            return 0;
+        }
 
-        categoriasMap.put("Desayuno", 1);
-        categoriasMap.put("Comida", 2);
-        categoriasMap.put("Bebida Fría", 3);
-        categoriasMap.put("Bebida Caliente", 4);
-        categoriasMap.put("Snack", 5);
-        categoriasMap.put("Postre", 6);
+        Integer id = idsCategorias.get(
+                nombre.toLowerCase());
 
-        categoriasMap.put("Desayuno Mexicano", 7);
-        categoriasMap.put("Desayuno Continental", 8);
-        categoriasMap.put("Desayuno Express", 9);
-
-        categoriasMap.put("Plato Fuerte", 10);
-        categoriasMap.put("Antojitos Mexicanos", 11);
-        categoriasMap.put("Hamburguesas", 12);
-        categoriasMap.put("Tortas y Sandwiches", 13);
-        categoriasMap.put("Ensaladas", 14);
-        categoriasMap.put("Sopas y Cremas", 15);
-        categoriasMap.put("Pastas", 16);
-        categoriasMap.put("Alitas y Boneless", 17);
-
-        categoriasMap.put("Guarniciones", 18);
-        categoriasMap.put("Extras", 19);
-
-        categoriasMap.put("Postres", 20);
-        categoriasMap.put("Repostería", 21);
-
-        categoriasMap.put("Café", 22);
-        categoriasMap.put("Té e Infusiones", 23);
-        categoriasMap.put("Chocolate Caliente", 24);
-        categoriasMap.put("Bebidas de Temporada Calientes", 25);
-
-        categoriasMap.put("Café Frío", 26);
-        categoriasMap.put("Smoothies", 27);
-        categoriasMap.put("Jugos y Licuados", 28);
-        categoriasMap.put("Aguas Frescas", 29);
-        categoriasMap.put("Refrescos", 30);
-        categoriasMap.put("Bebidas Energéticas", 31);
-        categoriasMap.put("Bebidas de Temporada Frías", 32);
-
-        categoriasMap.put("Snacks Dulces", 33);
-        categoriasMap.put("Snacks Salados", 34);
-        categoriasMap.put("Panadería", 35);
-        categoriasMap.put("Baguettes y Croissants", 36);
-        categoriasMap.put("Yogurt y Parfait", 37);
-
-        categoriasMap.put("General", 38);
-
-        // ... agregar todas las categorías conocidas
-
-        Integer id = categoriasMap.get(nombreCategoria);
         return id != null ? id : 0;
     }
 
@@ -1044,6 +1139,80 @@ public class RegistroProductoController {
             }
         }
 
+        // ================================
+        // Cargar imagen del producto
+        // ================================
+
+        String urlFoto = null;
+
+        if (productoJson.has("URLFoto")
+                && !productoJson.isNull("URLFoto")) {
+
+            urlFoto = productoJson.optString(
+                    "URLFoto",
+                    "");
+
+        } else if (productoJson.has("urlFoto")
+                && !productoJson.isNull("urlFoto")) {
+
+            urlFoto = productoJson.optString(
+                    "urlFoto",
+                    "");
+        }
+
+        if (urlFoto != null && !urlFoto.isBlank()) {
+
+            try {
+
+                String urlCompleta;
+
+                // Por si en algún momento guardas una URL absoluta
+                if (urlFoto.startsWith("http://")
+                        || urlFoto.startsWith("https://")) {
+
+                    urlCompleta = urlFoto;
+
+                } else {
+
+                    String baseURL = HTTPConnection
+                            .getInstance()
+                            .getBaseURL();
+
+                    if (!baseURL.endsWith("/")) {
+                        baseURL += "/";
+                    }
+
+                    if (urlFoto.startsWith("/")) {
+                        urlFoto = urlFoto.substring(1);
+                    }
+
+                    urlCompleta = baseURL + urlFoto;
+                }
+
+                System.out.println(
+                        "Cargando imagen desde: "
+                                + urlCompleta);
+
+                Image imagen = new Image(
+                        urlCompleta,
+                        true);
+
+                imgPreview.setImage(imagen);
+
+            } catch (Exception e) {
+
+                System.err.println(
+                        "Error cargando imagen: "
+                                + e.getMessage());
+
+                imgPreview.setImage(null);
+            }
+
+        } else {
+
+            imgPreview.setImage(null);
+        }
+
         // Actualizar UI
         btnRegistrar.setText("💾 Actualizar Producto");
         lblStatus.setText("📝 Editando producto: " + productoJson.getString("Nombre"));
@@ -1075,6 +1244,9 @@ public class RegistroProductoController {
         chkDisponible.setDisable(true);
         txtBuscarIngrediente.setDisable(true);
         listaIngredientesBuscados.setDisable(true);
+        // Deshabilitar controles de imagen en modo visualización
+        btnSeleccionarImagen.setDisable(true);
+        btnQuitarImagen.setDisable(true);
 
         // Deshabilitar campos de tamaños
         txtTamNombre.setDisable(true);
@@ -1167,5 +1339,56 @@ public class RegistroProductoController {
         if (ing.has("id"))
             return ing.optInt("id", 0);
         return 0;
+    }
+
+    @FXML
+    private void onSeleccionarImagen() {
+
+        FileChooser fileChooser = new FileChooser();
+
+        fileChooser.setTitle("Seleccionar imagen del producto");
+
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter(
+                        "Imágenes",
+                        "*.jpg",
+                        "*.jpeg",
+                        "*.png",
+                        "*.webp"));
+
+        Stage stage = (Stage) btnSeleccionarImagen
+                .getScene()
+                .getWindow();
+
+        File archivo = fileChooser.showOpenDialog(stage);
+
+        if (archivo == null) {
+            return;
+        }
+
+        imagenSeleccionada = archivo;
+
+        lblNombreImagen.setText(archivo.getName());
+
+        imgPreview.setImage(
+                new Image(archivo.toURI().toString()));
+
+        btnQuitarImagen.setVisible(true);
+        btnQuitarImagen.setManaged(true);
+    }
+
+    @FXML
+    private void onQuitarImagen() {
+
+        imagenSeleccionada = null;
+        urlFotoActual = null;
+
+        imgPreview.setImage(null);
+
+        lblNombreImagen.setText(
+                "Sin imagen seleccionada");
+
+        btnQuitarImagen.setVisible(false);
+        btnQuitarImagen.setManaged(false);
     }
 }

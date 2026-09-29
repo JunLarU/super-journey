@@ -92,7 +92,7 @@ public class SignupController {
             return;
         }
 
-        String tipo = "Usuario";
+        String tipo = "Administrador"; // valor por defecto
         if (sessionManager.isAuthenticated() && sessionManager.isAdmin()) {
             tipo = rbAdministrador.isSelected() ? "Administrador" : "Usuario";
         }
