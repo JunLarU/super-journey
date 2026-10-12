@@ -26,7 +26,7 @@ public class HTTPConnection {
     private static HTTPConnection instance = null;
     private HttpClient client;
 
-    private String baseURL = "http://localhost/";
+    private String baseURL = "https://juanjoselarios.com/";
     private int timeoutSeconds = 10;
 
     private HTTPConnection() {

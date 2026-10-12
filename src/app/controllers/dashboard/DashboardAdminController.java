@@ -59,7 +59,7 @@ public class DashboardAdminController {
                 System.out.println("Stage obtenido: " + currentStage.getTitle());
 
                 // Vista por defecto al abrir el panel
-                cargarVista("Menus", "/app/views/menus/Menus.fxml");
+                cargarVista("Menus", "/app/views/menus/menus.fxml");
             });
 
         } catch (Exception e) {
@@ -71,12 +71,12 @@ public class DashboardAdminController {
     // --- Navegación entre secciones ---
     @FXML
     private void onProductosClicked() {
-        cargarVista("Productos", "/app/views/productos/Productos.fxml");
+        cargarVista("Productos", "/app/views/productos/productos.fxml");
     }
 
     @FXML
     private void onMenusClicked() {
-        cargarVista("Menus", "/app/views/menus/Menus.fxml");
+        cargarVista("Menus", "/app/views/menus/menus.fxml");
     }
 
     @FXML
@@ -86,12 +86,12 @@ public class DashboardAdminController {
 
     @FXML
     private void onIngredientesClicked() {
-        cargarVista("Ingredientes", "/app/views/ingredientes/Ingredientes.fxml");
+        cargarVista("Ingredientes", "/app/views/ingredientes/ingredientes.fxml");
     }
 
     @FXML
     private void onAvisosClicked() {
-        cargarVista("Avisos", "/app/views/avisos/Avisos.fxml");
+        cargarVista("Avisos", "/app/views/avisos/avisos.fxml");
     }
 
     @FXML

@@ -66,6 +66,38 @@ public class Menu {
         this.secciones = new ArrayList<>();
     }
 
+    // Constructor completo compatible con AllMenus
+    public Menu(
+            int id,
+            LocalDate fecha,
+            String diaSemana,
+            String horario,
+            int numeroSemana,
+            int anio,
+            String fechaCreacion,
+            boolean activo,
+            int idUsuarioCreador,
+            int idUsuarioModificador,
+            String fechaModificacion) {
+        this.id = id;
+        this.fecha = fecha != null
+                ? fecha.toString()
+                : LocalDate.now().toString();
+
+        this.diaSemana = diaSemana;
+        this.horario = horario;
+        this.numeroSemana = numeroSemana;
+        this.anio = anio;
+        this.fechaCreacion = fechaCreacion;
+        this.activo = activo;
+
+        this.idUsuarioCreador = idUsuarioCreador;
+        this.idUsuarioModificador = idUsuarioModificador;
+        this.fechaModificacion = fechaModificacion;
+
+        this.secciones = new ArrayList<>();
+    }
+
     // Constructor desde JSON (compatible con backend)
     // Constructor desde JSON (compatible con backend)
     // Constructor desde JSON (compatible con backend)

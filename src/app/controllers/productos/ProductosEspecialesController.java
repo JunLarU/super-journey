@@ -76,7 +76,7 @@ public class ProductosEspecialesController {
 
         colProducto.setCellValueFactory(data -> {
             Producto producto = allProductos.getById(data.getValue().getIdProducto());
-            String nombre = producto != null ? producto.getNombre() : "Producto #" + data.getValue().getIdProducto();
+            String nombre = (producto != null) ? producto.getNombre() : "No se encontró producto";
             return new javafx.beans.property.SimpleStringProperty(nombre);
         });
 

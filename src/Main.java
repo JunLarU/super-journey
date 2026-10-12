@@ -58,7 +58,7 @@ public class Main extends Application {
 
             // Configura la escena
             Scene scene = new Scene(root, 600, 500);
-            scene.getStylesheets().add(getClass().getResource("/assets/css/app.css").toExternalForm());
+            //scene.getStylesheets().add(getClass().getResource("/assets/css/app.css").toExternalForm());
 
             // Icono, título y propiedades de la ventana
             primaryStage.getIcons().add(
