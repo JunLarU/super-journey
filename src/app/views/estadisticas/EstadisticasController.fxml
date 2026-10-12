@@ -1,78 +1,111 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.chart.*?>
-<?import javafx.geometry.*?>
+<?import javafx.scene.layout.*?>
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="app.controllers.estadisticas.EstadisticasController"
-            prefWidth="1200" prefHeight="800"
-            style="-fx-background-color: #F8F9FA;">
+            prefWidth="1200"
+            prefHeight="800"
+            styleClass="stats-root"
+            stylesheets="@../../../assets/css/estadisticas.css">
 
-    <!-- ===================== HEADER ===================== -->
     <top>
-        <VBox spacing="10" style="-fx-padding: 20;">
-            <HBox alignment="CENTER_LEFT" spacing="10">
-                <Label text="📊 Panel de Estadísticas"
-                       style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2C3E50;"/>
+        <VBox spacing="10" styleClass="stats-header">
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <VBox spacing="3">
+                    <Label text="Panel de estadísticas"
+                           styleClass="stats-page-title"/>
+                    <Label text="Ventas, desempeño, tendencias y comportamiento operativo de CAFI."
+                           styleClass="stats-subtitle"/>
+                </VBox>
+
                 <Region HBox.hgrow="ALWAYS"/>
-                <Button text="🔄 Actualizar"
+
+                <VBox alignment="CENTER_RIGHT" spacing="2">
+                    <Label fx:id="lblPeriodoActual"
+                           text="Hoy"
+                           styleClass="stats-period"/>
+                    <Label fx:id="lblFechaActual"
+                           text="Sin actualizar"
+                           styleClass="stats-updated"/>
+                </VBox>
+
+                <Button text="Actualizar"
                         onAction="#onRecargarClicked"
-                        style="-fx-background-color: #3498DB; -fx-text-fill: white; -fx-font-weight: bold; 
-                               -fx-padding: 8 15; -fx-background-radius: 5;"/>
+                        styleClass="stats-primary-button"/>
             </HBox>
-            <Label fx:id="lblFechaActual"
-                   style="-fx-text-fill: #7F8C8D; -fx-font-size: 14px;"/>
         </VBox>
     </top>
 
-    <!-- ===================== CONTENT ===================== -->
     <center>
-        <VBox spacing="10" style="-fx-padding: 0 20 20 20;">
-            <!-- PESTAÑAS -->
-            <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE">
-                
-                <!-- SEMANA -->
-                <Tab fx:id="tabSemana" text="Esta Semana">
-                    <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;">
-                        <!-- AQUÍ DEBE ESTAR EL VBox con fx:id="semanaContent" -->
-                        <VBox fx:id="semanaContent" spacing="20" style="-fx-padding: 20;">
-                            <!-- El contenido se cargará programáticamente -->
-                        </VBox>
+        <VBox spacing="8" style="-fx-padding: 0 16 16 16;">
+
+            <TabPane fx:id="tabPane"
+                     tabClosingPolicy="UNAVAILABLE"
+                     VBox.vgrow="ALWAYS"
+                     styleClass="stats-tabs">
+
+                <Tab fx:id="tabHoy" text="Hoy">
+                    <ScrollPane fitToWidth="true"
+                                pannable="true"
+                                styleClass="stats-scroll">
+                        <content>
+                            <VBox fx:id="hoyContent"
+                                  spacing="16"
+                                  style="-fx-padding: 16;"/>
+                        </content>
                     </ScrollPane>
                 </Tab>
-                
-                <!-- MES -->
-                <Tab fx:id="tabMes" text="Este Mes">
-                    <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;">
-                        <!-- AQUÍ DEBE ESTAR EL VBox con fx:id="mesContent" -->
-                        <VBox fx:id="mesContent" spacing="20" style="-fx-padding: 20;">
-                            <!-- El contenido se cargará programáticamente -->
-                        </VBox>
+
+                <Tab fx:id="tabSemana" text="7 días">
+                    <ScrollPane fitToWidth="true"
+                                pannable="true"
+                                styleClass="stats-scroll">
+                        <content>
+                            <VBox fx:id="semanaContent"
+                                  spacing="16"
+                                  style="-fx-padding: 16;"/>
+                        </content>
                     </ScrollPane>
                 </Tab>
-                
-                <!-- 6 MESES -->
-                <Tab fx:id="tabSeisMeses" text="Últimos 6 Meses">
-                    <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;">
-                        <!-- AQUÍ DEBE ESTAR EL VBox con fx:id="seisMesesContent" -->
-                        <VBox fx:id="seisMesesContent" spacing="20" style="-fx-padding: 20;">
-                            <!-- El contenido se cargará programáticamente -->
-                        </VBox>
+
+                <Tab fx:id="tabMes" text="Mes actual">
+                    <ScrollPane fitToWidth="true"
+                                pannable="true"
+                                styleClass="stats-scroll">
+                        <content>
+                            <VBox fx:id="mesContent"
+                                  spacing="16"
+                                  style="-fx-padding: 16;"/>
+                        </content>
+                    </ScrollPane>
+                </Tab>
+
+                <Tab fx:id="tabSeisMeses" text="6 meses">
+                    <ScrollPane fitToWidth="true"
+                                pannable="true"
+                                styleClass="stats-scroll">
+                        <content>
+                            <VBox fx:id="seisMesesContent"
+                                  spacing="16"
+                                  style="-fx-padding: 16;"/>
+                        </content>
                     </ScrollPane>
                 </Tab>
             </TabPane>
-            
-            <!-- LOADING INDICATOR -->
-            <VBox fx:id="contentBox" alignment="CENTER" spacing="10" visible="false"
-                  style="-fx-padding: 50;">
-                <ProgressIndicator fx:id="progressIndicator" 
-                                   progress="-1.0" 
-                                   style="-fx-progress-color: #3498DB;"/>
-                <Label text="Cargando estadísticas..." 
-                       style="-fx-text-fill: #7F8C8D; -fx-font-size: 14px;"/>
+
+            <VBox fx:id="contentBox"
+                  alignment="CENTER"
+                  spacing="8"
+                  visible="false"
+                  managed="false"
+                  styleClass="stats-loading">
+                <ProgressIndicator fx:id="progressIndicator"
+                                   progress="-1.0"/>
+                <Label text="Calculando estadísticas..."
+                       styleClass="stats-subtitle"/>
             </VBox>
         </VBox>
     </center>

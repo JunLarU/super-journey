@@ -11,6 +11,7 @@ E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\app\controllers\dashboard\DashboardUserCo
 E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\app\controllers\estadisticas\EstadisticasController.java
 E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\app\controllers\estadisticas\EstadisticasHoyController.java
 E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\app\controllers\estadisticas\EstadisticasMesController.java
+E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\app\controllers\estadisticas\EstadisticasPeriodoBaseController.java
 E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\app\controllers\estadisticas\EstadisticasSeisMesesController.java
 E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\app\controllers\estadisticas\EstadisticasSemanaController.java
 E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\app\controllers\estadisticas\EstadisticasVentasController.java

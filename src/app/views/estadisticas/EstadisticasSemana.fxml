@@ -1,185 +1,308 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.control.*?>
+
 <?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<VBox spacing="20" xmlns="http://javafx.com/javafx" 
+<VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="app.controllers.estadisticas.EstadisticasSemanaController">
+      fx:controller="app.controllers.estadisticas.EstadisticasSemanaController"
+      spacing="16"
+      styleClass="stats-period-root"
+      stylesheets="@../../../assets/css/estadisticas.css">
 
-    <!-- ===================== TARJETAS ===================== -->
-    <GridPane hgap="15" vgap="15">
+    <GridPane hgap="12" vgap="12">
         <columnConstraints>
-            <ColumnConstraints percentWidth="16"/>
-            <ColumnConstraints percentWidth="16"/>
-            <ColumnConstraints percentWidth="16"/>
-            <ColumnConstraints percentWidth="16"/>
-            <ColumnConstraints percentWidth="16"/>
-            <ColumnConstraints percentWidth="16"/>
+            <ColumnConstraints percentWidth="33.33"/>
+            <ColumnConstraints percentWidth="33.33"/>
+            <ColumnConstraints percentWidth="33.33"/>
         </columnConstraints>
 
-        <!-- USUARIOS -->
-        <VBox GridPane.columnIndex="0" 
-              style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20; 
-                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0.5, 0, 2);
-                     -fx-border-color: #3498DB; -fx-border-width: 0 0 0 4; -fx-border-radius: 10;">
-            <Label text="👥 Usuarios" 
-                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2C3E50;"/>
-            <Label fx:id="lblTotalUsuariosSemana" 
-                   style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #3498DB; -fx-padding: 5 0 0 0;"/>
-            <Label text="Esta semana" 
-                   style="-fx-font-size: 12px; -fx-text-fill: #7F8C8D; -fx-padding: 5 0 0 0;"/>
+        <VBox GridPane.columnIndex="0"
+              GridPane.rowIndex="0"
+              styleClass="metric-card,metric-blue">
+            <Label text="Ingresos netos" styleClass="metric-caption"/>
+            <Label fx:id="lblIngresos" text="0.00" styleClass="metric-value"/>
+            <Label fx:id="lblIngresosDetalle"
+                   text="Sin base comparable"
+                   styleClass="metric-detail"/>
         </VBox>
 
-        <!-- PRODUCTOS -->
-        <VBox GridPane.columnIndex="1" 
-              style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20; 
-                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0.5, 0, 2);
-                     -fx-border-color: #2ECC71; -fx-border-width: 0 0 0 4; -fx-border-radius: 10;">
-            <Label text="🍔 Productos" 
-                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2C3E50;"/>
-            <Label fx:id="lblTotalProductosSemana" 
-                   style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #2ECC71; -fx-padding: 5 0 0 0;"/>
-            <Label text="Esta semana" 
-                   style="-fx-font-size: 12px; -fx-text-fill: #7F8C8D; -fx-padding: 5 0 0 0;"/>
+        <VBox GridPane.columnIndex="1"
+              GridPane.rowIndex="0"
+              styleClass="metric-card,metric-green">
+            <Label text="Ventas completadas" styleClass="metric-caption"/>
+            <Label fx:id="lblVentas" text="0" styleClass="metric-value"/>
+            <Label fx:id="lblVentasDetalle"
+                   text="Sin base comparable"
+                   styleClass="metric-detail"/>
         </VBox>
 
-        <!-- AVISOS -->
-        <VBox GridPane.columnIndex="2" 
-              style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20; 
-                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0.5, 0, 2);
-                     -fx-border-color: #E74C3C; -fx-border-width: 0 0 0 4; -fx-border-radius: 10;">
-            <Label text="📢 Avisos" 
-                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2C3E50;"/>
-            <Label fx:id="lblTotalAvisosSemana" 
-                   style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #E74C3C; -fx-padding: 5 0 0 0;"/>
-            <Label text="Esta semana" 
-                   style="-fx-font-size: 12px; -fx-text-fill: #7F8C8D; -fx-padding: 5 0 0 0;"/>
+        <VBox GridPane.columnIndex="2"
+              GridPane.rowIndex="0"
+              styleClass="metric-card,metric-purple">
+            <Label text="Ticket promedio" styleClass="metric-caption"/>
+            <Label fx:id="lblTicket" text="0.00" styleClass="metric-value"/>
+            <Label fx:id="lblTicketDetalle"
+                   text="Mediana 0.00"
+                   styleClass="metric-detail"/>
         </VBox>
 
-        <!-- MENUS -->
-        <VBox GridPane.columnIndex="3" 
-              style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20; 
-                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0.5, 0, 2);
-                     -fx-border-color: #9B59B6; -fx-border-width: 0 0 0 4; -fx-border-radius: 10;">
-            <Label text="📅 Menús" 
-                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2C3E50;"/>
-            <Label fx:id="lblTotalMenusSemana" 
-                   style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #9B59B6; -fx-padding: 5 0 0 0;"/>
-            <Label text="Esta semana" 
-                   style="-fx-font-size: 12px; -fx-text-fill: #7F8C8D; -fx-padding: 5 0 0 0;"/>
+        <VBox GridPane.columnIndex="0"
+              GridPane.rowIndex="1"
+              styleClass="metric-card,metric-teal">
+            <Label text="Unidades vendidas" styleClass="metric-caption"/>
+            <Label fx:id="lblProductos" text="0" styleClass="metric-value"/>
+            <Label fx:id="lblProductosDetalle"
+                   text="0 por venta"
+                   styleClass="metric-detail"/>
         </VBox>
 
-        <!-- CATEGORÍAS -->
-        <VBox GridPane.columnIndex="4" 
-              style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20; 
-                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0.5, 0, 2);
-                     -fx-border-color: #F39C12; -fx-border-width: 0 0 0 4; -fx-border-radius: 10;">
-            <Label text="🏷 Categorías" 
-                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2C3E50;"/>
-            <Label fx:id="lblTotalCategoriasSemana" 
-                   style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #F39C12; -fx-padding: 5 0 0 0;"/>
-            <Label text="Total" 
-                   style="-fx-font-size: 12px; -fx-text-fill: #7F8C8D; -fx-padding: 5 0 0 0;"/>
+        <VBox GridPane.columnIndex="1"
+              GridPane.rowIndex="1"
+              styleClass="metric-card,metric-orange">
+            <Label text="Descuentos aplicados" styleClass="metric-caption"/>
+            <Label fx:id="lblDescuentos" text="0.00" styleClass="metric-value"/>
+            <Label fx:id="lblDescuentosDetalle"
+                   text="0% del bruto"
+                   styleClass="metric-detail"/>
         </VBox>
 
-        <!-- INGREDIENTES -->
-        <VBox GridPane.columnIndex="5" 
-              style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20; 
-                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0.5, 0, 2);
-                     -fx-border-color: #1ABC9C; -fx-border-width: 0 0 0 4; -fx-border-radius: 10;">
-            <Label text="🥬 Ingredientes" 
-                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2C3E50;"/>
-            <Label fx:id="lblTotalIngredientesSemana" 
-                   style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #1ABC9C; -fx-padding: 5 0 0 0;"/>
-            <Label text="Total" 
-                   style="-fx-font-size: 12px; -fx-text-fill: #7F8C8D; -fx-padding: 5 0 0 0;"/>
+        <VBox GridPane.columnIndex="2"
+              GridPane.rowIndex="1"
+              styleClass="metric-card,metric-red">
+            <Label text="Ventas canceladas" styleClass="metric-caption"/>
+            <Label fx:id="lblCancelaciones" text="0" styleClass="metric-value"/>
+            <Label fx:id="lblCancelacionesDetalle"
+                   text="0% de operaciones"
+                   styleClass="metric-detail"/>
         </VBox>
     </GridPane>
 
-    <!-- ===================== FILA 1 ===================== -->
-    <GridPane hgap="20" vgap="20">
+    <HBox spacing="12">
+        <VBox spacing="10" HBox.hgrow="ALWAYS" styleClass="analysis-card">
+            <Label text="Análisis estadístico" styleClass="section-title"/>
+
+            <GridPane hgap="25" vgap="8">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="33.33"/>
+                    <ColumnConstraints percentWidth="33.33"/>
+                    <ColumnConstraints percentWidth="33.33"/>
+                </columnConstraints>
+
+                <VBox GridPane.columnIndex="0" GridPane.rowIndex="0">
+                    <Label text="Mediana del ticket" styleClass="mini-caption"/>
+                    <Label fx:id="lblMediana" text="0.00" styleClass="mini-value"/>
+                </VBox>
+
+                <VBox GridPane.columnIndex="1" GridPane.rowIndex="0">
+                    <Label text="Desviación del ticket" styleClass="mini-caption"/>
+                    <Label fx:id="lblDesviacion" text="0.00" styleClass="mini-value"/>
+                </VBox>
+
+                <VBox GridPane.columnIndex="2" GridPane.rowIndex="0">
+                    <Label text="Rango de tickets" styleClass="mini-caption"/>
+                    <Label fx:id="lblRangoTicket" text="0.00 – 0.00" styleClass="mini-value"/>
+                </VBox>
+
+                <VBox GridPane.columnIndex="0" GridPane.rowIndex="1">
+                    <Label text="Ingresos por extras" styleClass="mini-caption"/>
+                    <Label fx:id="lblExtras" text="0.00" styleClass="mini-value"/>
+                </VBox>
+
+                <VBox GridPane.columnIndex="1" GridPane.rowIndex="1">
+                    <Label text="Productos especiales" styleClass="mini-caption"/>
+                    <Label fx:id="lblEspeciales" text="0 (0%)" styleClass="mini-value"/>
+                </VBox>
+
+                <VBox GridPane.columnIndex="2" GridPane.rowIndex="1">
+                    <Label text="Variabilidad de ingresos" styleClass="mini-caption"/>
+                    <Label fx:id="lblVariabilidad" text="0%" styleClass="mini-value"/>
+                </VBox>
+            </GridPane>
+        </VBox>
+    </HBox>
+
+    <GridPane hgap="12" vgap="12">
+        <columnConstraints>
+            <ColumnConstraints percentWidth="33.33"/>
+            <ColumnConstraints percentWidth="33.33"/>
+            <ColumnConstraints percentWidth="33.33"/>
+        </columnConstraints>
+
+        <VBox GridPane.columnIndex="0" styleClass="insight-card">
+            <Label text="Producto líder" styleClass="insight-caption"/>
+            <Label fx:id="lblMejorProducto"
+                   text="Sin datos"
+                   wrapText="true"
+                   styleClass="insight-value"/>
+        </VBox>
+
+        <VBox GridPane.columnIndex="1" styleClass="insight-card">
+            <Label text="Mejor vendedor" styleClass="insight-caption"/>
+            <Label fx:id="lblMejorVendedor"
+                   text="Sin datos"
+                   wrapText="true"
+                   styleClass="insight-value"/>
+        </VBox>
+
+        <VBox GridPane.columnIndex="2" styleClass="insight-card">
+            <Label text="Hora pico" styleClass="insight-caption"/>
+            <Label fx:id="lblHoraPico"
+                   text="Sin datos"
+                   wrapText="true"
+                   styleClass="insight-value"/>
+        </VBox>
+
+        <VBox GridPane.columnIndex="0" GridPane.rowIndex="1" styleClass="insight-card">
+            <Label text="Categoría líder" styleClass="insight-caption"/>
+            <Label fx:id="lblCategoriaLider"
+                   text="Sin datos"
+                   wrapText="true"
+                   styleClass="insight-value"/>
+        </VBox>
+
+        <VBox GridPane.columnIndex="1" GridPane.rowIndex="1" styleClass="insight-card">
+            <Label text="Método de pago principal" styleClass="insight-caption"/>
+            <Label fx:id="lblMetodoPago"
+                   text="Sin datos"
+                   wrapText="true"
+                   styleClass="insight-value"/>
+        </VBox>
+
+        <VBox GridPane.columnIndex="2" GridPane.rowIndex="1" styleClass="insight-card">
+            <Label text="Concentración Top 3" styleClass="insight-caption"/>
+            <Label fx:id="lblConcentracion"
+                   text="0% de unidades"
+                   wrapText="true"
+                   styleClass="insight-value"/>
+        </VBox>
+    </GridPane>
+
+    <GridPane hgap="14" vgap="14">
         <columnConstraints>
             <ColumnConstraints percentWidth="50"/>
             <ColumnConstraints percentWidth="50"/>
         </columnConstraints>
 
-        <!-- Usuarios por Tipo -->
-        <VBox GridPane.columnIndex="0" 
-              style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20;
-                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0.5, 0, 2);">
-            <Label text="Usuarios por Tipo (Esta semana)" 
-                   style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2C3E50; -fx-padding: 0 0 15 0;"/>
-            <PieChart fx:id="chartUsuariosTipoSemana"
-                      VBox.vgrow="ALWAYS" 
-                      minHeight="300"/>
-        </VBox>
-
-        <!-- Productos por categoría -->
-        <VBox GridPane.columnIndex="1" 
-              style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20;
-                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0.5, 0, 2);">
-            <Label text="Top Categorías de Productos (Esta semana)" 
-                   style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2C3E50; -fx-padding: 0 0 15 0;"/>
-            <BarChart fx:id="chartProductosCategoriaSemana"
-                      VBox.vgrow="ALWAYS"
-                      minHeight="300">
+        <VBox GridPane.columnIndex="0"
+              GridPane.rowIndex="0"
+              styleClass="chart-card">
+            <Label text="Evolución de ingresos" styleClass="section-title"/>
+            <LineChart fx:id="chartIngresos"
+                       minHeight="310"
+                       legendVisible="true">
                 <xAxis>
-                    <CategoryAxis label="Categoría"/>
+                    <CategoryAxis label="Periodo"/>
                 </xAxis>
                 <yAxis>
-                    <NumberAxis label="Cantidad"/>
+                    <NumberAxis label="Ingresos"/>
                 </yAxis>
-            </BarChart>
-        </VBox>
-    </GridPane>
-
-    <!-- ===================== FILA 2 ===================== -->
-    <GridPane hgap="20" vgap="20">
-        <columnConstraints>
-            <ColumnConstraints percentWidth="33"/>
-            <ColumnConstraints percentWidth="34"/>
-            <ColumnConstraints percentWidth="33"/>
-        </columnConstraints>
-
-        <!-- Avisos por Establecimiento -->
-        <VBox GridPane.columnIndex="0" 
-              style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20;
-                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0.5, 0, 2);">
-            <Label text="Avisos por Establecimiento (Esta semana)" 
-                   style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2C3E50; -fx-padding: 0 0 15 0;"/>
-            <PieChart fx:id="chartAvisosEstablecimientoSemana"
-                      VBox.vgrow="ALWAYS"
-                      minHeight="250"/>
+            </LineChart>
         </VBox>
 
-        <!-- Menús por Día -->
-        <VBox GridPane.columnIndex="1" 
-              style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20;
-                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0.5, 0, 2);">
-            <Label text="Menús por Día (Esta semana)" 
-                   style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2C3E50; -fx-padding: 0 0 15 0;"/>
-            <BarChart fx:id="chartMenusDiaSemana"
-                      VBox.vgrow="ALWAYS"
-                      minHeight="250">
+        <VBox GridPane.columnIndex="1"
+              GridPane.rowIndex="0"
+              styleClass="chart-card">
+            <Label text="Productos más vendidos" styleClass="section-title"/>
+            <BarChart fx:id="chartProductos"
+                      minHeight="310"
+                      legendVisible="false">
                 <xAxis>
-                    <CategoryAxis label="Día"/>
+                    <CategoryAxis label="Producto"
+                                  tickLabelRotation="-25"/>
                 </xAxis>
                 <yAxis>
-                    <NumberAxis label="Cantidad"/>
+                    <NumberAxis label="Unidades"/>
                 </yAxis>
             </BarChart>
         </VBox>
 
-        <!-- Productos por Estado -->
-        <VBox GridPane.columnIndex="2" 
-              style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20;
-                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0.5, 0, 2);">
-            <Label text="Productos por Estado (Esta semana)" 
-                   style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #2C3E50; -fx-padding: 0 0 15 0;"/>
-            <PieChart fx:id="chartProductosEstadoSemana"
-                      VBox.vgrow="ALWAYS"
-                      minHeight="250"/>
+        <VBox GridPane.columnIndex="0"
+              GridPane.rowIndex="1"
+              styleClass="chart-card">
+            <Label text="Mejores vendedores por ingresos" styleClass="section-title"/>
+            <BarChart fx:id="chartVendedores"
+                      minHeight="310"
+                      legendVisible="false">
+                <xAxis>
+                    <CategoryAxis label="Vendedor"
+                                  tickLabelRotation="-20"/>
+                </xAxis>
+                <yAxis>
+                    <NumberAxis label="Ingresos"/>
+                </yAxis>
+            </BarChart>
+        </VBox>
+
+        <VBox GridPane.columnIndex="1"
+              GridPane.rowIndex="1"
+              styleClass="chart-card">
+            <Label text="Ingresos por categoría" styleClass="section-title"/>
+            <PieChart fx:id="chartCategorias"
+                      minHeight="310"
+                      legendVisible="true"
+                      labelsVisible="true"/>
+        </VBox>
+
+        <VBox GridPane.columnIndex="0"
+              GridPane.rowIndex="2"
+              styleClass="chart-card">
+            <Label text="Distribución de métodos de pago" styleClass="section-title"/>
+            <PieChart fx:id="chartPagos"
+                      minHeight="310"
+                      legendVisible="true"
+                      labelsVisible="true"/>
+        </VBox>
+
+        <VBox GridPane.columnIndex="1"
+              GridPane.rowIndex="2"
+              styleClass="chart-card">
+            <Label text="Ventas por hora" styleClass="section-title"/>
+            <BarChart fx:id="chartHorarios"
+                      minHeight="310"
+                      legendVisible="false">
+                <xAxis>
+                    <CategoryAxis label="Hora"/>
+                </xAxis>
+                <yAxis>
+                    <NumberAxis label="Ventas"/>
+                </yAxis>
+            </BarChart>
+        </VBox>
+
+        <VBox GridPane.columnIndex="0"
+              GridPane.rowIndex="3"
+              styleClass="chart-card">
+            <Label text="Personalizaciones más solicitadas" styleClass="section-title"/>
+            <BarChart fx:id="chartModificaciones"
+                      minHeight="310"
+                      legendVisible="false">
+                <xAxis>
+                    <CategoryAxis label="Modificación"
+                                  tickLabelRotation="-25"/>
+                </xAxis>
+                <yAxis>
+                    <NumberAxis label="Solicitudes"/>
+                </yAxis>
+            </BarChart>
+        </VBox>
+
+        <VBox GridPane.columnIndex="1"
+              GridPane.rowIndex="3"
+              styleClass="chart-card">
+            <Label text="Tamaños / configuraciones más vendidas" styleClass="section-title"/>
+            <BarChart fx:id="chartTamanos"
+                      minHeight="310"
+                      legendVisible="false">
+                <xAxis>
+                    <CategoryAxis label="Configuración"
+                                  tickLabelRotation="-25"/>
+                </xAxis>
+                <yAxis>
+                    <NumberAxis label="Unidades"/>
+                </yAxis>
+            </BarChart>
         </VBox>
     </GridPane>
 
