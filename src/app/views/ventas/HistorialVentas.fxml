@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="app.controllers.ventas.HistorialVentasController"
+            prefWidth="1000" prefHeight="650"
+            styleClass="sales-root"
+            stylesheets="@../../../assets/css/ventas.css">
+
+    <top>
+        <VBox>
+            <HBox alignment="CENTER_LEFT" spacing="12" styleClass="sales-header">
+                <VBox spacing="2">
+                    <Label text="Historial de ventas" styleClass="page-title"/>
+                    <Label text="Consulta ventas, revisa su detalle y cancela operaciones cuando sea necesario." styleClass="subtitle"/>
+                </VBox>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label text="Desde:" styleClass="form-label"/>
+                <DatePicker fx:id="dpDesde" prefWidth="135"/>
+                <Label text="Hasta:" styleClass="form-label"/>
+                <DatePicker fx:id="dpHasta" prefWidth="135"/>
+                <Button text="Buscar" onAction="#onBuscar" styleClass="primary-button"/>
+            </HBox>
+            <Separator/>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox spacing="10" style="-fx-padding: 15;">
+            <VBox spacing="8" VBox.vgrow="ALWAYS" styleClass="content-card">
+                <HBox alignment="CENTER_LEFT">
+                    <Label text="Ventas registradas" styleClass="section-title"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label text="Doble clic sobre una venta para ver su detalle." styleClass="small-hint"/>
+                </HBox>
+
+                <TableView fx:id="tablaVentas" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colFolio" text="Folio" prefWidth="190"/>
+                        <TableColumn fx:id="colFecha" text="Fecha y hora" prefWidth="175"/>
+                        <TableColumn fx:id="colVendedor" text="Vendedor" prefWidth="190"/>
+                        <TableColumn fx:id="colEstado" text="Estado" prefWidth="105"/>
+                        <TableColumn fx:id="colDescuento" text="Descuento" prefWidth="105"/>
+                        <TableColumn fx:id="colTotal" text="Total" prefWidth="110"/>
+                    </columns>
+                    <placeholder>
+                        <Label text="No hay ventas en el periodo seleccionado" styleClass="empty-hint"/>
+                    </placeholder>
+                </TableView>
+
+                <HBox spacing="8" alignment="CENTER_RIGHT">
+                    <Button fx:id="btnVerDetalle" text="Ver detalle" onAction="#onVerDetalle" styleClass="primary-button"/>
+                    <Button fx:id="btnCancelarVenta" text="Cancelar venta" onAction="#onCancelarVenta" styleClass="danger-button"/>
+                </HBox>
+            </VBox>
+
+            <Label fx:id="lblStatus" text="Listo" styleClass="status-label"/>
+        </VBox>
+    </center>
+</BorderPane>

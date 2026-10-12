@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="app.controllers.estadisticas.EstadisticasVentasController"
+            prefWidth="1100" prefHeight="700"
+            styleClass="sales-root"
+            stylesheets="@../../../assets/css/ventas.css">
+
+    <top>
+        <VBox>
+            <HBox alignment="CENTER_LEFT" spacing="10" styleClass="sales-header">
+                <VBox spacing="2">
+                    <Label text="Estadísticas de ventas" styleClass="page-title"/>
+                    <Label text="Resumen de ingresos, productos vendidos y formas de pago." styleClass="subtitle"/>
+                </VBox>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label text="Desde:" styleClass="form-label"/>
+                <DatePicker fx:id="dpDesde" prefWidth="135"/>
+                <Label text="Hasta:" styleClass="form-label"/>
+                <DatePicker fx:id="dpHasta" prefWidth="135"/>
+                <Button text="Actualizar" onAction="#onActualizar" styleClass="primary-button"/>
+            </HBox>
+            <Separator/>
+        </VBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;">
+            <content>
+                <VBox spacing="14" style="-fx-padding: 15;">
+                    <GridPane hgap="10" vgap="10">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="33.33"/>
+                            <ColumnConstraints percentWidth="33.33"/>
+                            <ColumnConstraints percentWidth="33.33"/>
+                        </columnConstraints>
+
+                        <VBox spacing="4" styleClass="summary-card" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <Label text="Ventas" styleClass="summary-caption"/>
+                            <Label fx:id="lblVentas" text="0" styleClass="summary-value"/>
+                        </VBox>
+                        <VBox spacing="4" styleClass="summary-card" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                            <Label text="Ingresos" styleClass="summary-caption"/>
+                            <Label fx:id="lblIngresos" text="0.00" styleClass="summary-value-success"/>
+                        </VBox>
+                        <VBox spacing="4" styleClass="summary-card" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                            <Label text="Ticket promedio" styleClass="summary-caption"/>
+                            <Label fx:id="lblTicketPromedio" text="0.00" styleClass="summary-value-blue"/>
+                        </VBox>
+                        <VBox spacing="4" styleClass="summary-card" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                            <Label text="Productos vendidos" styleClass="summary-caption"/>
+                            <Label fx:id="lblProductos" text="0" styleClass="summary-value"/>
+                        </VBox>
+                        <VBox spacing="4" styleClass="summary-card" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                            <Label text="Descuentos" styleClass="summary-caption"/>
+                            <Label fx:id="lblDescuentos" text="0.00" styleClass="summary-value-warning"/>
+                        </VBox>
+                        <VBox spacing="4" styleClass="summary-card" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                            <Label text="Canceladas" styleClass="summary-caption"/>
+                            <Label fx:id="lblCanceladas" text="0" styleClass="summary-value-danger"/>
+                        </VBox>
+                    </GridPane>
+
+                    <VBox spacing="8" styleClass="content-card">
+                        <Label text="Ingresos por día" styleClass="section-title"/>
+                        <LineChart fx:id="chartIngresos" prefHeight="300" animated="false">
+                            <xAxis><CategoryAxis label="Fecha"/></xAxis>
+                            <yAxis><NumberAxis label="Ingresos" forceZeroInRange="true"/></yAxis>
+                        </LineChart>
+                    </VBox>
+
+                    <VBox spacing="8" styleClass="content-card">
+                        <Label text="Productos más vendidos" styleClass="section-title"/>
+                        <BarChart fx:id="chartProductos" prefHeight="340" animated="false">
+                            <xAxis><CategoryAxis label="Producto"/></xAxis>
+                            <yAxis><NumberAxis label="Unidades" forceZeroInRange="true"/></yAxis>
+                        </BarChart>
+                    </VBox>
+
+                    <VBox spacing="8" styleClass="content-card">
+                        <Label text="Métodos de pago" styleClass="section-title"/>
+                        <PieChart fx:id="chartPagos" prefHeight="340" animated="false"/>
+                    </VBox>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+</BorderPane>

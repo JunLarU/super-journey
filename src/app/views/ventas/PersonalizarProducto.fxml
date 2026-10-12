@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="app.controllers.ventas.PersonalizarProductoController"
+            prefWidth="680" prefHeight="740"
+            styleClass="sales-root"
+            stylesheets="@../../../assets/css/ventas.css">
+
+    <top>
+        <VBox>
+            <VBox spacing="4" styleClass="sales-header">
+                <Label fx:id="lblProducto" text="Producto" styleClass="page-title"/>
+                <Label fx:id="lblDescripcion" wrapText="true" styleClass="subtitle"/>
+                <Label fx:id="lblPrecioBase" styleClass="product-price"/>
+            </VBox>
+            <Separator/>
+        </VBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;">
+            <content>
+                <VBox spacing="14" style="-fx-padding: 16;">
+
+                    <VBox spacing="8" styleClass="info-card">
+                        <Label text="Personaliza esta unidad" styleClass="section-title"/>
+                        <Label text="Cada configuración se registra como una línea independiente, por lo que puedes vender el mismo producto con distintos tamaños, ingredientes y descuentos."
+                               wrapText="true" styleClass="subtitle"/>
+                    </VBox>
+
+                    <VBox spacing="8" styleClass="content-card">
+                        <Label text="Tamaño" styleClass="section-title"/>
+                        <ComboBox fx:id="cmbTamano" maxWidth="Infinity"/>
+                    </VBox>
+
+                    <VBox spacing="9" styleClass="content-card">
+                        <Label text="Ingredientes" styleClass="section-title"/>
+                        <VBox fx:id="boxIngredientes" spacing="8"/>
+                    </VBox>
+
+                    <VBox spacing="9" styleClass="content-card">
+                        <Label text="Extras" styleClass="section-title"/>
+                        <VBox fx:id="boxExtras" spacing="8"/>
+                    </VBox>
+
+                    <VBox spacing="10" styleClass="content-card">
+                        <Label text="Cantidad y descuento" styleClass="section-title"/>
+                        <GridPane hgap="12" vgap="10">
+                            <columnConstraints>
+                                <ColumnConstraints minWidth="170"/>
+                                <ColumnConstraints hgrow="ALWAYS"/>
+                            </columnConstraints>
+
+                            <Label text="Cantidad:" styleClass="form-label" GridPane.rowIndex="0"/>
+                            <Spinner fx:id="spinCantidad" prefWidth="130" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                            <Label text="Tipo de descuento:" styleClass="form-label" GridPane.rowIndex="1"/>
+                            <ComboBox fx:id="cmbTipoDescuento" maxWidth="Infinity" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                            <Label text="Valor:" styleClass="form-label" GridPane.rowIndex="2"/>
+                            <TextField fx:id="txtDescuento" promptText="0.00" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                            <Label text="Motivo:" styleClass="form-label" GridPane.rowIndex="3"/>
+                            <TextField fx:id="txtMotivoDescuento" promptText="Opcional" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                        </GridPane>
+                    </VBox>
+
+                    <VBox spacing="8" styleClass="content-card">
+                        <Label text="Observaciones" styleClass="section-title"/>
+                        <TextArea fx:id="txtObservaciones" prefRowCount="3" wrapText="true"
+                                  promptText="Ej. poco hielo, para llevar, salsa aparte..."/>
+                    </VBox>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+
+    <bottom>
+        <VBox>
+            <Separator/>
+            <HBox spacing="10" alignment="CENTER_RIGHT" style="-fx-padding: 12 16 16 16; -fx-background-color: white;">
+                <Button text="Cancelar" onAction="#onCancelar" styleClass="neutral-button"/>
+                <Button fx:id="btnAceptar" text="Agregar a la venta" onAction="#onAceptar" styleClass="success-button"/>
+            </HBox>
+        </VBox>
+    </bottom>
+</BorderPane>

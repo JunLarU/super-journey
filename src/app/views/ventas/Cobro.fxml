@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="app.controllers.ventas.CobroController"
+            prefWidth="760" prefHeight="620"
+            styleClass="sales-root"
+            stylesheets="@../../../assets/css/ventas.css">
+
+    <top>
+        <VBox>
+            <HBox alignment="CENTER_LEFT" spacing="10" styleClass="sales-header">
+                <VBox spacing="3">
+                    <Label text="Cobro de venta" styleClass="page-title"/>
+                    <Label text="Registra uno o varios métodos de pago. Si el cliente paga con efectivo, el cambio se calcula automáticamente."
+                           wrapText="true" styleClass="subtitle"/>
+                </VBox>
+            </HBox>
+            <Separator/>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox spacing="14" style="-fx-padding: 16;">
+
+            <HBox spacing="10">
+                <VBox spacing="4" HBox.hgrow="ALWAYS" styleClass="summary-card">
+                    <Label text="Total" styleClass="summary-caption"/>
+                    <Label fx:id="lblTotal" text="0.00" styleClass="summary-value"/>
+                </VBox>
+                <VBox spacing="4" HBox.hgrow="ALWAYS" styleClass="summary-card">
+                    <Label text="Pagado" styleClass="summary-caption"/>
+                    <Label fx:id="lblPagado" text="0.00" styleClass="summary-value-success"/>
+                </VBox>
+                <VBox spacing="4" HBox.hgrow="ALWAYS" styleClass="summary-card">
+                    <Label text="Restante" styleClass="summary-caption"/>
+                    <Label fx:id="lblRestante" text="0.00" styleClass="summary-value-warning"/>
+                </VBox>
+                <VBox spacing="4" HBox.hgrow="ALWAYS" styleClass="summary-card">
+                    <Label text="Cambio" styleClass="summary-caption"/>
+                    <Label fx:id="lblCambio" text="0.00" styleClass="summary-value"/>
+                </VBox>
+            </HBox>
+
+            <VBox spacing="10" styleClass="content-card">
+                <Label text="Agregar pago" styleClass="section-title"/>
+
+                <GridPane hgap="12" vgap="10">
+                    <columnConstraints>
+                        <ColumnConstraints minWidth="145"/>
+                        <ColumnConstraints hgrow="ALWAYS"/>
+                    </columnConstraints>
+
+                    <Label text="Método:" styleClass="form-label" GridPane.rowIndex="0"/>
+                    <ComboBox fx:id="cmbMetodo" maxWidth="Infinity" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                    <Label text="Monto aplicado:" styleClass="form-label" GridPane.rowIndex="1"/>
+                    <TextField fx:id="txtMonto" promptText="0.00" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                    <Label text="Efectivo recibido:" styleClass="form-label" GridPane.rowIndex="2"/>
+                    <TextField fx:id="txtRecibido" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                    <Label text="Referencia:" styleClass="form-label" GridPane.rowIndex="3"/>
+                    <TextField fx:id="txtReferencia" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+                </GridPane>
+
+                <HBox alignment="CENTER_RIGHT">
+                    <Button fx:id="btnAgregarPago"
+                            text="Agregar pago"
+                            onAction="#onAgregar"
+                            styleClass="primary-button"/>
+                </HBox>
+            </VBox>
+
+            <VBox spacing="8" VBox.vgrow="ALWAYS" styleClass="content-card">
+                <HBox alignment="CENTER_LEFT">
+                    <Label text="Pagos capturados" styleClass="section-title"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label text="Selecciona una fila para eliminarla. También puedes usar Supr o doble clic."
+                           styleClass="small-hint"/>
+                </HBox>
+
+                <TableView fx:id="tablaPagos" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colMetodo" text="Método" prefWidth="130"/>
+                        <TableColumn fx:id="colMonto" text="Monto" prefWidth="105"/>
+                        <TableColumn fx:id="colReferencia" text="Referencia" prefWidth="180"/>
+                        <TableColumn fx:id="colRecibido" text="Recibido" prefWidth="105"/>
+                        <TableColumn fx:id="colCambio" text="Cambio" prefWidth="95"/>
+                    </columns>
+                    <placeholder>
+                        <Label text="Aún no hay pagos agregados" styleClass="empty-hint"/>
+                    </placeholder>
+                </TableView>
+
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Button fx:id="btnEliminarPago" text="Eliminar seleccionado" onAction="#onEliminar" styleClass="danger-button"/>
+                    <Button fx:id="btnLimpiarPagos" text="Limpiar pagos" onAction="#onLimpiar" styleClass="neutral-button"/>
+                </HBox>
+            </VBox>
+
+            <Label fx:id="lblStatus" wrapText="true" styleClass="status-label"/>
+        </VBox>
+    </center>
+
+    <bottom>
+        <VBox>
+            <Separator/>
+            <HBox spacing="10" alignment="CENTER_RIGHT" style="-fx-padding: 12 16 16 16; -fx-background-color: white;">
+                <Button text="Cancelar" onAction="#onCancelar" styleClass="neutral-button"/>
+                <Button fx:id="btnConfirmar"
+                        text="Confirmar cobro"
+                        onAction="#onConfirmar"
+                        styleClass="success-button"/>
+            </HBox>
+        </VBox>
+    </bottom>
+</BorderPane>

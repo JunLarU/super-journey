@@ -8,7 +8,7 @@
                 "orden": 1,
                 "sustituible": 0,
                 "nombre": "Arroz Blanco",
-                "idIngrediente": 32
+                "idIngrediente": 49
             },
             {
                 "eliminable": 1,
@@ -16,7 +16,7 @@
                 "orden": 2,
                 "sustituible": 0,
                 "nombre": "Frijoles Negros",
-                "idIngrediente": 28
+                "idIngrediente": 45
             },
             {
                 "eliminable": 0,
@@ -24,7 +24,7 @@
                 "orden": 3,
                 "sustituible": 1,
                 "nombre": "Pollo a la Plancha",
-                "idIngrediente": 6
+                "idIngrediente": 9
             },
             {
                 "eliminable": 1,
@@ -32,7 +32,7 @@
                 "orden": 4,
                 "sustituible": 0,
                 "nombre": "Maíz",
-                "idIngrediente": 26
+                "idIngrediente": 43
             },
             {
                 "eliminable": 1,
@@ -40,42 +40,19 @@
                 "orden": 5,
                 "sustituible": 0,
                 "nombre": "Aguacate",
-                "idIngrediente": 13
-            },
-            {
-                "eliminable": 1,
-                "cantidad": 1,
-                "orden": 6,
-                "sustituible": 0,
-                "nombre": "Salsa Roja",
-                "idIngrediente": 41
+                "idIngrediente": 22
             }
         ],
         "categoria": "Bowls",
-        "calorias": 650,
+        "calorias": 652,
         "urlFoto": null,
         "nombre": "Bowl Mexicano",
         "gramaje": 450,
         "precioBase": 92,
         "tamanos": [],
-        "ID": 13,
-        "id": 13,
-        "idCategoria": 38,
-        "disponible": 1
-    },
-    {
-        "descripcion": "Arroz, frijoles, maíz, espinaca, aguacate y pico de gallo.",
-        "ingredientes": [],
-        "categoria": "Bowls",
-        "calorias": 540,
-        "urlFoto": null,
-        "nombre": "Bowl Veggie",
-        "gramaje": 430,
-        "precioBase": 84,
-        "tamanos": [],
-        "ID": 27,
-        "id": 27,
-        "idCategoria": 38,
+        "ID": 26,
+        "id": 26,
+        "idCategoria": 45,
         "disponible": 1
     },
     {
@@ -85,12 +62,12 @@
         "calorias": 390,
         "urlFoto": null,
         "nombre": "Brownie de Chocolate",
-        "gramaje": 110,
+        "gramaje": 111,
         "precioBase": 42,
         "tamanos": [],
-        "ID": 20,
-        "id": 20,
-        "idCategoria": 15,
+        "ID": 33,
+        "id": 33,
+        "idCategoria": 21,
         "disponible": 1
     },
     {
@@ -102,7 +79,7 @@
                 "orden": 1,
                 "sustituible": 0,
                 "nombre": "Tortilla de Harina",
-                "idIngrediente": 31
+                "idIngrediente": 48
             },
             {
                 "eliminable": 0,
@@ -110,7 +87,7 @@
                 "orden": 2,
                 "sustituible": 1,
                 "nombre": "Pollo a la Plancha",
-                "idIngrediente": 6
+                "idIngrediente": 9
             },
             {
                 "eliminable": 1,
@@ -118,7 +95,7 @@
                 "orden": 3,
                 "sustituible": 0,
                 "nombre": "Arroz Blanco",
-                "idIngrediente": 32
+                "idIngrediente": 49
             },
             {
                 "eliminable": 1,
@@ -126,7 +103,7 @@
                 "orden": 4,
                 "sustituible": 0,
                 "nombre": "Frijoles Negros",
-                "idIngrediente": 28
+                "idIngrediente": 45
             },
             {
                 "eliminable": 1,
@@ -134,7 +111,7 @@
                 "orden": 5,
                 "sustituible": 1,
                 "nombre": "Queso Manchego",
-                "idIngrediente": 8
+                "idIngrediente": 12
             }
         ],
         "categoria": "Burritos",
@@ -144,9 +121,9 @@
         "gramaje": 410,
         "precioBase": 82,
         "tamanos": [],
-        "ID": 10,
-        "id": 10,
-        "idCategoria": 34,
+        "ID": 23,
+        "id": 23,
+        "idCategoria": 41,
         "disponible": 1
     },
     {
@@ -159,9 +136,9 @@
         "gramaje": 430,
         "precioBase": 89,
         "tamanos": [],
-        "ID": 11,
-        "id": 11,
-        "idCategoria": 34,
+        "ID": 24,
+        "id": 24,
+        "idCategoria": 41,
         "disponible": 1
     },
     {
@@ -169,14 +146,14 @@
         "ingredientes": [],
         "categoria": "Café",
         "calorias": 10,
-        "urlFoto": null,
+        "urlFoto": "uploads/productos/97966160ba9d2d38a2e3b67a3c58a6cf.jpg",
         "nombre": "Café Americano",
         "gramaje": 0,
         "precioBase": 35,
         "tamanos": [],
-        "ID": 14,
-        "id": 14,
-        "idCategoria": 16,
+        "ID": 27,
+        "id": 27,
+        "idCategoria": 22,
         "disponible": 1
     },
     {
@@ -188,26 +165,26 @@
                 "orden": 1,
                 "sustituible": 0,
                 "nombre": "Café Espresso",
-                "idIngrediente": 43
+                "idIngrediente": 60
             },
             {
                 "sustitutos": [
                     {
                         "costoExtra": 10,
                         "nombre": "Leche de Almendra",
-                        "idIngrediente": 46,
+                        "idIngrediente": 63,
                         "disponible": 1
                     },
                     {
                         "costoExtra": 10,
                         "nombre": "Leche de Avena",
-                        "idIngrediente": 47,
+                        "idIngrediente": 64,
                         "disponible": 1
                     },
                     {
                         "costoExtra": 5,
                         "nombre": "Leche Deslactosada",
-                        "idIngrediente": 45,
+                        "idIngrediente": 62,
                         "disponible": 1
                     }
                 ],
@@ -216,12 +193,12 @@
                 "orden": 2,
                 "sustituible": 1,
                 "nombre": "Leche Entera",
-                "idIngrediente": 44
+                "idIngrediente": 61
             }
         ],
         "categoria": "Café",
         "calorias": 140,
-        "urlFoto": null,
+        "urlFoto": "uploads/productos/2a5a465ce3d7c24de4ca3ea4105d37bb.jpg",
         "nombre": "Cappuccino",
         "gramaje": 0,
         "precioBase": 49,
@@ -260,24 +237,9 @@
                 "disponible": 1
             }
         ],
-        "ID": 15,
-        "id": 15,
-        "idCategoria": 16,
-        "disponible": 1
-    },
-    {
-        "descripcion": "Totopos con salsa roja, pollo, queso y crema.",
-        "ingredientes": [],
-        "categoria": "Chilaquiles",
-        "calorias": 650,
-        "urlFoto": null,
-        "nombre": "Chilaquiles Rojos con Pollo",
-        "gramaje": 430,
-        "precioBase": 82,
-        "tamanos": [],
-        "ID": 21,
-        "id": 21,
-        "idCategoria": 48,
+        "ID": 28,
+        "id": 28,
+        "idCategoria": 22,
         "disponible": 1
     },
     {
@@ -285,14 +247,14 @@
         "ingredientes": [],
         "categoria": "Chilaquiles",
         "calorias": 610,
-        "urlFoto": null,
+        "urlFoto": "uploads/productos/585f66466e8e840e8f179b055bfbc2ec.jpg",
         "nombre": "Chilaquiles Verdes con Huevo",
         "gramaje": 400,
         "precioBase": 75,
         "tamanos": [],
-        "ID": 5,
-        "id": 5,
-        "idCategoria": 48,
+        "ID": 18,
+        "id": 18,
+        "idCategoria": 55,
         "disponible": 1
     },
     {
@@ -305,24 +267,9 @@
         "gramaje": 350,
         "precioBase": 85,
         "tamanos": [],
-        "ID": 12,
-        "id": 12,
-        "idCategoria": 8,
-        "disponible": 1
-    },
-    {
-        "descripcion": "Lechuga, jitomate, queso, aceitunas y aderezo.",
-        "ingredientes": [],
-        "categoria": "Ensaladas",
-        "calorias": 390,
-        "urlFoto": null,
-        "nombre": "Ensalada Mediterránea",
-        "gramaje": 340,
-        "precioBase": 82,
-        "tamanos": [],
-        "ID": 28,
-        "id": 28,
-        "idCategoria": 8,
+        "ID": 25,
+        "id": 25,
+        "idCategoria": 14,
         "disponible": 1
     },
     {
@@ -331,7 +278,7 @@
         "categoria": "Frappés",
         "calorias": 330,
         "urlFoto": null,
-        "nombre": "Frappe de Caramelo",
+        "nombre": "Frappé de Caramelo",
         "gramaje": 0,
         "precioBase": 65,
         "tamanos": [
@@ -358,24 +305,9 @@
                 "disponible": 1
             }
         ],
-        "ID": 17,
-        "id": 17,
-        "idCategoria": 43,
-        "disponible": 1
-    },
-    {
-        "descripcion": "Café frío con chocolate y crema batida.",
-        "ingredientes": [],
-        "categoria": "Frappés",
-        "calorias": 360,
-        "urlFoto": null,
-        "nombre": "Frappé Mocha",
-        "gramaje": 0,
-        "precioBase": 68,
-        "tamanos": [],
-        "ID": 32,
-        "id": 32,
-        "idCategoria": 43,
+        "ID": 30,
+        "id": 30,
+        "idCategoria": 50,
         "disponible": 1
     },
     {
@@ -387,7 +319,7 @@
                 "orden": 1,
                 "sustituible": 1,
                 "nombre": "Pan de Hamburguesa",
-                "idIngrediente": 1
+                "idIngrediente": 4
             },
             {
                 "eliminable": 0,
@@ -395,7 +327,7 @@
                 "orden": 2,
                 "sustituible": 1,
                 "nombre": "Carne de Res 200g",
-                "idIngrediente": 5
+                "idIngrediente": 8
             },
             {
                 "eliminable": 1,
@@ -403,7 +335,7 @@
                 "orden": 3,
                 "sustituible": 1,
                 "nombre": "Queso Manchego",
-                "idIngrediente": 8
+                "idIngrediente": 12
             },
             {
                 "eliminable": 1,
@@ -411,7 +343,7 @@
                 "orden": 4,
                 "sustituible": 0,
                 "nombre": "Tocino",
-                "idIngrediente": 21
+                "idIngrediente": 38
             },
             {
                 "eliminable": 1,
@@ -419,7 +351,7 @@
                 "orden": 5,
                 "sustituible": 0,
                 "nombre": "Cebolla Caramelizada",
-                "idIngrediente": 14
+                "idIngrediente": 24
             },
             {
                 "eliminable": 1,
@@ -427,7 +359,7 @@
                 "orden": 6,
                 "sustituible": 0,
                 "nombre": "Salsa BBQ",
-                "idIngrediente": 16
+                "idIngrediente": 29
             }
         ],
         "categoria": "Hamburguesas",
@@ -437,9 +369,9 @@
         "gramaje": 380,
         "precioBase": 99,
         "tamanos": [],
-        "ID": 2,
-        "id": 2,
-        "idCategoria": 6,
+        "ID": 15,
+        "id": 15,
+        "idCategoria": 12,
         "disponible": 1
     },
     {
@@ -450,13 +382,13 @@
                     {
                         "costoExtra": 5,
                         "nombre": "Pan Integral",
-                        "idIngrediente": 2,
+                        "idIngrediente": 5,
                         "disponible": 1
                     },
                     {
                         "costoExtra": 12,
                         "nombre": "Pan Sin Gluten",
-                        "idIngrediente": 3,
+                        "idIngrediente": 6,
                         "disponible": 1
                     }
                 ],
@@ -465,7 +397,7 @@
                 "orden": 1,
                 "sustituible": 1,
                 "nombre": "Pan de Hamburguesa",
-                "idIngrediente": 1
+                "idIngrediente": 4
             },
             {
                 "eliminable": 0,
@@ -473,20 +405,20 @@
                 "orden": 2,
                 "sustituible": 1,
                 "nombre": "Carne de Res 150g",
-                "idIngrediente": 4
+                "idIngrediente": 7
             },
             {
                 "sustitutos": [
                     {
                         "costoExtra": 8,
                         "nombre": "Queso Manchego",
-                        "idIngrediente": 8,
+                        "idIngrediente": 12,
                         "disponible": 1
                     },
                     {
                         "costoExtra": 12,
                         "nombre": "Queso Suizo",
-                        "idIngrediente": 9,
+                        "idIngrediente": 13,
                         "disponible": 1
                     }
                 ],
@@ -495,7 +427,7 @@
                 "orden": 3,
                 "sustituible": 1,
                 "nombre": "Queso Amarillo",
-                "idIngrediente": 7
+                "idIngrediente": 11
             },
             {
                 "eliminable": 1,
@@ -503,7 +435,7 @@
                 "orden": 4,
                 "sustituible": 0,
                 "nombre": "Lechuga",
-                "idIngrediente": 10
+                "idIngrediente": 18
             },
             {
                 "eliminable": 1,
@@ -511,7 +443,7 @@
                 "orden": 5,
                 "sustituible": 0,
                 "nombre": "Jitomate",
-                "idIngrediente": 11
+                "idIngrediente": 19
             },
             {
                 "eliminable": 1,
@@ -519,7 +451,7 @@
                 "orden": 6,
                 "sustituible": 0,
                 "nombre": "Cebolla",
-                "idIngrediente": 12
+                "idIngrediente": 20
             },
             {
                 "eliminable": 1,
@@ -527,7 +459,7 @@
                 "orden": 7,
                 "sustituible": 1,
                 "nombre": "Mayonesa",
-                "idIngrediente": 15
+                "idIngrediente": 26
             }
         ],
         "categoria": "Hamburguesas",
@@ -537,24 +469,9 @@
         "gramaje": 320,
         "precioBase": 79,
         "tamanos": [],
-        "ID": 1,
-        "id": 1,
-        "idCategoria": 6,
-        "disponible": 1
-    },
-    {
-        "descripcion": "Pollo empanizado, queso, lechuga, jitomate y ranch.",
-        "ingredientes": [],
-        "categoria": "Hamburguesas",
-        "calorias": 740,
-        "urlFoto": null,
-        "nombre": "Hamburguesa de Pollo Crispy",
-        "gramaje": 350,
-        "precioBase": 92,
-        "tamanos": [],
-        "ID": 24,
-        "id": 24,
-        "idCategoria": 6,
+        "ID": 14,
+        "id": 14,
+        "idCategoria": 12,
         "disponible": 1
     },
     {
@@ -567,9 +484,9 @@
         "gramaje": 360,
         "precioBase": 95,
         "tamanos": [],
-        "ID": 3,
-        "id": 3,
-        "idCategoria": 6,
+        "ID": 16,
+        "id": 16,
+        "idCategoria": 12,
         "disponible": 1
     },
     {
@@ -582,9 +499,9 @@
         "gramaje": 330,
         "precioBase": 89,
         "tamanos": [],
-        "ID": 4,
-        "id": 4,
-        "idCategoria": 39,
+        "ID": 17,
+        "id": 17,
+        "idCategoria": 46,
         "disponible": 1
     },
     {
@@ -597,110 +514,9 @@
         "gramaje": 310,
         "precioBase": 69,
         "tamanos": [],
-        "ID": 7,
-        "id": 7,
-        "idCategoria": 46,
-        "disponible": 1
-    },
-    {
-        "descripcion": "Espresso con leche vaporizada.",
-        "ingredientes": [
-            {
-                "eliminable": 0,
-                "cantidad": 1,
-                "orden": 1,
-                "sustituible": 0,
-                "nombre": "Café Espresso",
-                "idIngrediente": 43
-            },
-            {
-                "sustitutos": [
-                    {
-                        "costoExtra": 10,
-                        "nombre": "Leche de Almendra",
-                        "idIngrediente": 46,
-                        "disponible": 1
-                    },
-                    {
-                        "costoExtra": 10,
-                        "nombre": "Leche de Avena",
-                        "idIngrediente": 47,
-                        "disponible": 1
-                    },
-                    {
-                        "costoExtra": 5,
-                        "nombre": "Leche Deslactosada",
-                        "idIngrediente": 45,
-                        "disponible": 1
-                    }
-                ],
-                "eliminable": 0,
-                "cantidad": 1,
-                "orden": 2,
-                "sustituible": 1,
-                "nombre": "Leche Entera",
-                "idIngrediente": 44
-            }
-        ],
-        "categoria": "Café",
-        "calorias": 180,
-        "urlFoto": null,
-        "nombre": "Latte",
-        "gramaje": 0,
-        "precioBase": 55,
-        "tamanos": [
-            {
-                "descripcion": "Latte chico",
-                "gramaje": null,
-                "precio": 48,
-                "piezas": null,
-                "id": 9,
-                "orden": 1,
-                "nombre": "Chico",
-                "capacidad": 250,
-                "disponible": 1
-            },
-            {
-                "descripcion": "Latte mediano",
-                "gramaje": null,
-                "precio": 55,
-                "piezas": null,
-                "id": 10,
-                "orden": 2,
-                "nombre": "Mediano",
-                "capacidad": 350,
-                "disponible": 1
-            },
-            {
-                "descripcion": "Latte grande",
-                "gramaje": null,
-                "precio": 64,
-                "piezas": null,
-                "id": 11,
-                "orden": 3,
-                "nombre": "Grande",
-                "capacidad": 450,
-                "disponible": 1
-            }
-        ],
-        "ID": 29,
-        "id": 29,
-        "idCategoria": 16,
-        "disponible": 1
-    },
-    {
-        "descripcion": "Espresso, leche y jarabe de caramelo.",
-        "ingredientes": [],
-        "categoria": "Café",
-        "calorias": 230,
-        "urlFoto": null,
-        "nombre": "Latte Caramelo",
-        "gramaje": 0,
-        "precioBase": 60,
-        "tamanos": [],
-        "ID": 30,
-        "id": 30,
-        "idCategoria": 16,
+        "ID": 20,
+        "id": 20,
+        "idCategoria": 53,
         "disponible": 1
     },
     {
@@ -712,7 +528,7 @@
                 "orden": 1,
                 "sustituible": 0,
                 "nombre": "Café Espresso",
-                "idIngrediente": 43
+                "idIngrediente": 60
             },
             {
                 "eliminable": 0,
@@ -720,7 +536,7 @@
                 "orden": 2,
                 "sustituible": 1,
                 "nombre": "Leche Entera",
-                "idIngrediente": 44
+                "idIngrediente": 61
             },
             {
                 "eliminable": 1,
@@ -728,7 +544,7 @@
                 "orden": 3,
                 "sustituible": 0,
                 "nombre": "Jarabe de Vainilla",
-                "idIngrediente": 48
+                "idIngrediente": 65
             }
         ],
         "categoria": "Café",
@@ -772,39 +588,9 @@
                 "disponible": 1
             }
         ],
-        "ID": 16,
-        "id": 16,
-        "idCategoria": 16,
-        "disponible": 1
-    },
-    {
-        "descripcion": "Espresso, leche vaporizada y chocolate.",
-        "ingredientes": [],
-        "categoria": "Café",
-        "calorias": 260,
-        "urlFoto": null,
-        "nombre": "Mocha",
-        "gramaje": 0,
-        "precioBase": 62,
-        "tamanos": [],
-        "ID": 31,
-        "id": 31,
-        "idCategoria": 16,
-        "disponible": 1
-    },
-    {
-        "descripcion": "Bolillo con frijoles, queso y chorizo.",
-        "ingredientes": [],
-        "categoria": "Molletes",
-        "calorias": 610,
-        "urlFoto": null,
-        "nombre": "Molletes con Chorizo",
-        "gramaje": 330,
-        "precioBase": 69,
-        "tamanos": [],
-        "ID": 22,
-        "id": 22,
-        "idCategoria": 47,
+        "ID": 29,
+        "id": 29,
+        "idCategoria": 22,
         "disponible": 1
     },
     {
@@ -812,59 +598,14 @@
         "ingredientes": [],
         "categoria": "Molletes",
         "calorias": 520,
-        "urlFoto": null,
+        "urlFoto": "uploads/productos/de57de5c1af2ce74221750a8a1957a29.jpg",
         "nombre": "Molletes Tradicionales",
         "gramaje": 300,
         "precioBase": 59,
         "tamanos": [],
-        "ID": 6,
-        "id": 6,
-        "idCategoria": 47,
-        "disponible": 1
-    },
-    {
-        "descripcion": "Muffin de chocolate.",
-        "ingredientes": [],
-        "categoria": "Panadería",
-        "calorias": 350,
-        "urlFoto": null,
-        "nombre": "Muffin de Chocolate",
-        "gramaje": 100,
-        "precioBase": 38,
-        "tamanos": [],
-        "ID": 36,
-        "id": 36,
-        "idCategoria": 29,
-        "disponible": 1
-    },
-    {
-        "descripcion": "Totopos con queso fundido y jalapeños.",
-        "ingredientes": [],
-        "categoria": "Snacks Salados",
-        "calorias": 590,
-        "urlFoto": null,
-        "nombre": "Nachos con Queso",
-        "gramaje": 250,
-        "precioBase": 54,
-        "tamanos": [],
-        "ID": 35,
-        "id": 35,
-        "idCategoria": 28,
-        "disponible": 1
-    },
-    {
-        "descripcion": "Omelette con espinaca, jitomate y queso panela.",
-        "ingredientes": [],
-        "categoria": "Desayunos con Huevo",
-        "calorias": 480,
-        "urlFoto": null,
-        "nombre": "Omelette de Espinaca y Queso",
-        "gramaje": 300,
-        "precioBase": 72,
-        "tamanos": [],
-        "ID": 23,
-        "id": 23,
-        "idCategoria": 46,
+        "ID": 19,
+        "id": 19,
+        "idCategoria": 54,
         "disponible": 1
     },
     {
@@ -877,9 +618,9 @@
         "gramaje": 280,
         "precioBase": 68,
         "tamanos": [],
-        "ID": 8,
-        "id": 8,
-        "idCategoria": 32,
+        "ID": 21,
+        "id": 21,
+        "idCategoria": 39,
         "disponible": 1
     },
     {
@@ -892,9 +633,9 @@
         "gramaje": 300,
         "precioBase": 75,
         "tamanos": [],
-        "ID": 9,
-        "id": 9,
-        "idCategoria": 32,
+        "ID": 22,
+        "id": 22,
+        "idCategoria": 39,
         "disponible": 1
     },
     {
@@ -907,157 +648,9 @@
         "gramaje": 220,
         "precioBase": 45,
         "tamanos": [],
-        "ID": 19,
-        "id": 19,
-        "idCategoria": 37,
-        "disponible": 1
-    },
-    {
-        "descripcion": "Latte de temporada con espresso, leche, sirope de calabaza y especias, crema batida, canela y nuez moscada.",
-        "ingredientes": [
-            {
-                "eliminable": 0,
-                "cantidad": 1,
-                "orden": 1,
-                "sustituible": 0,
-                "nombre": "Café Espresso",
-                "idIngrediente": 43
-            },
-            {
-                "sustitutos": [
-                    {
-                        "costoExtra": 10,
-                        "nombre": "Leche de Almendra",
-                        "idIngrediente": 46,
-                        "disponible": 1
-                    },
-                    {
-                        "costoExtra": 10,
-                        "nombre": "Leche de Avena",
-                        "idIngrediente": 47,
-                        "disponible": 1
-                    },
-                    {
-                        "costoExtra": 5,
-                        "nombre": "Leche Deslactosada",
-                        "idIngrediente": 45,
-                        "disponible": 1
-                    }
-                ],
-                "eliminable": 0,
-                "cantidad": 1,
-                "orden": 2,
-                "sustituible": 1,
-                "nombre": "Leche Entera",
-                "idIngrediente": 44
-            },
-            {
-                "eliminable": 0,
-                "cantidad": 1,
-                "orden": 3,
-                "sustituible": 0,
-                "nombre": "Sirope Pumpkin Spice",
-                "idIngrediente": 63
-            },
-            {
-                "eliminable": 1,
-                "cantidad": 1,
-                "orden": 4,
-                "sustituible": 0,
-                "nombre": "Crema Batida",
-                "idIngrediente": 66
-            },
-            {
-                "eliminable": 1,
-                "cantidad": 1,
-                "orden": 5,
-                "sustituible": 0,
-                "nombre": "Canela",
-                "idIngrediente": 64
-            },
-            {
-                "eliminable": 1,
-                "cantidad": 1,
-                "orden": 6,
-                "sustituible": 0,
-                "nombre": "Nuez Moscada",
-                "idIngrediente": 65
-            }
-        ],
-        "categoria": "Bebidas de Temporada Calientes",
-        "calorias": 310,
-        "urlFoto": null,
-        "nombre": "Pumpkin Spice Latte",
-        "gramaje": 0,
-        "precioBase": 72,
-        "tamanos": [
-            {
-                "descripcion": "Pumpkin Spice Latte chico",
-                "gramaje": null,
-                "precio": 65,
-                "piezas": null,
-                "id": 12,
-                "orden": 1,
-                "nombre": "Chico",
-                "capacidad": 250,
-                "disponible": 1
-            },
-            {
-                "descripcion": "Pumpkin Spice Latte mediano",
-                "gramaje": null,
-                "precio": 72,
-                "piezas": null,
-                "id": 13,
-                "orden": 2,
-                "nombre": "Mediano",
-                "capacidad": 350,
-                "disponible": 1
-            },
-            {
-                "descripcion": "Pumpkin Spice Latte grande",
-                "gramaje": null,
-                "precio": 82,
-                "piezas": null,
-                "id": 14,
-                "orden": 3,
-                "nombre": "Grande",
-                "capacidad": 450,
-                "disponible": 1
-            }
-        ],
-        "ID": 34,
-        "id": 34,
-        "idCategoria": 19,
-        "disponible": 1
-    },
-    {
-        "descripcion": "Tortilla de harina con queso y champiñones.",
-        "ingredientes": [],
-        "categoria": "Quesadillas",
-        "calorias": 470,
-        "urlFoto": null,
-        "nombre": "Quesadilla de Champiñones",
-        "gramaje": 260,
-        "precioBase": 59,
-        "tamanos": [],
-        "ID": 26,
-        "id": 26,
-        "idCategoria": 33,
-        "disponible": 1
-    },
-    {
-        "descripcion": "Tortilla de harina con queso manchego y pollo.",
-        "ingredientes": [],
-        "categoria": "Quesadillas",
-        "calorias": 540,
-        "urlFoto": null,
-        "nombre": "Quesadilla de Pollo",
-        "gramaje": 280,
-        "precioBase": 64,
-        "tamanos": [],
-        "ID": 25,
-        "id": 25,
-        "idCategoria": 33,
+        "ID": 32,
+        "id": 32,
+        "idCategoria": 44,
         "disponible": 1
     },
     {
@@ -1070,24 +663,9 @@
         "gramaje": 0,
         "precioBase": 62,
         "tamanos": [],
-        "ID": 18,
-        "id": 18,
-        "idCategoria": 21,
-        "disponible": 1
-    },
-    {
-        "descripcion": "Smoothie de mango y leche.",
-        "ingredientes": [],
-        "categoria": "Smoothies",
-        "calorias": 240,
-        "urlFoto": null,
-        "nombre": "Smoothie de Mango",
-        "gramaje": 0,
-        "precioBase": 64,
-        "tamanos": [],
-        "ID": 33,
-        "id": 33,
-        "idCategoria": 21,
+        "ID": 31,
+        "id": 31,
+        "idCategoria": 27,
         "disponible": 1
     }
 ]

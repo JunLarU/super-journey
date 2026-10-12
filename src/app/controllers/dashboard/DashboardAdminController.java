@@ -12,6 +12,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import java.net.URL;
 
 public class DashboardAdminController {
@@ -102,6 +104,25 @@ public class DashboardAdminController {
     @FXML
     private void onEstadisticasClicked() {
         cargarVista("Estadísticas", "/app/views/estadisticas/EstadisticasController.fxml");
+    }
+
+    @FXML
+    private void onVentasClicked() {
+        cargarVista("Ventas", "/app/views/ventas/Ventas.fxml");
+    }
+
+    @FXML
+    private void onHistorialVentasClicked() {
+        cargarVista(
+                "Historial de Ventas",
+                "/app/views/ventas/HistorialVentas.fxml");
+    }
+
+    @FXML
+    private void onEstadisticasVentasClicked() {
+        cargarVista(
+                "Estadísticas de Ventas",
+                "/app/views/estadisticas/EstadisticasVentas.fxml");
     }
 
     @FXML

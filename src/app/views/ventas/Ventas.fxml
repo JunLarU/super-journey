@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="app.controllers.ventas.VentasController"
+            prefWidth="1100" prefHeight="700"
+            styleClass="sales-root"
+            stylesheets="@../../../assets/css/ventas.css">
+
+    <top>
+        <VBox>
+            <HBox alignment="CENTER_LEFT" spacing="12" styleClass="sales-header">
+                <VBox spacing="2">
+                    <Label text="Punto de venta" styleClass="page-title"/>
+                    <Label text="Selecciona productos, personalízalos y registra el cobro." styleClass="subtitle"/>
+                </VBox>
+                <Region HBox.hgrow="ALWAYS"/>
+                <TextField fx:id="txtBuscar" promptText="Buscar producto..." prefWidth="300"/>
+                <ComboBox fx:id="cmbCategoria" promptText="Categoría" prefWidth="210"/>
+            </HBox>
+            <Separator/>
+        </VBox>
+    </top>
+
+    <center>
+        <SplitPane dividerPositions="0.50" style="-fx-background-color: transparent; -fx-padding: 14;">
+
+            <VBox spacing="10" styleClass="content-card">
+                <HBox alignment="CENTER_LEFT">
+                    <Label text="Productos disponibles" styleClass="section-title"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label text="Haz clic en ‘Agregar a la venta’ para elegir opciones." styleClass="small-hint"/>
+                </HBox>
+
+                <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent;">
+                    <content>
+                        <FlowPane fx:id="flowProductos" hgap="10" vgap="10" prefWrapLength="510" style="-fx-padding: 4;"/>
+                    </content>
+                </ScrollPane>
+            </VBox>
+
+            <VBox spacing="10" styleClass="content-card">
+                <HBox alignment="CENTER_LEFT">
+                    <Label text="Venta actual" styleClass="section-title"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="lblCantidadLineas" text="0 líneas" styleClass="small-hint"/>
+                </HBox>
+
+                <TableView fx:id="tablaCarrito" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colProducto" text="Producto" prefWidth="135"/>
+                        <TableColumn fx:id="colConfiguracion" text="Configuración" prefWidth="180"/>
+                        <TableColumn fx:id="colCantidad" text="Cant." prefWidth="52"/>
+                        <TableColumn fx:id="colPrecio" text="Precio" prefWidth="72"/>
+                        <TableColumn fx:id="colExtras" text="Extras" prefWidth="65"/>
+                        <TableColumn fx:id="colDescuento" text="Desc." prefWidth="65"/>
+                        <TableColumn fx:id="colTotal" text="Total" prefWidth="78"/>
+                    </columns>
+                    <placeholder>
+                        <Label text="La venta está vacía" styleClass="empty-hint"/>
+                    </placeholder>
+                </TableView>
+
+                <HBox spacing="7">
+                    <Button fx:id="btnOtraConfiguracion" text="Otra configuración" onAction="#onDuplicarLinea" styleClass="primary-button"/>
+                    <Button fx:id="btnDescuentoLinea" text="Descuento a producto" onAction="#onDescuentoLinea" styleClass="warning-button"/>
+                    <Button fx:id="btnEliminarLinea" text="Eliminar" onAction="#onEliminarLinea" styleClass="danger-button"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button text="Vaciar venta" onAction="#onVaciarVenta" styleClass="neutral-button"/>
+                </HBox>
+
+                <Separator/>
+
+                <GridPane hgap="12" vgap="7" styleClass="totals-box">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="ALWAYS"/>
+                        <ColumnConstraints minWidth="110" halignment="RIGHT"/>
+                    </columnConstraints>
+
+                    <Label text="Subtotal bruto:" GridPane.rowIndex="0"/>
+                    <Label fx:id="lblSubtotalBruto" text="0.00" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                    <Label text="Extras:" GridPane.rowIndex="1"/>
+                    <Label fx:id="lblExtras" text="0.00" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                    <Label text="Descuentos en productos:" GridPane.rowIndex="2"/>
+                    <Label fx:id="lblDescuentosProductos" text="-0.00" styleClass="discount-value" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                    <Label text="Descuento de venta:" GridPane.rowIndex="3"/>
+                    <Label fx:id="lblDescuentoVenta" text="-0.00" styleClass="discount-value" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                    <Separator GridPane.rowIndex="4" GridPane.columnSpan="2"/>
+
+                    <Label text="TOTAL:" styleClass="total-label" GridPane.rowIndex="5"/>
+                    <Label fx:id="lblTotal" text="0.00" styleClass="total-value" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+                </GridPane>
+
+                <HBox spacing="9" alignment="CENTER_RIGHT">
+                    <Button text="Descuento a venta" onAction="#onDescuentoVenta" styleClass="warning-button"/>
+                    <Button fx:id="btnCobrar" text="COBRAR" onAction="#onCobrar" styleClass="checkout-button"/>
+                </HBox>
+
+                <Label fx:id="lblStatus" text="Listo" wrapText="true" styleClass="status-label"/>
+            </VBox>
+        </SplitPane>
+    </center>
+</BorderPane>

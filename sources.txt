@@ -1,4 +1,4 @@
-E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\Main.java
+﻿E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\Main.java
 E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\app\controllers\FXDialogs.java
 E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\app\controllers\TestController.java
 E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\app\controllers\administradores\AdministradoresController.java
@@ -13,6 +13,7 @@ E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\app\controllers\estadisticas\Estadisticas
 E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\app\controllers\estadisticas\EstadisticasMesController.java
 E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\app\controllers\estadisticas\EstadisticasSeisMesesController.java
 E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\app\controllers\estadisticas\EstadisticasSemanaController.java
+E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\app\controllers\estadisticas\EstadisticasVentasController.java
 E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\app\controllers\ingredientes\IngredientesController.java
 E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\app\controllers\ingredientes\RegistroIngredienteController.java
 E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\app\controllers\menus\MenusController.java
@@ -23,6 +24,10 @@ E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\app\controllers\productos\RegistroProduct
 E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\app\controllers\productos\RegistroProductoEspecialController.java
 E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\app\controllers\sessions\LoginController.java
 E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\app\controllers\sessions\SignupController.java
+E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\app\controllers\ventas\CobroController.java
+E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\app\controllers\ventas\HistorialVentasController.java
+E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\app\controllers\ventas\PersonalizarProductoController.java
+E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\app\controllers\ventas\VentasController.java
 E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\core\HTTPConnection.java
 E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\core\SessionManager.java
 E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\core\data\Avisos\AllAvisos.java
@@ -47,9 +52,14 @@ E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\core\data\Productos\Sustituto.java
 E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\core\data\Productos\TamanoProducto.java
 E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\core\data\Users\AllUsers.java
 E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\core\data\Users\User.java
+E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\core\data\Ventas\CarritoVenta.java
+E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\core\data\Ventas\Descuento.java
+E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\core\data\Ventas\LineaVenta.java
+E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\core\data\Ventas\ModificacionVenta.java
 E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\core\services\AvisosService.java
 E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\core\services\CategoriaService.java
 E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\core\services\EstadisticasService.java
+E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\core\services\EstadisticasVentasService.java
 E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\core\services\ImagenService.java
 E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\core\services\IngredienteService.java
 E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\core\services\MenuService.java
@@ -57,3 +67,4 @@ E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\core\services\NormalUserService.java
 E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\core\services\ProductoService.java
 E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\core\services\ProductosEspecialesService.java
 E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\core\services\UserService.java
+E:\F07_SOFTWARES\S12_FITACAPP\cafi\src\core\services\VentaService.java
